@@ -11,7 +11,7 @@ import static java.lang.Math.pow;
  * (r<sub>i</sub><sup>2</sup>+(&alpha<sub>c</sub>d<sub>c</sub>)<sup>2</sup>)<sup>q</sup>
  * 其中 r<sub>i</sub>=((x-x<sub>i</sub>)<sup>2</sup>+(y-y<sub>i</sub>)<sup>2</sup>)<sup>1/2<sup>
  * @author epsilon
- * @version 0.10 未曾测试过。
+ * @version 0.101 通过测试
  */
 public class MultiQuadRadial implements RadialBasisFunction {
 
@@ -25,9 +25,7 @@ public class MultiQuadRadial implements RadialBasisFunction {
      * @param dc 节点的平均距离d<sub>c</sub>
      * @param q 幂参数
      */
-    public MultiQuadRadial(double centerX, double centerY, double alphac, double dc, double q) {
-        this.centerX = centerX;
-        this.centerY = centerY;
+    public MultiQuadRadial(double alphac, double dc, double q) {
         this.alphac = alphac;
         this.dc = dc;
         this.q = q;
