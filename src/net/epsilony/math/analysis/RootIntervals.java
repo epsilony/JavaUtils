@@ -64,7 +64,6 @@ public class RootIntervals extends ArrayList<Interval> {
 
     /**
      * 构造一个链表，这个链表的每一个元素是一个区间，这样的区间中有一个单根
-     * @param n
      * @param bigIntv
      * @param fun
      */

@@ -16,7 +16,7 @@ public class ArrayUtils {
      * 或取一个二维数组的某列
      * @param matrix
      * @param col 列号
-     * @return
+     * @return 获得一个二维数组的第col列的Copy 
      */
     public static double[] getMatrixColumn(double[][] matrix, int col) {
         int n = matrix.length;

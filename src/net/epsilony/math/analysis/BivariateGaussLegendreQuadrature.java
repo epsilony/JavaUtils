@@ -11,8 +11,19 @@ import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.FunctionEvaluationException;
 
 /**
- *
- * @author epsilon
+ * <P>本类是个工厂类的雏形，用于将一个二维的一一映射和Gauss-Legendre积分器结合</P>
+ * <P>设计的使用流程：<br>
+ * <ol type=1>
+ * <li>构造一个BivariateMapper 该一一映射器实际用来指定被积区域XY，<br>
+ *  因为一个[-1,1]<sup>2</sup>的区域上的所有点通过Mapper就得到XY区域上的所有点 
+ * <li>构造本类，其中需要指定本类结合的mapper以及高斯积分点数的平方根 <br
+ * <li>调用quadrate完成计算 
+ * <li>修改mapper的属性 
+ * <li>重复3－4步直到完成计算。
+ * </ol>
+ * @see net.epsilony.math.util.BivariateMapper
+ * @version 0.10-haven't been tested 
+ * @author M.Yuan
  */
 public class BivariateGaussLegendreQuadrature {
 
