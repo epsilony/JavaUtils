@@ -8,15 +8,21 @@ import static java.lang.Math.pow;
 
 /**
  * 复合二次径向基函数
- * (r<sub>i</sub><sup>2</sup>+(&alpha<sub>c</sub>d<sub>c</sub>)<sup>2</sup>)<sup>q</sup>
- * 其中 r<sub>i</sub>=((x-x<sub>i</sub>)<sup>2</sup>+(y-y<sub>i</sub>)<sup>2</sup>)<sup>1/2<sup>
- * @author epsilon
- * @version 0.101 通过测试
+ * <br> (r<sub>i</sub><sup>2</sup>+(&alpha<sub>c</sub>d<sub>c</sub>)<sup>2</sup>)<sup>q</sup> </br>
+ * <br>其中 r<sub>i</sub>=((x-x<sub>i</sub>)<sup>2</sup>+(y-y<sub>i</sub>)<sup>2</sup>)<sup>1/2</sup> </br>
+ * <p> <br> <bold> ChangeList: </bold> </br>
+ * <br>0.11 增加了二阶偏导数</br>
+ * <br>0.10 新建</br>
+ * </p> 
+ * @author M.Yuan
+ * @version 0.11 增加了二阶导数
+
  */
 public class MultiQuadRadial implements RadialBasisFunction {
 
     double centerX, centerY;
     double alphac, dc, q;
+
     /**
      *
      * @param centerX 径向中心X坐标x<sub>i</sub>
@@ -30,6 +36,7 @@ public class MultiQuadRadial implements RadialBasisFunction {
         this.dc = dc;
         this.q = q;
     }
+
     /**
      * 求径向基函数的值
      * @param x 
@@ -55,15 +62,32 @@ public class MultiQuadRadial implements RadialBasisFunction {
         results[1] = (y - centerY) * t;
         return results;
     }
-    
+
     /**
      * 设置径向基的中心
      * @param centerX 径向中心X坐标x<sub>i</sub>
      * @param centerY 径向中心Y坐标y<sub>i</sub>
      */
     @Override
-    public void setCenter(double centerX,double centerY){
-        this.centerX=centerX;
-        this.centerY=centerY;
+    public void setCenter(double centerX, double centerY) {
+        this.centerX = centerX;
+        this.centerY = centerY;
+    }
+
+    /**
+     * 求径向基函数的一阶偏导数
+     * @param x
+     * @param y
+     * @param results 最小长度为3
+     * @return ｛&part;&sup2;f/&part;x&sup2;,&part;&sup2;f/&part;x&part;y, &part;&sup2;f/&part;y&sup2;}
+     */
+    @Override
+    public double[] quadPartialDifferential(double x, double y, double[] results) {
+        double t = q * pow(((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY) + (alphac * dc) * (alphac * dc)), q - 1) * 2;
+        double t2 = q * (q - 1) * pow(((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY) + (alphac * dc) * (alphac * dc)), q - 2) * 4;
+        results[0] = (x - centerX) * (x - centerX) * t2 + t;
+        results[1] = (x - centerX) * (y - centerY) * t2;
+        results[2] = (y - centerY) * (y - centerY) * t2 + t;
+        return results;
     }
 }

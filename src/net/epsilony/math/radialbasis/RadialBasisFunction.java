@@ -6,8 +6,13 @@
 package net.epsilony.math.radialbasis;
 
 /**
- *
- * @author epsilon
+ * 径向基函数接口
+  * <p> <br><bold> Changelist </bold></br>
+ * <br> 0.11 增加二阶偏导数函数接口 </br>
+ * <br> 0.10 建立 </br>
+ * @version 0.11
+ * @author M.Yuan
+
  */
 public interface RadialBasisFunction {
 
@@ -16,7 +21,7 @@ public interface RadialBasisFunction {
      * @param x
      * @param y
      * @param results 最小长度为2
-     * @return ｛x的偏导数值, y的偏导数值}
+     * @return ｛&part;f/&part;x, &part;f/&part;y}
      */
     double[] partialDifferential(double x, double y, double[] results);
 
@@ -31,8 +36,16 @@ public interface RadialBasisFunction {
      * 求径向基函数的值
      * @param x
      * @param y
-     * @return
+     * @return 基函数的值
      */
     double value(double x, double y);
-
+    
+    /**
+     * 求径向基函数的一阶偏导数
+     * @param x
+     * @param y
+     * @param results 最小长度为3
+     * @return ｛&part;&sup2;f/&part;x&sup2;,&part;&sup2;f/&part;x&part;y, &part;&sup2;f/&part;y&sup2;}
+     */
+    double [] quadPartialDifferential(double x,double y,double [] results);
 }
