@@ -90,4 +90,9 @@ public class MultiQuadRadial implements RadialBasisFunction {
         results[2] = (y - centerY) * (y - centerY) * t2 + t;
         return results;
     }
+
+    @Override
+    public void setDc(double dc) {
+        this.dc=dc;
+    }
 }

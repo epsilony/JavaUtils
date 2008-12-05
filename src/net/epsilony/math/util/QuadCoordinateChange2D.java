@@ -8,10 +8,11 @@ import net.epsilony.math.analysis.UnivariateVectorFunction;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 /**
- * @deprecated 用CoonsCoordinateChange2D，该类的设计目前不是很成熟
+ * @deprecated 用 QudarangleMapper，该类的设计目前不是很成熟
  * [-1,1]X[-1,1]的正方形区域，映射到四个定义域为[0,1]参数线直线l1,l2,l3,l4所围成的四边
  * 可用于四个直线围成的四边形的Gauss积分。则u,v为一对边上的曲线参数-0.5,
- * @author epsilon
+ * @see QuadrangleMapper
+ * @author M.Yuan
  */
 public class QuadCoordinateChange2D implements BivariateMapper{
 
@@ -148,112 +149,3 @@ public class QuadCoordinateChange2D implements BivariateMapper{
         diffs[3][1]=pt[1];
     }
 }
-/**
- * result of mfile 
- * x =
-
-x1-(-x1+x3)*(x1*y4-x1*y2-x2*y4-y1*x4+y1*x2+y2*x4)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)
-
-
-
-y =
-
-y1-(y3-y1)*(x1*y4-x1*y2-x2*y4-y1*x4+y1*x2+y2*x4)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)
-
-
-
-pXx1 =
-
--(x4-x2)*(y3-y1)*(-x2*y4+y2*x4+x3*y4-x3*y2-x4*y3+x2*y3)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pXy1 =
-
-(-x1+x3)*(x4-x2)*(-x2*y4+y2*x4+x3*y4-x3*y2-x4*y3+x2*y3)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pXx3 =
-
-(x1*y4-x1*y2-x2*y4-y1*x4+y1*x2+y2*x4)*(x4-x2)*(y3-y1)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pXy3 =
-
-(x1-x3)*(x1*y4-x1*y2-x2*y4-y1*x4+y1*x2+y2*x4)*(x4-x2)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pYx1 =
-
--(y3-y1)*(y4-y2)*(-x2*y4+y2*x4+x3*y4-x3*y2-x4*y3+x2*y3)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pYy1 =
-
-(y4-y2)*(-x1+x3)*(x3*y4-x3*y2-x2*y4+y2*x4-x4*y3+x2*y3)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pYx3 =
-
-(y3-y1)*((y4-y2)*x1+y1*x2+y2*x4-x2*y4-y1*x4)/((y2-y4)*x1+x3*y4-x3*y2+y1*x4-y1*x2-x4*y3+x2*y3)^2*(y4-y2)
-
-
-
-pYy3 =
-
--(x1*y4-x1*y2-x2*y4-y1*x4+y1*x2+y2*x4)*(y4-y2)*(-x1+x3)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pXx2 =
-
-(-x1+x3)*(y4-y2)*(-x1*y4+x3*y4-x4*y3-x3*y1+x1*y3+y1*x4)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pXy2 =
-
--(-x1+x3)*(x4-x2)*(-x1*y4+x3*y4-x4*y3-x3*y1+x1*y3+y1*x4)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pXx4 =
-
--(-x1+x3)*(y4-y2)*(-x2*y3+y1*x2+x1*y3-x3*y1-x1*y2+x3*y2)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pXy4 =
-
-(-x1+x3)*(-x2+x4)*(-x2*y3+y1*x2+x1*y3-x3*y1-x1*y2+x3*y2)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pYx2 =
-
-(y3-y1)*(y4-y2)*(-x1*y4+x3*y4+x1*y3-x3*y1-x4*y3+y1*x4)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pYy2 =
-
--(y3-y1)*(-x2+x4)*(-x1*y4+x3*y4+x1*y3-x3*y1-x4*y3+y1*x4)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pYx4 =
-
--(y3-y1)*(y4-y2)*(-x2*y3+y1*x2+x1*y3-x3*y1-x1*y2+x3*y2)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
-
-
-pYy4 =
-
-(y3-y1)*(-x2+x4)*(-x2*y3+y1*x2+x1*y3-x3*y1-x1*y2+x3*y2)/(x3*y4-x3*y2-x1*y4+x1*y2-x4*y3+x2*y3+y1*x4-y1*x2)^2
-
- */

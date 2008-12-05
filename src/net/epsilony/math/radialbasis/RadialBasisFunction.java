@@ -48,4 +48,6 @@ public interface RadialBasisFunction {
      * @return ｛&part;&sup2;f/&part;x&sup2;,&part;&sup2;f/&part;x&part;y, &part;&sup2;f/&part;y&sup2;}
      */
     double [] quadPartialDifferential(double x,double y,double [] results);
+    
+    public void setDc(double dc);
 }
