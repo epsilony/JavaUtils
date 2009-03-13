@@ -108,7 +108,7 @@ public class EYMath {
         ty1 = ty1 * (1 - t) + ty2 * t;
         results[0] = tx1;
         results[1] = ty1;
-        System.out.println(tx1 + " " + ty1);
+//        System.out.println(tx1 + " " + ty1);
         return results;
     }
 
