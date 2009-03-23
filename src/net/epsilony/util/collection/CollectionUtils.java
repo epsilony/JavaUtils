@@ -53,7 +53,7 @@ public class CollectionUtils {
             return -1;
         }
         if (c.compare(list.get(list.size() - 1), key) <= 0) {
-            return list.size()-1;
+            return list.size() - 1;
         }
         int start = 0, end = list.size() - 1, res;
         T mid;
@@ -82,6 +82,86 @@ public class CollectionUtils {
         }
 
 
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param array
+     * @param key
+     * @param c
+     * @param start inclusive
+     * @param end exclusive
+     * @return 
+     */
+    public static <T> int ceil(T[] array, T key, Comparator<? super T> c,int start,int end) {
+        if (c.compare(array[start], key) >= 0) {
+            return start;
+        }
+        end--;
+        if (c.compare(array[end], key) < 0) {
+            return -1;
+        }
+        int res;
+        T mid;
+        while (start < end - 1) {
+            mid = array[(start + end) / 2];
+            res = c.compare(mid, key);
+//            System.out.println("res = " + res);
+//            System.out.println("mid = " + mid);
+            if (res >= 0) {
+                end = (start + end) / 2;
+            } else {
+                start = (start + end) / 2;
+            }
+//            System.out.println("start = " + start);
+//            System.out.println("end = "+ end);
+        }
+        res = c.compare(array[start], key);
+        if (res < 0) {
+            return end;
+        } else {
+            if (res == 0) {
+                return start;
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    public static <T> int floor(T[] array, T key, Comparator<? super T> c,int start,int end) {
+        if (c.compare(array[start], key) > 0) {
+            return -1;
+        }
+        end --;
+        if (c.compare(array[end], key) <= 0) {
+            return end;
+        }
+        int  res;
+        T mid;
+        while (start < end - 1) {
+            mid = array[(start + end) / 2];
+            res = c.compare(mid, key);
+//            System.out.println("res = " + res);
+//            System.out.println("mid = " + mid);
+            if (res > 0) {
+                end = (start + end) / 2;
+            } else {
+                start = (start + end) / 2;
+            }
+//            System.out.println("start = " + start);
+//            System.out.println("end = "+ end);
+        }
+        res = c.compare(array[end], key);
+        if (res > 0) {
+            return start;
+        } else {
+            if (res == 0) {
+                return end;
+            } else {
+                return -1;
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -113,8 +193,8 @@ public class CollectionUtils {
             }
 
             System.out.println(list);
-           // System.out.println(ceil(list, new Integer(4), comp));
-        System.out.println(floor(list, new Integer(3), comp));
+            // System.out.println(ceil(list, new Integer(4), comp));
+            System.out.println(floor(list, new Integer(3), comp));
         }
     }
 }

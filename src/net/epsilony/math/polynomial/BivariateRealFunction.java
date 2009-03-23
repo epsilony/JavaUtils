@@ -10,5 +10,11 @@ import org.apache.commons.math.FunctionEvaluationException;
  */
 public interface BivariateRealFunction {
 
+    /**
+     * @param x
+     * @param y
+     * @return
+     * @throws org.apache.commons.math.FunctionEvaluationException
+     */
     public double value(double x, double y)throws FunctionEvaluationException;
 }
