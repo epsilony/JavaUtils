@@ -16,5 +16,5 @@ public interface BivariateRealFunction {
      * @return
      * @throws org.apache.commons.math.FunctionEvaluationException
      */
-    public double value(double x, double y)throws FunctionEvaluationException;
+    public double value(double x, double y);
 }
