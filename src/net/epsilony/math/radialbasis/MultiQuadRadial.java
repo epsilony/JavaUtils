@@ -31,10 +31,14 @@ public class MultiQuadRadial implements RadialBasisFunction {
      * @param dc 节点的平均距离d<sub>c</sub>
      * @param q 幂参数
      */
-    public MultiQuadRadial(double alphac, double dc, double q) {
+    public MultiQuadRadial(double alphac, double q) {
         this.alphac = alphac;
-        this.dc = dc;
         this.q = q;
+    }
+
+    public MultiQuadRadial(){
+        this.alphac=4.0;
+        this.q=1.03;
     }
 
     /**
@@ -92,7 +96,7 @@ public class MultiQuadRadial implements RadialBasisFunction {
     }
 
     @Override
-    public void setDc(double dc) {
+    public void setNodesAverageDistance(double dc) {
         this.dc=dc;
     }
 }

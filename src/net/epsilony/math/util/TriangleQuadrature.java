@@ -316,6 +316,8 @@ public class TriangleQuadrature {
 
         return result;
 
+
+
 //        % >>[X,Y,Wx,Wy]=triquad(8,[0 0; 0 2; 2 1])
 //% >>f=@(x,y) exp(x+y);
 //% >>Q=Wx'*feval(f,X,Y)*Wy;
@@ -325,6 +327,32 @@ public class TriangleQuadrature {
 //[tt,xx]=meshgrid(t,x); yy=tt.*xx;
 //X=cd(1,1)+cd(2,1)*xx+cd(3,1)*yy;    Y=cd(1,2)+cd(2,2)*xx+cd(3,2)*yy;
 
+
+    }
+        public static void triangleQuadratePointWeight(double[] xys,double weights[],int n,double x1,double y1,double x2,double y2,double x3,double y3) throws ArgumentOutsideDomainException {
+        if(n<1||n>10){
+            throw new ArgumentOutsideDomainException(n, 0, 10);
+        }
+        double []x=xs[n-1];
+        double []Wy=Wys[n-1];
+        double []t=ts[n-1];
+        double []wx=wxs[n-1];
+        double t1=Math.abs((-x1+x3)*(y2-y3)+(y1-y3)*(x2-x3));
+        for(int i=0;i<n;i++){
+            Wx[i]=t1*wx[i];
+        }
+        double result=0;
+        double xij,yij;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                xij=x1+x2*x[i]+x3*t[j]*x[i];
+                yij=y1+y2*x[i]+y3*t[j]*x[i];
+//                result+=Wx[i]*fun.value(xij, yij)*Wy[j];
+                xys[(i*n+j)*2]=xij;
+                xys[(i*n+j)*2+1]=yij;
+                weights[i*n+j]=Wx[i]*Wy[j];
+            }
+        }
 
     }
 

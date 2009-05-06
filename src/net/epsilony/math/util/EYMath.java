@@ -4,6 +4,7 @@
  */
 package net.epsilony.math.util;
 
+import java.awt.geom.Point2D;
 import org.apache.commons.math.complex.Complex;
 import static java.lang.Math.*;
 
@@ -188,5 +189,26 @@ public class EYMath {
         double b = (x21 * x10 + y21 * y10) * 2;
         double c = x10 * x10 + y10 * y10;
         return -b * b / 4 / a + c;
+    }
+
+    public static Point2D linesIntersectionPoint(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4){
+        double a11,a12,a21,a22,b1,b2,t1,t2;
+        a11=x2-x1;
+        a21=y2-y1;
+        a12=-(x4-x3);
+        a22=-(y4-y3);
+        b1=x3-x1;
+        b2=y3-y1;
+        if(a11*a22-a12*a21==0){
+            return null;
+        }
+        t1=(b1*a22-b2*a12)/(a11*a22-a21*a12);
+        t2=(b1*a21-b2*a11)/(a12*a21-a22*a11);
+        if(t1>1||t1<0||t2>1||t1<0){
+            return null;
+        }
+        else{
+            return new Point2D.Double(x1+(x2-x1)*t1, y1+(y2-y1)*t1);
+        }
     }
 }
