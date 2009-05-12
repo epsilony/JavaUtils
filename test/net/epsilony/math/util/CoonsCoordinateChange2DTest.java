@@ -52,7 +52,8 @@ public class CoonsCoordinateChange2DTest {
         instance.setInfos(infos);
         BivariateRealFunction fun = new BivariateRealFunction() {
 
-            public double value(double x, double y) throws FunctionEvaluationException {
+            @Override
+            public double value(double x, double y)  {
                 return 1;
             }
         };

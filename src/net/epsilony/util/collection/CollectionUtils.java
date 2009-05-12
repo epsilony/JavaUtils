@@ -48,6 +48,14 @@ public class CollectionUtils {
 
     }
 
+    /**
+     * 用二分法查找有序的list中不大于key的所项的最大的下标。
+     * @param <T>
+     * @param list 依c有序的列表
+     * @param key 比较键值
+     * @param c
+     * @return 如key比list中最小的项还小，则返回-1，否则返回list中不大于key的项的最大下标。
+     */
     public static <T> int floor(ArrayList<T> list, T key, Comparator<? super T> c) {
         if (c.compare(list.get(0), key) > 0) {
             return -1;

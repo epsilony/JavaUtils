@@ -38,39 +38,100 @@ public class EYMath {
      * @param y3
      * @param x4
      * @param y4
-     * @return true 有交集 false 无交集
+     * @return true:有交集(包括交集只是点或线) false:无交集
      */
     public static boolean isRectangleIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        if (((x3 - x1) * (x3 - x2) <= 0 || (x4 - x1) * (x4 - x2) <= 0 || (x1 - x3) * (x1 - x4) <= 0 || (x2 - x3) * (x2 - x4) <= 0) && ((y3 - y1) * (y3 - y2) <= 0 || (y4 - y1) * (y4 - y2) <= 0 || (y1 - y3) * (y1 - y4) <= 0 || (y2 - y3) * (y2 - y4) <= 0)) {
-            return true;
-        } else {
+//        if (((x3 - x1) * (x3 - x2) <= 0 || (x4 - x1) * (x4 - x2) <= 0 || (x1 - x3) * (x1 - x4) <= 0 || (x2 - x3) * (x2 - x4) <= 0) && ((y3 - y1) * (y3 - y2) <= 0 || (y4 - y1) * (y4 - y2) <= 0 || (y1 - y3) * (y1 - y4) <= 0 || (y2 - y3) * (y2 - y4) <= 0))
+//        return true;
+//        } else {
+//            return false;
+//        }
+        double t;
+        if(x1>x2){
+            t=x1;
+            x1=x2;
+            x2=t;
+        }
+        if(y1>y2){
+            t=y1;
+            y1=y2;
+            y2=t;
+        }
+        if(x3>x4){
+            t=x3;
+            x3=x4;
+            x4=t;
+        }
+        if(y3>y4){
+            t=y3;
+            y3=y4;
+            y4=t;
+        }
+        if((x3<x1&&x4<x1||x3>x2&&x4>x2)||(y3<y1&&y4<y1||y3>y2&&y4>y2)){
             return false;
+        } else{
+            return true;
         }
     }
 
+    /**
+     * 
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
     public static double vectorProduct(double x1, double y1, double x2, double y2) {
         return x1 * y2 - x2 * y1;
     }
 
-    public static double lineSegmentJump(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        return vectorProduct(x1 - x2, y1 - y2, x3 - x4, y3 - y4);
-    }
+//    public static double lineSegmentJump(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+//        return vectorProduct(x1 - x2, y1 - y2, x3 - x4, y3 - y4);
+//    }
 
+    /**
+     * 快速判断两直线(x1,y1)-(x2,y2) (x3,y3)-(x4,y4)是否有交集（交集可以是一个交点，一条线段）
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param x3
+     * @param y3
+     * @param x4
+     * @param y4
+     * @return true:两直线有交集 false：两直线无交集
+     */
     public static boolean isLineSegmentIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
         if (isRectangleIntersect(x1, y1, x2, y2, x3, y3, x4, y4)) {
-            if (lineSegmentJump(x1, y1, x2, y2, x3, y3, x4, y4) <= 0) {
+            if (vectorProduct(x3-x1,y3-y1,x2-x1,y2-y1)*vectorProduct(x4-x1,y4-y1,x2-x1,y2-y1) <= 0) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * solve cubic quation ax<sup>3</sup>+bx<sup>2</sup>+cx+d=0
+     * @param effs efficiencis {d,c,b,a} of ax<sup>3</sup>+bx<sup>2</sup>+cx+d=0
+     * @param result for output Complex[3] at least
+     * @return result
+     */
     public static Complex[] solveCubicEquation(double[] effs, Complex[] result) {
 
         return solveCubicEquation(effs[0], effs[1], effs[2], effs[3], result);
 
     }
 
+    /**
+     * solve cubic quation ax<sup>3</sup>+bx<sup>2</sup>+cx+d=0
+     * @param d
+     * @param c
+     * @param b
+     * @param a
+     * @param result for output Complex[3] at least
+     * @return result
+     */
     public static Complex[] solveCubicEquation(double d, double c, double b, double a, Complex[] result) {
         double t1 = 36 * c * b * a - 108 * d * a * a - 8 * b * b * b + 12 * a * sqrt(12 * c * c * c * a - 3 * c * c * b * b - 54 * c * b * a * d + 81 * d * d * a * a + 12 * d * b * b * b);
         double t2 = -pow(t1, 2 / 3) + 12 * c * a - 4 * b * b;
@@ -83,17 +144,33 @@ public class EYMath {
     }
 
     /**
-     * A classic Bezier Curve Agorithm Implementation
-     * @param degree
+//     *
+//     * A classic Bezier Curve Agorithm Implementation
+//     * @param degree
+//     * @param t
+//     * @param ctrlPts
+//     * @param result
+//     * @return
+//     */
+//    public static double[] bezierPoint(int degree, double t, double ctrlPts[], double results[]) {
+//        throw new UnsupportedOperationException();
+//    }
+
+    /**
+     * <br>A classic Bezier Curve Agorithm Implementation</br>
+     * <br> the 4 control points are (x1,y1)(x2,y2)(x3,y3)(x4,y4)</br>
      * @param t
-     * @param ctrlPts
-     * @param result
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param x3
+     * @param y3
+     * @param x4
+     * @param y4
+     * @param results
      * @return
      */
-    public static double[] bezierPoint(int degree, double t, double ctrlPts[], double results[]) {
-        throw new UnsupportedOperationException();
-    }
-
     public static double[] cubicBezierPoint(double t, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double[] results) {
         double tx1 = x1 * (1 - t) + x2 * t;
         double ty1 = y1 * (1 - t) + y2 * t;
@@ -113,6 +190,14 @@ public class EYMath {
         return results;
     }
 
+    /**
+     * <br>A classic Bezier Curve Agorithm Implementation</br>
+     * <br> the 4 control points are (x1,y1)(x2,y2)(x3,y3)(x4,y4)</br>
+     * @param t
+     * @param ctrlPts control points {x1,y1,x2,y2,x3,y3,x4,y4}
+     * @param results for output double[2] at least
+     * @return results={x(t),y(t)}
+     */
     public static double[] cubicBezierPoint(double t, double ctrlPts[], double results[]) {
         double tx1 = ctrlPts[0] * (1 - t) + ctrlPts[2] * t;
         double ty1 = ctrlPts[1] * (1 - t) + ctrlPts[3] * t;
@@ -210,5 +295,19 @@ public class EYMath {
         else{
             return new Point2D.Double(x1+(x2-x1)*t1, y1+(y2-y1)*t1);
         }
+    }
+
+        public static boolean isLineCircleIntersects(double xc,double yc,double r,double x1,double y1,double x2,double y2){
+        double len1s=(x1-xc)*(x1-xc)+(y1-yc)*(y1-yc);
+        double len2s=(x2-xc)*(x2-xc)+(y2-yc)*(y2-yc);
+        double rs=r*r;
+        if(len1s<r*r||len2s<r*r){
+            return true;
+        }
+        double len3=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+        if((x1-xc)*(x2-xc)+(y1-yc)*(y2-yc)<=0&&abs(vectorProduct((x1-xc),(y1-yc),(x2-xc),(y2-yc)))/len3<=r){
+            return true;
+        }
+        return false;
     }
 }
