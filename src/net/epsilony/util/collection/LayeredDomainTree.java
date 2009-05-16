@@ -109,8 +109,8 @@ public class LayeredDomainTree<T> {
         int t1, t2;
         int fromIndex = CollectionUtils.ceil(leafNodeValues, from, outerComp);
         int toIndex = CollectionUtils.floor(leafNodeValues, to, outerComp);
-        System.out.println("toIndex = " + toIndex);
-        System.out.println("fromIndex = " + fromIndex);
+//        System.out.println("toIndex = " + toIndex);
+//        System.out.println("fromIndex = " + fromIndex);
         if (fromIndex == -1 || toIndex == -1) {
             return list;
         }
@@ -137,8 +137,8 @@ public class LayeredDomainTree<T> {
                 toIndex += higherNodesBase;
             }
         }
-        System.out.println("fromIndex2 = " + fromIndex);
-        System.out.println("toIndex2 = " + toIndex);
+//        System.out.println("fromIndex2 = " + fromIndex);
+//        System.out.println("toIndex2 = " + toIndex);
 
         while (fromIndex < toIndex) {
             if (fromIndex % 2 == 0) {

@@ -298,16 +298,17 @@ public class EYMath {
     }
 
         public static boolean isLineCircleIntersects(double xc,double yc,double r,double x1,double y1,double x2,double y2){
-        double len1s=(x1-xc)*(x1-xc)+(y1-yc)*(y1-yc);
-        double len2s=(x2-xc)*(x2-xc)+(y2-yc)*(y2-yc);
-        double rs=r*r;
-        if(len1s<r*r||len2s<r*r){
-            return true;
+        double t=((x2-x1)*(x1-xc)+(y2-y1)*(y1-yc))/((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+        if(t<0){
+            t=0;
+        }else if(t>1){
+            t=1;
         }
-        double len3=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-        if((x1-xc)*(x2-xc)+(y1-yc)*(y2-yc)<=0&&abs(vectorProduct((x1-xc),(y1-yc),(x2-xc),(y2-yc)))/len3<=r){
+        double ds=(x1+(x2-x1)*t-xc)*(x1+(x2-x1)*t-xc)+(y1+(y2-y1)*t-yc)*(y1+(y2-y1)*t-yc);
+        if(ds<=r*r){
             return true;
         }
         return false;
     }
+
 }
