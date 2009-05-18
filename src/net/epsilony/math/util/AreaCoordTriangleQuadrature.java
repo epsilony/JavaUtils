@@ -10,7 +10,7 @@ import java.util.Arrays;
  *
  * @author epsilon
  */
-public class TriangleQuadrature {
+public class AreaCoordTriangleQuadrature {
 
     final static int[] numPts = new int[]{1, 3, 4, 6, 7, 12, 13};
     final static double[][] weights = new double[][]{{1},
