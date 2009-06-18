@@ -50,4 +50,6 @@ public interface RadialBasisFunction {
     double [] quadPartialDifferential(double x,double y,double [] results);
     
     public void setNodesAverageDistance(double dc);
+
+    public void setSupportDomainRadius(double delta);
 }

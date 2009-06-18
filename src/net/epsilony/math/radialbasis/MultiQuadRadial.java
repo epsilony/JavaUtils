@@ -99,4 +99,9 @@ public class MultiQuadRadial implements RadialBasisFunction {
     public void setNodesAverageDistance(double dc) {
         this.dc=dc;
     }
+
+    @Override
+    public void setSupportDomainRadius(double r) {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -76,7 +76,7 @@ public class PolynomialUtils {
         return coefs;
     }
     
-    public static double [] coeffienctsMultiply(double []coefs,double factor){
+    public static double [] coeffientsMultply(double []coefs,double factor){
         double []results=new double[coefs.length];
         for (int i=0;i<coefs.length;i++){
             results[i]=factor*coefs[i];
