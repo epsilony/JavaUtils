@@ -52,4 +52,6 @@ public interface RadialBasisFunction {
     public void setNodesAverageDistance(double dc);
 
     public void setSupportDomainRadius(double delta);
+
+    public RadialBasisFunction CopyOf(boolean deep);
 }

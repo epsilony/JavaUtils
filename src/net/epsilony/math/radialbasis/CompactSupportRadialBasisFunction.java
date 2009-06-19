@@ -20,24 +20,35 @@ public class CompactSupportRadialBasisFunction implements RadialBasisFunction {
     PolynomialFunction p;
     PolynomialFunction p1;
     PolynomialFunction p2;
+    Type type;
 
-    public enum Type{
-        Wu_C2(1,0),Wu_C4(2,1),Wendland_C2(0,2),Wendland_C4(2,3),Wendland_C6(3,4);
-        Type(int index1,int index2){
-            this.index1=index1;
-            this.index2=index2;
+    @Override
+    public RadialBasisFunction CopyOf(boolean deep) {
+
+        return new CompactSupportRadialBasisFunction(type);
+
+    }
+
+    public enum Type {
+
+        Wu_C2(1, 0), Wu_C4(2, 1), Wendland_C2(0, 2), Wendland_C4(2, 3), Wendland_C6(3, 4);
+
+        Type(int index1, int index2) {
+            this.index1 = index1;
+            this.index2 = index2;
         }
         int index1;
         int index2;
     }
-    private static double[][] ceofs1=new double[][]{{1,-4,6,-4,1},{1,-5,10,-5,1},{1,-6,15,-20,15,-6,1},{1,-8,28,-56,70,-56,28,-8,1}};
-    private static double[][] coefs2=new double[][]{{8,40,48,25,5},{6,36,82,72,30,5},{1,4},{3,18,35},{1,8,25,32}};
-    static{
+    private static double[][] ceofs1 = new double[][]{{1, -4, 6, -4, 1}, {1, -5, 10, -5, 1}, {1, -6, 15, -20, 15, -6, 1}, {1, -8, 28, -56, 70, -56, 28, -8, 1}};
+    private static double[][] coefs2 = new double[][]{{8, 40, 48, 25, 5}, {6, 36, 82, 72, 30, 5}, {1, 4}, {3, 18, 35}, {1, 8, 25, 32}};
 
+
+    static {
     }
-    
 
     public CompactSupportRadialBasisFunction(Type type) {
+        this.type=type;
         p = new PolynomialFunction(PolynomialUtils.coeffientsMultply(ceofs1[type.index1], coefs2[type.index2]));
         p1 = p.polynomialDerivative();
         p2 = p1.polynomialDerivative();
@@ -47,7 +58,7 @@ public class CompactSupportRadialBasisFunction implements RadialBasisFunction {
     public double[] partialDifferential(double x, double y, double[] results) {
         double r, t0, t;
         r = sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY));
-        if (0 != r) {
+        if (0 != r && r <= delta) {
             t0 = r / delta;
             t = p1.value(t0) / delta / r;
             results[0] = t * (x - centerX);
@@ -72,21 +83,23 @@ public class CompactSupportRadialBasisFunction implements RadialBasisFunction {
         if (t >= 1) {
             return 0;
         }
-        if (t == 0) {
-            return 8;
-        } else {
-            return pow(1 - t, 5) * p1.value(t);
-        }
+
+        return p.value(t);
+
     }
 
     @Override
     public double[] quadPartialDifferential(double x, double y, double[] results) {
         double r = sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY));
         if (r == 0) {
-            double t=p2.value(0);
-            results[0] = t ;
+            double t = p2.value(0);
+            results[0] = t;
             results[1] = t;
             results[2] = t;
+        } else if (r > delta) {
+            results[0] = 0;
+            results[1] = 0;
+            results[2] = 0;
         } else {
             double t0 = r / delta;
             double t1 = x - centerX / r;

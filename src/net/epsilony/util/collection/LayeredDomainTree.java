@@ -5,6 +5,7 @@
 package net.epsilony.util.collection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -36,7 +37,7 @@ public class LayeredDomainTree<T> {
         return father * 2 + 2;
     }
 
-    public LayeredDomainTree(List<T> inputPoints, Comparator<? super T> compW, Comparator<? super T> compH, boolean wider) {
+    public LayeredDomainTree(Collection<T> inputPoints, Comparator<? super T> compW, Comparator<? super T> compH, boolean wider) {
         this.points.addAll(inputPoints);
         if (wider) {
             outerComp = compW;

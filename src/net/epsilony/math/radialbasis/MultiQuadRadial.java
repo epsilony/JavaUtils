@@ -104,4 +104,9 @@ public class MultiQuadRadial implements RadialBasisFunction {
     public void setSupportDomainRadius(double r) {
 //        throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public RadialBasisFunction CopyOf(boolean deep) {
+        return new MultiQuadRadial(alphac, q);
+    }
 }
