@@ -5,6 +5,8 @@
 
 package net.epsilony.math.radialbasis;
 
+import java.io.Serializable;
+
 /**
  * 径向基函数接口
   * <p> <br><bold> Changelist </bold></br>
@@ -14,7 +16,7 @@ package net.epsilony.math.radialbasis;
  * @author M.Yuan
 
  */
-public interface RadialBasisFunction {
+public interface RadialBasisFunction extends Serializable{
 
     /**
      * 求径向基函数的一阶偏导数

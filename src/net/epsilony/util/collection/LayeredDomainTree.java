@@ -4,6 +4,7 @@
  */
 package net.epsilony.util.collection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,7 +17,7 @@ import static java.lang.Math.*;
  *
  * @author epsilon
  */
-public class LayeredDomainTree<T> {
+public class LayeredDomainTree<T> implements Serializable{
 
     ArrayList<T> points = new ArrayList<T>();
     Comparator<? super T> outerComp, innerComp;
