@@ -26,6 +26,9 @@ public class LayeredDomainTree<T> implements Serializable{
     int higherNodesBase;
     int higherNodesCount;
 
+    public Collection<T> getPoints(){
+        return points;
+    }
     public static int father(int child) {
         return (child - 1) / 2;
     }
