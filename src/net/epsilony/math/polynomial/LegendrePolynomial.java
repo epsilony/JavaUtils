@@ -1,7 +1,7 @@
 package net.epsilony.math.polynomial;
 
 //import commons-math-1.2.jar from apache
-import org.apache.commons.math.analysis.PolynomialFunction;
+import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 import static java.lang.Math.*;
 import static net.epsilony.math.util.EYMath.*;
 import static org.apache.commons.math.util.MathUtils.*;

@@ -10,7 +10,7 @@ import java.awt.geom.PathIterator;
 import java.util.LinkedList;
 import net.epsilony.math.analysis.UnivariateVectorFunction;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.RombergIntegrator;
+import org.apache.commons.math.analysis.integration.RombergIntegrator;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

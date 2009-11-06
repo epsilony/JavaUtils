@@ -4,7 +4,7 @@
  */
 
 package net.epsilony.math.polynomial;
-import org.apache.commons.math.analysis.PolynomialFunction;
+import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
 
 /**

@@ -11,9 +11,8 @@ import net.epsilony.math.analysis.UnivariateVectorFunction;
 import net.epsilony.util.ArrayUtils;
 import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.PolynomialFunction;
+import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
-import static net.epsilony.math.polynomial.PolynomialUtils.*;
 
 /**
  * Bezier曲线的多项式，可以构造任意1～3维空间的Bezier曲线多项式
@@ -42,14 +41,19 @@ public class BezierPolynomial extends PolynomialFunction implements Differentiab
     public static PolynomialFunction getPolynomialFunctionInstance(double[] ctrlFactors) {
         int n = ctrlFactors.length - 1;
         PolynomialFunction sum = new BernsteinPolynomial(0, n);
-        sum = multiply(sum, ctrlFactors[0]);
+        double[] coefs=sum.getCoefficients();
+
         PolynomialFunction p;
 
 
-        for (int i = 1; i <= n; i++) {
+        for (int i = 0; i <= n; i++) {
             p = new BernsteinPolynomial(i, n);
-            p = multiply(p, ctrlFactors[i]);
-            sum = PolynomialUtils.add(sum, p);
+            for(int j=0;j<coefs.length;j++){
+            coefs[j]*=ctrlFactors[i];
+
+        }
+            p=new PolynomialFunction(coefs);
+            sum = sum.add(p);
         }
         return sum;
     }
@@ -95,7 +99,7 @@ public class BezierPolynomial extends PolynomialFunction implements Differentiab
                 throw new ArgumentOutsideDomainException(input, 0, 1);
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(BezierPolynomial.class.getName()).log(Level.SEVERE, null, ex);
-                throw new FunctionEvaluationException(input, ex);
+                throw new FunctionEvaluationException(ex,input);
             }
         }
         if (null == results) {
@@ -114,7 +118,7 @@ public class BezierPolynomial extends PolynomialFunction implements Differentiab
                 throw new ArgumentOutsideDomainException(input, 0, 1);
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(BezierPolynomial.class.getName()).log(Level.SEVERE, null, ex);
-                throw new FunctionEvaluationException(input, ex);
+                throw new FunctionEvaluationException(ex,input);
             }
         }
         double[] results = new double[dimension];

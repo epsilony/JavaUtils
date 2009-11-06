@@ -17,7 +17,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import net.epsilony.math.util.Interval;
 import net.epsilony.util.OrderedLinkedList;
-import org.apache.commons.math.analysis.PolynomialFunction;
+import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
 /**
  *

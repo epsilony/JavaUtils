@@ -7,7 +7,7 @@ package net.epsilony.math.radialbasis;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.apache.commons.math.analysis.PolynomialFunction;
+import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 import static java.lang.Math.*;
 
 /**
