@@ -35,7 +35,7 @@ public class TriMapper implements BivariateMapper{
         v=(v+1)/2;
         results[0]=(vertex[0]*(1-u)+vertex[2]*u)*v+vertex[4]*(1-v);
         results[1]=(vertex[1]*(1-u)+vertex[3]*u)*v+vertex[5]*(1-v);
-        results[3]=0.25*abs(v*(vertex[2]-vertex[0])*((vertex[3]-vertex[1])*u+vertex[1]-vertex[5])-(vertex[3]-vertex[1])*v*((vertex[0]-vertex[4])+(vertex[2]-vertex[0])*u));
+        results[3]=1/4*abs(v*(vertex[2]-vertex[0])*((vertex[3]-vertex[1])*u+vertex[1]-vertex[5])-(vertex[3]-vertex[1])*v*((vertex[0]-vertex[4])+(vertex[2]-vertex[0])*u));
         return results;
     }
 

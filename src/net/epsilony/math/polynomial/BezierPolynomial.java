@@ -41,19 +41,14 @@ public class BezierPolynomial extends PolynomialFunction implements Differentiab
     public static PolynomialFunction getPolynomialFunctionInstance(double[] ctrlFactors) {
         int n = ctrlFactors.length - 1;
         PolynomialFunction sum = new BernsteinPolynomial(0, n);
-        double[] coefs=sum.getCoefficients();
-
+        sum = sum.multiply(new PolynomialFunction(new double[]{ctrlFactors[0]}));
         PolynomialFunction p;
 
 
-        for (int i = 0; i <= n; i++) {
+        for (int i = 1; i <= n; i++) {
             p = new BernsteinPolynomial(i, n);
-            for(int j=0;j<coefs.length;j++){
-            coefs[j]*=ctrlFactors[i];
-
-        }
-            p=new PolynomialFunction(coefs);
-            sum = sum.add(p);
+            p = p.multiply(new PolynomialFunction(new double[]{ctrlFactors[i]}));
+            sum = PolynomialUtils.add(sum, p);
         }
         return sum;
     }
@@ -99,7 +94,7 @@ public class BezierPolynomial extends PolynomialFunction implements Differentiab
                 throw new ArgumentOutsideDomainException(input, 0, 1);
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(BezierPolynomial.class.getName()).log(Level.SEVERE, null, ex);
-                throw new FunctionEvaluationException(ex,input);
+                throw ex;
             }
         }
         if (null == results) {
@@ -118,7 +113,7 @@ public class BezierPolynomial extends PolynomialFunction implements Differentiab
                 throw new ArgumentOutsideDomainException(input, 0, 1);
             } catch (ArgumentOutsideDomainException ex) {
                 Logger.getLogger(BezierPolynomial.class.getName()).log(Level.SEVERE, null, ex);
-                throw new FunctionEvaluationException(ex,input);
+                throw ex;
             }
         }
         double[] results = new double[dimension];

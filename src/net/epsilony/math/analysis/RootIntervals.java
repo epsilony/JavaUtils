@@ -21,8 +21,10 @@ import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
 /**
  *
+ * @deprecated  没有通过测试
  * @author epsilon
  */
+@Deprecated
 public class RootIntervals extends ArrayList<Interval> {
 
     UnivariateRealFunction uniFun;
@@ -33,6 +35,7 @@ public class RootIntervals extends ArrayList<Interval> {
 
     class RootIntervalComparator implements Comparator<Interval> {
 
+        @Override
         public int compare(Interval arg0, Interval arg1) {
             try {
                 double size0 = arg0.getSize();
@@ -75,7 +78,7 @@ public class RootIntervals extends ArrayList<Interval> {
         findIntervals();
     }
 
-    void findIntervals() throws FunctionEvaluationException {
+    private void findIntervals() throws FunctionEvaluationException {
         splitInterval(nRoot, bigIntv);
         //end of 将bigIntv区间平均划分成nRoot等分，存到tIntvs中
 

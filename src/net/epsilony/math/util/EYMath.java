@@ -47,29 +47,29 @@ public class EYMath {
 //            return false;
 //        }
         double t;
-        if (x1 > x2) {
-            t = x1;
-            x1 = x2;
-            x2 = t;
+        if(x1>x2){
+            t=x1;
+            x1=x2;
+            x2=t;
         }
-        if (y1 > y2) {
-            t = y1;
-            y1 = y2;
-            y2 = t;
+        if(y1>y2){
+            t=y1;
+            y1=y2;
+            y2=t;
         }
-        if (x3 > x4) {
-            t = x3;
-            x3 = x4;
-            x4 = t;
+        if(x3>x4){
+            t=x3;
+            x3=x4;
+            x4=t;
         }
-        if (y3 > y4) {
-            t = y3;
-            y3 = y4;
-            y4 = t;
+        if(y3>y4){
+            t=y3;
+            y3=y4;
+            y4=t;
         }
-        if ((x3 < x1 && x4 < x1 || x3 > x2 && x4 > x2) || (y3 < y1 && y4 < y1 || y3 > y2 && y4 > y2)) {
+        if((x3<x1&&x4<x1||x3>x2&&x4>x2)||(y3<y1&&y4<y1||y3>y2&&y4>y2)){
             return false;
-        } else {
+        } else{
             return true;
         }
     }
@@ -89,6 +89,7 @@ public class EYMath {
 //    public static double lineSegmentJump(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 //        return vectorProduct(x1 - x2, y1 - y2, x3 - x4, y3 - y4);
 //    }
+
     /**
      * 快速判断两直线(x1,y1)-(x2,y2) (x3,y3)-(x4,y4)是否有交集（交集可以是一个交点，一条线段）
      * @param x1
@@ -103,7 +104,7 @@ public class EYMath {
      */
     public static boolean isLineSegmentIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
         if (isRectangleIntersect(x1, y1, x2, y2, x3, y3, x4, y4)) {
-            if (vectorProduct(x3 - x1, y3 - y1, x2 - x1, y2 - y1) * vectorProduct(x4 - x1, y4 - y1, x2 - x1, y2 - y1) <= 0) {
+            if (vectorProduct(x3-x1,y3-y1,x2-x1,y2-y1)*vectorProduct(x4-x1,y4-y1,x2-x1,y2-y1) <= 0) {
                 return true;
             }
         }
@@ -143,17 +144,18 @@ public class EYMath {
     }
 
     /**
-    //     *
-    //     * A classic Bezier Curve Agorithm Implementation
-    //     * @param degree
-    //     * @param t
-    //     * @param ctrlPts
-    //     * @param result
-    //     * @return
-    //     */
+//     *
+//     * A classic Bezier Curve Agorithm Implementation
+//     * @param degree
+//     * @param t
+//     * @param ctrlPts
+//     * @param result
+//     * @return
+//     */
 //    public static double[] bezierPoint(int degree, double t, double ctrlPts[], double results[]) {
 //        throw new UnsupportedOperationException();
 //    }
+
     /**
      * <br>A classic Bezier Curve Agorithm Implementation</br>
      * <br> the 4 control points are (x1,y1)(x2,y2)(x3,y3)(x4,y4)</br>
@@ -274,49 +276,39 @@ public class EYMath {
         return -b * b / 4 / a + c;
     }
 
-    public static Point2D linesIntersectionPoint(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        double a11, a12, a21, a22, b1, b2, t1, t2;
-        a11 = x2 - x1;
-        a21 = y2 - y1;
-        a12 = -(x4 - x3);
-        a22 = -(y4 - y3);
-        b1 = x3 - x1;
-        b2 = y3 - y1;
-        if (a11 * a22 - a12 * a21 == 0) {
+    public static Point2D linesIntersectionPoint(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4){
+        double a11,a12,a21,a22,b1,b2,t1,t2;
+        a11=x2-x1;
+        a21=y2-y1;
+        a12=-(x4-x3);
+        a22=-(y4-y3);
+        b1=x3-x1;
+        b2=y3-y1;
+        if(a11*a22-a12*a21==0){
             return null;
         }
-        t1 = (b1 * a22 - b2 * a12) / (a11 * a22 - a21 * a12);
-        t2 = (b1 * a21 - b2 * a11) / (a12 * a21 - a22 * a11);
-        if (t1 > 1 || t1 < 0 || t2 > 1 || t1 < 0) {
+        t1=(b1*a22-b2*a12)/(a11*a22-a21*a12);
+        t2=(b1*a21-b2*a11)/(a12*a21-a22*a11);
+        if(t1>1||t1<0||t2>1||t1<0){
             return null;
-        } else {
-            return new Point2D.Double(x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1);
+        }
+        else{
+            return new Point2D.Double(x1+(x2-x1)*t1, y1+(y2-y1)*t1);
         }
     }
 
-    public static boolean isLineCircleIntersects(double xc, double yc, double r, double x1, double y1, double x2, double y2) {
-        double t = ((x2 - x1) * (x1 - xc) + (y2 - y1) * (y1 - yc)) / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-        if (t < 0) {
-            t = 0;
-        } else if (t > 1) {
-            t = 1;
+        public static boolean isLineCircleIntersects(double xc,double yc,double r,double x1,double y1,double x2,double y2){
+        double t=((x2-x1)*(x1-xc)+(y2-y1)*(y1-yc))/((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+        if(t<0){
+            t=0;
+        }else if(t>1){
+            t=1;
         }
-        double ds = (x1 + (x2 - x1) * t - xc) * (x1 + (x2 - x1) * t - xc) + (y1 + (y2 - y1) * t - yc) * (y1 + (y2 - y1) * t - yc);
-        if (ds <= r * r) {
+        double ds=(x1+(x2-x1)*t-xc)*(x1+(x2-x1)*t-xc)+(y1+(y2-y1)*t-yc)*(y1+(y2-y1)*t-yc);
+        if(ds<=r*r){
             return true;
         }
         return false;
     }
 
-    public static double cirumradiu(double x1,double y1,double x2,double y2,double x3,double y3){
-        double a=(x2-x3)*(x2-x3)+(y2-y3)*(y2-y3);
-        double b=(x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
-        double c=(x1-x3)*(x1-x3)+(y1-y3)*(y1-y3);
-        double rs=a*b*c/pow((-x3*y2+x2*y3+x1*y2-x1*y3-x2*y1+x3*y1),2);
-        return sqrt(rs)/2;
-    }
-    
-    public static double cirumradiu(double [] pts){
-        return cirumradiu(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]);
-    }
 }

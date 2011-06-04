@@ -7,9 +7,11 @@ package net.epsilony.math.analysis;
 import org.apache.commons.math.FunctionEvaluationException;
 
 /**
- *
+ * 计划用commons Math中的接口代替
+ * @deprecated 
  * @author epsilon
  */
+@Deprecated
 public interface MultivariateRealFunction {
 
     public int getDimension();

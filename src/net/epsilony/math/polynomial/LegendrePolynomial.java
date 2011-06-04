@@ -7,9 +7,13 @@ import static net.epsilony.math.util.EYMath.*;
 import static org.apache.commons.math.util.MathUtils.*;
 import java.util.Arrays;
 /**
- * 
+ * should be replaced by the apache commons-math package class:<br />
+ * org.apache.commons.math.analysis.polynomials.PolynomialsUtils<br />
+ * the result is just as same as apache's PolynomialsUtils.createLegendrePolynomial(int degree)<br />
+ * this.order=apache.degree!
  * @author epsilon
  */
+@Deprecated
 public class LegendrePolynomial extends PolynomialFunction{
     
     public LegendrePolynomial(int order)
@@ -37,7 +41,7 @@ public class LegendrePolynomial extends PolynomialFunction{
         if((order-k)%2==0){
             t=1;
         }
-        t*=pow(2,order*-1);
+        t*=pow(2.0,order*-1);
         for(int i=k;i<=order;i++){
             ds[2*i-order]=t*permutation(2*i, order)/factorial(i)/factorial(order-i);
             t*=-1;
@@ -49,6 +53,9 @@ public class LegendrePolynomial extends PolynomialFunction{
         for(int i=0;i<=10;i++){           
             double []t= getCoefficients(i);
             System.out.println(Arrays.toString(t));
+            PolynomialFunction l=org.apache.commons.math.analysis.polynomials.PolynomialsUtils.createLegendrePolynomial(i);
+            System.out.println(Arrays.toString(l.getCoefficients()));
         }
+        
     }
 }

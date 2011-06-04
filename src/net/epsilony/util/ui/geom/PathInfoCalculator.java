@@ -84,7 +84,7 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
                 results[1] = ty;
                 return results;
             default:
-                throw new FunctionEvaluationException(new Exception("not write seg_type:" + node.getType()),input );
+                throw new FunctionEvaluationException(input, "not write seg_type:%s",node.getType());
         }
     }
 
@@ -130,7 +130,7 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
                 results[1] = ty;
                 return results;
             default:
-                throw new FunctionEvaluationException( new Exception("not write seg_type:" + node.getType()),input);
+                throw new FunctionEvaluationException(input,"not write seg_type:%s",node.getType());
         }
     }
 

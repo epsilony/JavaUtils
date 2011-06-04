@@ -38,9 +38,10 @@ public class BivariateGaussLegendreQuadratureTest {
      * Test of generalSectorQuadrate method, of class BivariateGaussLegendreQuadratures.
      */
     @Test
-    public void testGeneralSectorQuadrate() throws Exception {
+    public void testGeneralSectorQuadrate() throws FunctionEvaluationException {
         System.out.println("generalSectorQuadrate");
         BivariateRealFunction fun = new BivariateRealFunction() {
+
             @Override
             public double value(double x, double y) {
                 return 1;

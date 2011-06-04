@@ -56,6 +56,7 @@ public class PathInfoCalculatorTest {
         final double [] tds=new double[2];
         UnivariateRealFunction lengthFun=new UnivariateRealFunction() {
 
+            @Override
             public double value(double x) throws FunctionEvaluationException {
                 deriFun.values(x, tds);
                 return Math.sqrt(tds[0]*tds[0]+tds[1]*tds[1]);
