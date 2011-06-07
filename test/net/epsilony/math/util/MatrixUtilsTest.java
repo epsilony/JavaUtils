@@ -57,6 +57,7 @@ public class MatrixUtilsTest {
     @Test
     public void testGetAdjacencyVectors() {
         System.out.println("getAdjacencyVectors");
+        System.out.println("start testing symmetric base 1");
         FlexCompRowMatrix inMat = getSymmetricTestMatrix_01();
         boolean symmetric = true;
         int base = 1;
@@ -64,6 +65,13 @@ public class MatrixUtilsTest {
         int[][] result = MatrixUtils.getAdjacencyVectors(inMat, symmetric, base);
         assertArrayEquals(result[0], expResult[0]);
         assertArrayEquals(result[1],expResult[1]);
+        System.out.println("end of testing symmetric base 1");
+        System.out.println("start testing unsymmetric base 1");
+        inMat=getUnsymmetricTestMatrix_01();
+        result = MatrixUtils.getAdjacencyVectors(inMat, false, base);
+        assertArrayEquals(result[0], expResult[0]);
+        assertArrayEquals(result[1],expResult[1]);
+        System.out.println("end of testing unsymmetric base 1");
     }
 
     public static FlexCompRowMatrix getSymmetricTestMatrix_01() {
@@ -118,6 +126,31 @@ public class MatrixUtilsTest {
         };
         int[] adjRow=new int[]{1,6,9,12,17,17,19,22,25,29,33};
         return new int[][]{adjRow,adjVec};
+    }
+    
+    public static FlexCompRowMatrix getUnsymmetricTestMatrix_01(){
+         int[][] orimatrix = new int[][]{
+            {1, 0, 3, 0, 0, 0, 0, 8, 0, 0},
+            {0, 2, 3, 4, 0, 0, 0, 0, 0, 10},
+            {1, 0, 3, 0, 0, 0, 0, 8, 0, 0},
+            {1, 0, 0, 4, 0, 6, 0, 0, 0, 0},
+            {0, 0, 0, 0, 5, 0, 0, 0, 0, 0},
+            {0, 0, 0, 4, 0, 6, 0, 8, 0, 0},
+            {1, 0, 0, 0, 0, 0, 7, 0, 0, 0},
+            {1, 0, 3, 0, 0, 6, 0, 8, 0, 0},
+            {1, 0, 0, 4, 0, 0, 7, 0, 9, 0},
+            {0, 2, 0, 4, 0, 0, 7, 0, 9, 10}
+        };
+        FlexCompRowMatrix result = new FlexCompRowMatrix(orimatrix.length, orimatrix.length);
+        for (int rowI = 0; rowI < orimatrix.length; rowI++) {
+            int[] row = orimatrix[rowI];
+            for (int colI = 0; colI < row.length; colI++) {
+                if (row[colI] != 0) {
+                    result.set(rowI, colI, row[colI]);
+                }
+            }
+        }
+        return result;
     }
 }
 

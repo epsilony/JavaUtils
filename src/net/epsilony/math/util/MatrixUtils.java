@@ -4,7 +4,6 @@
  */
 package net.epsilony.math.util;
 
-import no.uib.cipr.matrix.Matrix;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import no.uib.cipr.matrix.sparse.SparseVector;
 
@@ -78,10 +77,8 @@ public class MatrixUtils {
                 if (colHasNext) {
                     adjNum += colIndes.length - colIndesI;
                 }
-                adjNum -= nodeNum;
-
             }
-
+            adjNum -= nodeNum;
 
             adjVec = new int[adjNum];
 
