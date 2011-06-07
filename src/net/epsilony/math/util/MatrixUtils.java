@@ -13,6 +13,19 @@ import no.uib.cipr.matrix.sparse.SparseVector;
  */
 public class MatrixUtils {
 
+    public static class Adjacency {
+
+        int[] adjRow;
+        int[] adjVec;
+        int base;
+
+        public Adjacency(int[] adjRow, int[] adjVec, int base) {
+            this.adjRow = adjRow;
+            this.adjVec = adjVec;
+            this.base = base;
+        }
+    }
+
     public static int getUsed(FlexCompRowMatrix inMat) {
         int sumUsed = 0;
         for (int row = 0; row < inMat.numRows(); row++) {
@@ -21,7 +34,7 @@ public class MatrixUtils {
         return sumUsed;
     }
 
-    public static int[][] getAdjacencyVectors(FlexCompRowMatrix inMat, boolean symmetric, int base) {
+    public static Adjacency getAdjacencyVectors(FlexCompRowMatrix inMat, boolean symmetric, int base) {
         int[] adjVec, adjRow;
         int nodeNum = inMat.numRows();
         adjRow = new int[nodeNum + 1];
@@ -138,6 +151,6 @@ public class MatrixUtils {
                 adjRow[i] += base;
             }
         }
-        return new int[][]{adjRow,adjVec};
+        return new Adjacency(adjRow, adjVec, base);
     }
 }

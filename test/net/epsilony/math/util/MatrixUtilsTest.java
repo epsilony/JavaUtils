@@ -61,16 +61,16 @@ public class MatrixUtilsTest {
         FlexCompRowMatrix inMat = getSymmetricTestMatrix_01();
         boolean symmetric = true;
         int base = 1;
-        int[][] expResult = getSymmetricTestResult_01();
-        int[][] result = MatrixUtils.getAdjacencyVectors(inMat, symmetric, base);
-        assertArrayEquals(result[0], expResult[0]);
-        assertArrayEquals(result[1],expResult[1]);
+        MatrixUtils.Adjacency expResult = getSymmetricTestResult_01();
+        MatrixUtils.Adjacency result = MatrixUtils.getAdjacencyVectors(inMat, symmetric, base);
+        assertArrayEquals(result.adjRow, expResult.adjRow);
+        assertArrayEquals(result.adjVec,expResult.adjVec);
         System.out.println("end of testing symmetric base 1");
         System.out.println("start testing unsymmetric base 1");
         inMat=getUnsymmetricTestMatrix_01();
         result = MatrixUtils.getAdjacencyVectors(inMat, false, base);
-        assertArrayEquals(result[0], expResult[0]);
-        assertArrayEquals(result[1],expResult[1]);
+        assertArrayEquals(result.adjRow, expResult.adjRow);
+        assertArrayEquals(result.adjVec,expResult.adjVec);
         System.out.println("end of testing unsymmetric base 1");
     }
 
@@ -100,7 +100,7 @@ public class MatrixUtilsTest {
         return result;
     }
 
-    public static int[][] getSymmetricTestResult_01() {
+    public static MatrixUtils.Adjacency getSymmetricTestResult_01() {
         /*int[][] orimatrix = new int[][]{
         {1, 0, 3, 4, 0, 0, 7, 8, 9, 0},
         {0, 2, 3, 4, 0, 0, 0, 0, 0, 10},
@@ -125,7 +125,7 @@ public class MatrixUtilsTest {
             2, 4, 7, 9
         };
         int[] adjRow=new int[]{1,6,9,12,17,17,19,22,25,29,33};
-        return new int[][]{adjRow,adjVec};
+        return new MatrixUtils.Adjacency(adjRow, adjVec,1);
     }
     
     public static FlexCompRowMatrix getUnsymmetricTestMatrix_01(){
