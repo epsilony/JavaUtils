@@ -36,9 +36,8 @@ public class RcmJnaTest {
         FlexCompRowMatrix inMat = getMatrix_01();
         boolean symmetric = true;
         int base = 1;
-        RcmJna instance = new RcmJna();
         int[] expResult = getPerm_01();
-        int[] result = instance.genrcm(inMat, symmetric, base);
+        int[] result = RcmJna.genrcm(inMat, symmetric, base);
         assertArrayEquals(expResult, result);
 
     }

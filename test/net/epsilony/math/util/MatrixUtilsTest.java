@@ -4,7 +4,17 @@
  */
 package net.epsilony.math.util;
 
+import no.uib.cipr.matrix.Matrix;
+import no.uib.cipr.matrix.VectorEntry;
+import java.util.Random;
+import net.epsilony.math.util.MatrixUtils.BandedResult;
+import net.epsilony.math.util.MatrixUtils.Bandwidth;
+import no.uib.cipr.matrix.DenseMatrix;
+import no.uib.cipr.matrix.DenseVector;
+import no.uib.cipr.matrix.MatrixEntry;
+import no.uib.cipr.matrix.Vector;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
+import org.apache.commons.math.random.JDKRandomGenerator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -38,20 +48,6 @@ public class MatrixUtilsTest {
     }
 
     /**
-     * Test of getUsed method, of class MatrixUtils.
-     */
-    //@Test
-    public void testGetUsed() {
-        System.out.println("getUsed");
-        FlexCompRowMatrix inMat = null;
-        int expResult = 0;
-        int result = MatrixUtils.getUsed(inMat);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of getAdjacencyVectors method, of class MatrixUtils.
      */
     @Test
@@ -64,13 +60,13 @@ public class MatrixUtilsTest {
         MatrixUtils.Adjacency expResult = getSymmetricTestResult_01();
         MatrixUtils.Adjacency result = MatrixUtils.getAdjacencyVectors(inMat, symmetric, base);
         assertArrayEquals(result.adjRow, expResult.adjRow);
-        assertArrayEquals(result.adjVec,expResult.adjVec);
+        assertArrayEquals(result.adjVec, expResult.adjVec);
         System.out.println("end of testing symmetric base 1");
         System.out.println("start testing unsymmetric base 1");
-        inMat=getUnsymmetricTestMatrix_01();
+        inMat = getUnsymmetricTestMatrix_01();
         result = MatrixUtils.getAdjacencyVectors(inMat, false, base);
         assertArrayEquals(result.adjRow, expResult.adjRow);
-        assertArrayEquals(result.adjVec,expResult.adjVec);
+        assertArrayEquals(result.adjVec, expResult.adjVec);
         System.out.println("end of testing unsymmetric base 1");
     }
 
@@ -124,12 +120,12 @@ public class MatrixUtilsTest {
             1, 4, 7, 10,
             2, 4, 7, 9
         };
-        int[] adjRow=new int[]{1,6,9,12,17,17,19,22,25,29,33};
-        return new MatrixUtils.Adjacency(adjRow, adjVec,1);
+        int[] adjRow = new int[]{1, 6, 9, 12, 17, 17, 19, 22, 25, 29, 33};
+        return new MatrixUtils.Adjacency(adjRow, adjVec, 1);
     }
-    
-    public static FlexCompRowMatrix getUnsymmetricTestMatrix_01(){
-         int[][] orimatrix = new int[][]{
+
+    public static FlexCompRowMatrix getUnsymmetricTestMatrix_01() {
+        int[][] orimatrix = new int[][]{
             {1, 0, 3, 0, 0, 0, 0, 8, 0, 0},
             {0, 2, 3, 4, 0, 0, 0, 0, 0, 10},
             {1, 0, 3, 0, 0, 0, 0, 8, 0, 0},
@@ -152,5 +148,133 @@ public class MatrixUtilsTest {
         }
         return result;
     }
-}
 
+    /**
+     * Test of getBandedMatrix method, of class MatrixUtils.
+     */
+    //@Test
+    public void testGetBandedMatrix() {
+        System.out.println("getBandedMatrix");
+        FlexCompRowMatrix mat = null;
+        boolean symmetric = false;
+        BandedResult expResult = null;
+        BandedResult result = MatrixUtils.getBandedMatrix(mat, symmetric);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getBandwidthByPerm method, of class MatrixUtils.
+     */
+    //@Test
+    public void testGetBandwidthByPerm() {
+        System.out.println("getBandwidthByPerm");
+        FlexCompRowMatrix mat = null;
+        int[] perm = null;
+        Bandwidth expResult = null;
+        Bandwidth result = MatrixUtils.getBandwidthByPerm(mat, perm);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of solveFlexCompRowMatrixByBandMethod method, of class MatrixUtils.
+     */
+    @Test
+    public void testSolveFlexCompRowMatrixByBandMethod() {
+        System.out.println("solveFlexCompRowMatrixByBandMethod");
+        System.out.println("unsymmetric random case:");
+        int repeat=20;
+        System.out.println("repeat "+repeat+" times per case:");
+        int size = 10;
+        int propRange=5;
+        int propBase=5;
+        int prop;
+        
+        boolean symmetric = false;
+        boolean spd = false;
+        for(int i=0;i<0;i++){
+            prop = new Random().nextInt(propRange) + propBase;
+            testCase_02(size, prop, symmetric, spd);
+        }
+        System.out.println("symmetric random case");
+        symmetric = true;
+        for(int i=0;i<repeat;i++){
+            prop = new Random().nextInt(propRange) + propBase;
+            testCase_02(size, prop, symmetric, spd);
+        }
+
+        System.out.println("symmetric spd random case");
+        spd = true;
+        for(int i=0;i<repeat;i++){
+            prop = new Random().nextInt(propRange) + propBase;
+            testCase_02(size, prop, symmetric, spd);
+        }
+    }
+
+    private void testCase_02(int size, int prop, boolean symmetric, boolean spd) {
+        System.out.println("size:" + size + ", prop:" + prop);
+
+        FlexCompRowMatrix mat = getRandomFullRankMatrix_02(size, prop, symmetric, spd);
+        Vector b = new DenseVector(size);
+        for (int i = 0; i < b.size(); i++) {
+            b.set(i, 1);
+        }
+
+        if (symmetric) {
+            for (MatrixEntry me : mat) {
+                assertEquals(me.get(), mat.get(me.column(), me.row()), 1e-10);
+            }
+        }
+        DenseMatrix denseMat = new DenseMatrix(mat);
+        DenseVector expResult = (DenseVector) denseMat.solve(b, new DenseVector(size));
+        DenseVector result = MatrixUtils.solveFlexCompRowMatrixByBandMethod(mat, b, symmetric, spd);
+        assertArrayEquals(expResult.getData(), result.getData(), 1e-5);
+    }
+
+    public FlexCompRowMatrix getRandomFullRankMatrix_02(int numRow, int transTime, boolean symmetric, boolean spd) {
+        FlexCompRowMatrix mat = new FlexCompRowMatrix(numRow, numRow);
+
+        Random rand = new JDKRandomGenerator();
+        //initiate the diagnal
+        for (int i = 0; i < mat.numRows(); i++) {
+            mat.set(i, i, rand.nextInt(100) + 1);
+        }
+        for (int i = 0; i < transTime; i++) {
+            int from = rand.nextInt(numRow);
+            int to = rand.nextInt(numRow);
+            double scale = rand.nextDouble() - 0.5;
+
+            if (symmetric) {
+                for (VectorEntry ve : mat.getRow(from)) {
+                    mat.add(to, ve.index(), ve.get() * scale);
+                }
+
+                for (int rowI = 0; rowI < numRow; rowI++) {
+                    mat.add(rowI, to, scale * mat.get(rowI, from));
+                }
+
+            } else {
+
+                if (rand.nextBoolean()) {
+                    for (VectorEntry ve : mat.getRow(from)) {
+                        mat.add(to, ve.index(), ve.get() * scale);
+                    }
+                } else {
+                    for (int rowI = 0; rowI < numRow; rowI++) {
+                        mat.add(rowI, to, scale * mat.get(rowI, from));
+                    }
+                }
+
+            }
+        }
+        if (spd) {
+            Matrix transpose = mat.transpose(new FlexCompRowMatrix(numRow, numRow));
+            mat = (FlexCompRowMatrix) transpose.mult(mat, new FlexCompRowMatrix(numRow, numRow));
+        }
+        return mat;
+
+    }
+}
