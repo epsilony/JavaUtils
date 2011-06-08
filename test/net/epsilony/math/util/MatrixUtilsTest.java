@@ -186,16 +186,16 @@ public class MatrixUtilsTest {
     public void testSolveFlexCompRowMatrixByBandMethod() {
         System.out.println("solveFlexCompRowMatrixByBandMethod");
         System.out.println("unsymmetric random case:");
-        int repeat=20;
+        int repeat=200;
         System.out.println("repeat "+repeat+" times per case:");
-        int size = 10;
-        int propRange=5;
-        int propBase=5;
+        int size = 100;
+        int propRange=10;
+        int propBase=50;
         int prop;
         
         boolean symmetric = false;
         boolean spd = false;
-        for(int i=0;i<0;i++){
+        for(int i=0;i<repeat;i++){
             prop = new Random().nextInt(propRange) + propBase;
             testCase_02(size, prop, symmetric, spd);
         }

@@ -185,7 +185,7 @@ public class MatrixUtils {
     }
 
     public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, boolean symmetric) {
-        int[] perm = RcmJna.genrcm(mat, symmetric, 0);
+        int[] perm = RcmJna.genrcm2(mat, symmetric, 0).perm;
         int[] permInv = RcmJna.getPermInv(perm, 0);
         Bandwidth bandwidth = getBandwidthByPerm(mat, perm);
         Matrix matrix;

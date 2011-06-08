@@ -4,6 +4,8 @@
  */
 package net.epsilony.math.util;
 
+import java.util.Arrays;
+import net.epsilony.math.util.RcmJna.RcmResult;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
