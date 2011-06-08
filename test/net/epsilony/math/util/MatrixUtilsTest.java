@@ -11,7 +11,6 @@ import net.epsilony.math.util.MatrixUtils.BandedResult;
 import net.epsilony.math.util.MatrixUtils.Bandwidth;
 import no.uib.cipr.matrix.DenseMatrix;
 import no.uib.cipr.matrix.DenseVector;
-import no.uib.cipr.matrix.MatrixEntry;
 import no.uib.cipr.matrix.Vector;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import org.apache.commons.math.random.JDKRandomGenerator;
@@ -186,11 +185,11 @@ public class MatrixUtilsTest {
     public void testSolveFlexCompRowMatrixByBandMethod() {
         System.out.println("solveFlexCompRowMatrixByBandMethod");
         System.out.println("unsymmetric random case:");
-        int repeat=200;
+        int repeat=1;
         System.out.println("repeat "+repeat+" times per case:");
-        int size = 100;
-        int propRange=10;
-        int propBase=50;
+        int size = 1000;
+        int propRange=5;
+        int propBase=5;
         int prop;
         
         boolean symmetric = false;
@@ -223,11 +222,17 @@ public class MatrixUtilsTest {
             b.set(i, 1);
         }
 
-        if (symmetric) {
-            for (MatrixEntry me : mat) {
-                assertEquals(me.get(), mat.get(me.column(), me.row()), 1e-10);
-            }
-        }
+//        if (symmetric) {
+//            for (MatrixEntry me : mat) {
+//                assertEquals(me.get(), mat.get(me.column(), me.row()), 1e-10);
+//            }
+//        }
+        
+        Bandwidth bandOri=MatrixUtils.getBandwidth(mat);
+        System.out.println("bandOri (u l) = ("+bandOri.upBandwidth+" "+bandOri.lowBandwidth);
+        int [] perm=RcmJna.genrcm2(mat, symmetric, 0).perm;
+        Bandwidth bandPermd=MatrixUtils.getBandwidthByPerm(mat, perm);
+        System.out.println("bandPermd (u l) = ("+bandPermd.upBandwidth+" "+bandPermd.lowBandwidth);
         DenseMatrix denseMat = new DenseMatrix(mat);
         DenseVector expResult = (DenseVector) denseMat.solve(b, new DenseVector(size));
         DenseVector result = MatrixUtils.solveFlexCompRowMatrixByBandMethod(mat, b, symmetric, spd);
@@ -274,6 +279,7 @@ public class MatrixUtilsTest {
             Matrix transpose = mat.transpose(new FlexCompRowMatrix(numRow, numRow));
             mat = (FlexCompRowMatrix) transpose.mult(mat, new FlexCompRowMatrix(numRow, numRow));
         }
+        mat.compact();
         return mat;
 
     }

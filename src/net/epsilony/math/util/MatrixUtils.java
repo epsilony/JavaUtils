@@ -234,4 +234,21 @@ public class MatrixUtils {
         }
         return x;
     }
+    
+    public static Bandwidth getBandwidth(FlexCompRowMatrix mat){
+        int low=0,up=0;
+        for (int rowI=0;rowI<mat.numRows();rowI++){
+            int[] rowIndes=mat.getRow(rowI).getIndex();
+            int t=rowIndes[0]-rowI;
+            if(t<low){
+                low=t;
+            }
+            t=rowIndes[rowIndes.length-1]-rowI;
+            if(t>up){
+                up=t;
+            }
+        }
+        low=-low;
+        return new Bandwidth(up, low);
+    }
 }
