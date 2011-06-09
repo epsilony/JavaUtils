@@ -10,7 +10,10 @@ import net.epsilony.math.util.MatrixUtils.Adjacency;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 
 /**
- *
+ * <p> if mat is banded to mat2 then:</p>
+ * <p> mat{perm[i],perm[j]}=mat2{i,j}</p>
+ * <p> mat2{permInv[i],permInv[j]}=mat{i,j}</p>
+ * @see MatrixUtils
  * @author epsilon
  */
 public class RcmJna {
@@ -22,8 +25,14 @@ public class RcmJna {
     public static final int RCM_NO_REVERSE =  16;
     public static final int RCM_USE_MASK = 32;
 
+    /**
+     * may have bug in librcm.so
+     * @deprecated
+     */
+    @Deprecated
     public interface Librcm extends Library {
 
+        //librcm.so is complied by jni/rcm/RCMNetBeans/...
         Librcm INSTANCE = (Librcm) Native.loadLibrary("rcm",
                 Librcm.class);
 
@@ -32,13 +41,15 @@ public class RcmJna {
 
     public interface Librcm2 extends Library {
 
+        //librcm.so is complied by jni/rcm/RcmNetBeans2/...
         Librcm2 INSTANCE = (Librcm2) Native.loadLibrary("rcm2", Librcm2.class);
 
         void genrcmi(int n, int flags, int[] xadj, int[] adj, int[] perm, byte[] mask, int[] deg);
     }
 
+    @Deprecated
     public static int[] genrcm(FlexCompRowMatrix inMat, boolean symmetric, int base) {
-        Adjacency adj = MatrixUtils.getAdjacencyVectors(inMat, symmetric, 1);
+        Adjacency adj = MatrixUtils.getAdjacency(inMat, symmetric, 1);
         int[] perm = new int[inMat.numRows()];
         Librcm.INSTANCE._Z6genrcmiiPiS_S_(inMat.numRows(), adj.adjVec.length, adj.adjRow, adj.adjVec, perm);
         if (base != 1) {
@@ -57,21 +68,44 @@ public class RcmJna {
         }
         return permInv;
     }
-
+    
     public static class RcmResult {
         int[] perm;
         byte[] mask;
         int[] deg;
+        int base=0;
 
+        /**
+         * 
+         * @param perm 排列
+         * @param mask 与perm一样长度的数组，用以记录结点是否被重排过，非0为重排过。
+         * @param deg 结点的度，与perm一样长度
+         */
         public RcmResult(int[] perm, byte[] mask, int[] deg) {
             this.perm = perm;
             this.mask = mask;
             this.deg = deg;
         }
-    }
 
+        public RcmResult(int[] perm, byte[] mask, int[] deg,int base) {
+            this.perm = perm;
+            this.mask = mask;
+            this.deg = deg;
+            this.base=base;
+        }
+        
+        
+    }
+    
+    /**
+     * 利用RCM - Reverse Cuthill McKee Ordering获取带宽缩减信息
+     * @param inMat 须是方阵
+     * @param symmetric inMat是否是对称的
+     * @param base 输出的perm中元素的起始编号
+     * @return 
+     */
     public static RcmResult genrcm2(FlexCompRowMatrix inMat, boolean symmetric, int base) {
-        Adjacency adj = MatrixUtils.getAdjacencyVectors(inMat, symmetric, 0);
+        Adjacency adj = MatrixUtils.getAdjacency(inMat, symmetric, 0);
         int[] perm = new int[inMat.numRows()];
         byte[] mask=new byte[inMat.numRows()];
         int[] deg=new int[inMat.numRows()];
@@ -82,6 +116,6 @@ public class RcmJna {
                 perm[i] += delta;
             }
         }
-        return new RcmResult(perm, mask, deg);
+        return new RcmResult(perm, mask, deg,base);
     }
 }

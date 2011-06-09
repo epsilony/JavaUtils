@@ -19,21 +19,49 @@ import no.uib.cipr.matrix.sparse.SparseVector;
  * @author epsilon
  */
 public class MatrixUtils {
-
+    
+    /**
+     * 关连信息
+     */
     public static class Adjacency {
-
+        /**
+         * <p> 起始编号base为0时结点i的关联关系由：adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]表示</p>
+         * <p> adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]不包含i,且可为空集 </p>
+         * <p> adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]为严格的升序跋 </p>
+         * <p> base 默认为0 </p>
+         */
         public int[] adjRow;
         public int[] adjVec;
-        public int base;
+        public int base=0;
 
         public Adjacency(int[] adjRow, int[] adjVec, int base) {
             this.adjRow = adjRow;
             this.adjVec = adjVec;
             this.base = base;
         }
-    }
 
-    public static int getUsed(FlexCompRowMatrix inMat) {
+        public Adjacency(int[] adjRow, int[] adjVec) {
+            this.adjRow = adjRow;
+            this.adjVec = adjVec;
+        }
+    }
+    
+    /**
+     * 计数inMat阵中的有用元素个数，计数前将调用inMat.compact()
+     */
+    public static int getUsed(FlexCompRowMatrix inMat){
+        return getUsed(inMat,true);
+    }
+    
+    /**
+     * 计数inMat阵中的有用元素个数
+     * @param compactBefore 是否在计数之前调用inMat.compact()
+     * @return 
+     */
+    public static int getUsed(FlexCompRowMatrix inMat, boolean compactBefore) {
+        if(compactBefore){
+            inMat.compact();
+        }
         int sumUsed = 0;
         for (int row = 0; row < inMat.numRows(); row++) {
             sumUsed += inMat.getRow(row).getUsed();
@@ -41,11 +69,29 @@ public class MatrixUtils {
         return sumUsed;
     }
 
-    public static Adjacency getAdjacencyVectors(FlexCompRowMatrix inMat, boolean symmetric, int base) {
+    /**
+     * 如inMat是对称的（isInMatSymmetrixal决定，非内部计算）获取inMat的Adjacency ，否则获取inMat.^2+(inMat.^2)'的Adjacency
+     * @param inMat  要求方阵，否则结果可能不正确
+     * @param isInMatSymmetrical inMat 本身是否是对称的
+     * @param base return的Adjacency有关的起始编号
+     * @return 
+     */
+    public static Adjacency getAdjacency(FlexCompRowMatrix inMat,boolean isInMatSymmetrical, int base){
+        return getAdjacency(inMat, isInMatSymmetrical, base, true);
+    }
+    /**
+     * 获取inMat的Adjacency 
+     * @param inMat  要求方阵，否则结果可能不正确
+     * @param isInMatSymmetrical inMat 本身是否是对称的
+     * @param base 返回的Adjacency有关的起始编号
+     * @param fakeSymmetrilize 对于非对称的inMat改为输出inMat.^2+(inMat.^2)'的Adjacency
+     * @return 
+     */
+    public static Adjacency getAdjacency(FlexCompRowMatrix inMat, boolean isInMatSymmetrical, int base,boolean fakeSymmetrilize) {
         int[] adjVec, adjRow;
         int nodeNum = inMat.numRows();
         adjRow = new int[nodeNum + 1];
-        if (symmetric) {
+        if (isInMatSymmetrical||!fakeSymmetrilize) {
             int adjNum = getUsed(inMat) - nodeNum;
             adjVec = new int[adjNum];
             for (int rowI = 0, adjVecIndex = 0; rowI < inMat.numRows(); rowI++) {
@@ -161,6 +207,9 @@ public class MatrixUtils {
         return new Adjacency(adjRow, adjVec, base);
     }
 
+    /**
+     * 带宽信息，upBandwidth: 矩阵上半部分不包括对角元素的带宽，lowBandwidth: 矩阵下半部分不包括对角元素的带宽。
+     */
     public static class Bandwidth {
 
         public int upBandwidth, lowBandwidth;
@@ -169,8 +218,15 @@ public class MatrixUtils {
             this.upBandwidth = upBandwidth;
             this.lowBandwidth = lowBandwidth;
         }
+        
+        public int getBandwidth(){
+            return upBandwidth+lowBandwidth+1;
+        }
     }
 
+    /**
+     * 带状化后的矩阵结果，bandedMatrix中(permInv[i]，perInv[j])即为原矩阵的(i,j)
+     */
     public static class BandedResult {
 
         public BandedResult(Matrix bandedMatrix, int[] permInv, Bandwidth bandwith) {
@@ -184,7 +240,16 @@ public class MatrixUtils {
         public MatrixUtils.Bandwidth bandwith;
     }
 
+    /**
+     * <p> 获得mat带状化后的矩阵与相关复排信息(BandedResult.permInv) </p>
+     * <p> 采用RCM - Reverse Cuthill McKee Ordering方法 </p>
+     * <p> 只依参数symmetric判定mat是否为对称阵
+     * @param mat  要求方阵，否则结果可能不正确
+     * @param symmetric
+     * @return 
+     */
     public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, boolean symmetric) {
+//        int[] perm = RcmJna.genrcm(mat, symmetric, 0);
         int[] perm = RcmJna.genrcm2(mat, symmetric, 0).perm;
         int[] permInv = RcmJna.getPermInv(perm, 0);
         Bandwidth bandwidth = getBandwidthByPerm(mat, perm);
@@ -202,6 +267,12 @@ public class MatrixUtils {
         return new BandedResult(matrix, permInv,bandwidth);
     }
 
+    /**
+     * 获取重排列perm下的矩阵带宽。perm使得mat中的元素(i,j)对应重排列后的矩阵元素(perm[i],perm[j])
+     * @param mat 要求方阵，否则结果可能不正确
+     * @param perm 重排列数组，要求perm中元素值在[0,mat.numRows()-1]内，如perm需用于解方程组，则perm是0,1,...,mat.nunRows()-1的一个排列。
+     * @return 
+     */
     public static Bandwidth getBandwidthByPerm(FlexCompRowMatrix mat, int[] perm) {
         int upBandwidth = 0, lowBandwidth = 0;
         for (int rowI = 0; rowI < mat.numRows(); rowI++) {

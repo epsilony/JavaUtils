@@ -5,6 +5,8 @@
 package net.epsilony.math.util;
 
 import java.util.Arrays;
+import java.util.Random;
+import net.epsilony.math.util.MatrixUtils.Bandwidth;
 import net.epsilony.math.util.RcmJna.RcmResult;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import org.junit.AfterClass;
@@ -44,13 +46,14 @@ public class RcmJnaTest {
 
     }
 
-    int[] getPerm_01(){
-        return new int[]{9,1,8,6,4,7,5,3,2,10};
+    int[] getPerm_01() {
+        return new int[]{9, 1, 8, 6, 4, 7, 5, 3, 2, 10};
     }
-    
-    int[] getPermInv_01(){
-        return new int[]{2,9,8,5,7,4,6,3,1,10};
+
+    int[] getPermInv_01() {
+        return new int[]{2, 9, 8, 5, 7, 4, 6, 3, 1, 10};
     }
+
     MatrixUtils.Adjacency getGraph_01() {
         int[] adjVec = new int[]{
             4, 6,
@@ -82,14 +85,50 @@ public class RcmJnaTest {
             {0, 0, 0, 4, 0, 0, 0, 0, 9, 0},
             {0, 2, 0, 0, 0, 0, 0, 0, 0, 10}
         };
-        result =new FlexCompRowMatrix(origin.length, origin.length);
-        for(int i=0;i<origin.length;i++){
-            for (int j=0;j<origin[i].length;j++){
-                if(origin[i][j]!=0){
+        result = new FlexCompRowMatrix(origin.length, origin.length);
+        for (int i = 0; i < origin.length; i++) {
+            for (int j = 0; j < origin[i].length; j++) {
+                if (origin[i][j] != 0) {
                     result.set(i, j, origin[i][j]);
                 }
             }
         }
         return result;
+    }
+
+    @Test
+    public void compareRcms() {
+        int size = 200;
+        int prop = 100;
+        int propRange = 100;
+        int repeat = 200;
+        int sum=0,sum2=0;
+        for (int i = 0; i < repeat; i++) {
+            int transTime = new Random().nextInt(propRange) + prop;
+            FlexCompRowMatrix matrix = MatrixUtilsTest.getRandomFullRankMatrix_02(size, transTime, true, false);
+            matrix.compact();
+
+            int[] perm = RcmJna.genrcm(matrix, true, size);
+            int[] perm2 = RcmJna.genrcm2(matrix, true, size).perm;
+            if (perm[perm.length - 1] == -1) {
+                perm[perm.length - 1] = 0;
+                System.out.println("bad!----------------------------");
+            }
+            Bandwidth bandOri = MatrixUtils.getBandwidth(matrix);
+            Bandwidth band = MatrixUtils.getBandwidthByPerm(matrix, perm);
+            Bandwidth band2 = MatrixUtils.getBandwidthByPerm(matrix, perm2);
+            String f = "%s -up:%d -low:%d";
+            System.out.println(String.format(f, "ori", bandOri.upBandwidth, bandOri.lowBandwidth));
+            System.out.println(String.format(f, "1", band.upBandwidth, band.lowBandwidth));
+            System.out.println(String.format(f, "2", band2.upBandwidth, band2.lowBandwidth));
+            if(band.lowBandwidth>band2.lowBandwidth){
+                sum2++;
+            }else if(band.lowBandwidth<band2.lowBandwidth){
+                sum++;
+            }else{
+                sum2++;
+                sum++;
+            }
+        }
     }
 }

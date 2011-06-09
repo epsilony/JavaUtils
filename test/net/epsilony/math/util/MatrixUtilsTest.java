@@ -47,7 +47,7 @@ public class MatrixUtilsTest {
     }
 
     /**
-     * Test of getAdjacencyVectors method, of class MatrixUtils.
+     * Test of getAdjacency method, of class MatrixUtils.
      */
     @Test
     public void testGetAdjacencyVectors() {
@@ -57,13 +57,13 @@ public class MatrixUtilsTest {
         boolean symmetric = true;
         int base = 1;
         MatrixUtils.Adjacency expResult = getSymmetricTestResult_01();
-        MatrixUtils.Adjacency result = MatrixUtils.getAdjacencyVectors(inMat, symmetric, base);
+        MatrixUtils.Adjacency result = MatrixUtils.getAdjacency(inMat, symmetric, base);
         assertArrayEquals(result.adjRow, expResult.adjRow);
         assertArrayEquals(result.adjVec, expResult.adjVec);
         System.out.println("end of testing symmetric base 1");
         System.out.println("start testing unsymmetric base 1");
         inMat = getUnsymmetricTestMatrix_01();
-        result = MatrixUtils.getAdjacencyVectors(inMat, false, base);
+        result = MatrixUtils.getAdjacency(inMat, false, base);
         assertArrayEquals(result.adjRow, expResult.adjRow);
         assertArrayEquals(result.adjVec, expResult.adjVec);
         System.out.println("end of testing unsymmetric base 1");
@@ -185,7 +185,7 @@ public class MatrixUtilsTest {
     public void testSolveFlexCompRowMatrixByBandMethod() {
         System.out.println("solveFlexCompRowMatrixByBandMethod");
         System.out.println("unsymmetric random case:");
-        int repeat=1;
+        int repeat=2;
         System.out.println("repeat "+repeat+" times per case:");
         int size = 1000;
         int propRange=5;
@@ -205,12 +205,12 @@ public class MatrixUtilsTest {
             testCase_02(size, prop, symmetric, spd);
         }
 
-        System.out.println("symmetric spd random case");
-        spd = true;
-        for(int i=0;i<repeat;i++){
-            prop = new Random().nextInt(propRange) + propBase;
-            testCase_02(size, prop, symmetric, spd);
-        }
+//        System.out.println("symmetric spd random case");
+//        spd = true;
+//        for(int i=0;i<repeat;i++){
+//            prop = new Random().nextInt(propRange) + propBase;
+//            testCase_02(size, prop, symmetric, spd);
+//        }
     }
 
     private void testCase_02(int size, int prop, boolean symmetric, boolean spd) {
@@ -239,7 +239,7 @@ public class MatrixUtilsTest {
         assertArrayEquals(expResult.getData(), result.getData(), 1e-5);
     }
 
-    public FlexCompRowMatrix getRandomFullRankMatrix_02(int numRow, int transTime, boolean symmetric, boolean spd) {
+    public static FlexCompRowMatrix getRandomFullRankMatrix_02(int numRow, int transTime, boolean symmetric, boolean spd) {
         FlexCompRowMatrix mat = new FlexCompRowMatrix(numRow, numRow);
 
         Random rand = new JDKRandomGenerator();
