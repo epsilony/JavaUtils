@@ -4,15 +4,9 @@
  */
 package net.epsilony.math.util;
 
-import java.util.Arrays;
-import java.util.Random;
-import net.epsilony.math.util.MatrixUtils.Bandwidth;
-import net.epsilony.math.util.RcmJna.RcmResult;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -29,21 +23,6 @@ public class RcmJnaTest {
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-    }
-
-    /**
-     * Test of genrcm method, of class RcmJna.
-     */
-    @Test
-    public void testGenrcm() {
-        System.out.println("genrcm");
-        FlexCompRowMatrix inMat = getMatrix_01();
-        boolean symmetric = true;
-        int base = 1;
-        int[] expResult = getPerm_01();
-        int[] result = RcmJna.genrcm(inMat, symmetric, base);
-        assertArrayEquals(expResult, result);
-
     }
 
     int[] getPerm_01() {
@@ -94,41 +73,5 @@ public class RcmJnaTest {
             }
         }
         return result;
-    }
-
-    @Test
-    public void compareRcms() {
-        int size = 200;
-        int prop = 100;
-        int propRange = 100;
-        int repeat = 200;
-        int sum=0,sum2=0;
-        for (int i = 0; i < repeat; i++) {
-            int transTime = new Random().nextInt(propRange) + prop;
-            FlexCompRowMatrix matrix = MatrixUtilsTest.getRandomFullRankMatrix_02(size, transTime, true, false);
-            matrix.compact();
-
-            int[] perm = RcmJna.genrcm(matrix, true, size);
-            int[] perm2 = RcmJna.genrcm2(matrix, true, size).perm;
-            if (perm[perm.length - 1] == -1) {
-                perm[perm.length - 1] = 0;
-                System.out.println("bad!----------------------------");
-            }
-            Bandwidth bandOri = MatrixUtils.getBandwidth(matrix);
-            Bandwidth band = MatrixUtils.getBandwidthByPerm(matrix, perm);
-            Bandwidth band2 = MatrixUtils.getBandwidthByPerm(matrix, perm2);
-            String f = "%s -up:%d -low:%d";
-            System.out.println(String.format(f, "ori", bandOri.upBandwidth, bandOri.lowBandwidth));
-            System.out.println(String.format(f, "1", band.upBandwidth, band.lowBandwidth));
-            System.out.println(String.format(f, "2", band2.upBandwidth, band2.lowBandwidth));
-            if(band.lowBandwidth>band2.lowBandwidth){
-                sum2++;
-            }else if(band.lowBandwidth<band2.lowBandwidth){
-                sum++;
-            }else{
-                sum2++;
-                sum++;
-            }
-        }
     }
 }

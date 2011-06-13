@@ -7,7 +7,6 @@ package net.epsilony.math.util;
 import no.uib.cipr.matrix.Matrix;
 import no.uib.cipr.matrix.VectorEntry;
 import java.util.Random;
-import net.epsilony.math.util.MatrixUtils.BandedResult;
 import net.epsilony.math.util.MatrixUtils.Bandwidth;
 import no.uib.cipr.matrix.DenseMatrix;
 import no.uib.cipr.matrix.DenseVector;
@@ -54,16 +53,15 @@ public class MatrixUtilsTest {
         System.out.println("getAdjacencyVectors");
         System.out.println("start testing symmetric base 1");
         FlexCompRowMatrix inMat = getSymmetricTestMatrix_01();
-        boolean symmetric = true;
         int base = 1;
         MatrixUtils.Adjacency expResult = getSymmetricTestResult_01();
-        MatrixUtils.Adjacency result = MatrixUtils.getAdjacency(inMat, symmetric, base);
+        MatrixUtils.Adjacency result = MatrixUtils.getAdjacency(inMat, MatrixUtils.SYMMETRICAL, base);
         assertArrayEquals(result.adjRow, expResult.adjRow);
         assertArrayEquals(result.adjVec, expResult.adjVec);
         System.out.println("end of testing symmetric base 1");
         System.out.println("start testing unsymmetric base 1");
         inMat = getUnsymmetricTestMatrix_01();
-        result = MatrixUtils.getAdjacency(inMat, false, base);
+        result = MatrixUtils.getAdjacency(inMat, MatrixUtils.UNSYMMETRICAL, base);
         assertArrayEquals(result.adjRow, expResult.adjRow);
         assertArrayEquals(result.adjVec, expResult.adjVec);
         System.out.println("end of testing unsymmetric base 1");
@@ -148,20 +146,6 @@ public class MatrixUtilsTest {
         return result;
     }
 
-    /**
-     * Test of getBandedMatrix method, of class MatrixUtils.
-     */
-    //@Test
-    public void testGetBandedMatrix() {
-        System.out.println("getBandedMatrix");
-        FlexCompRowMatrix mat = null;
-        boolean symmetric = false;
-        BandedResult expResult = null;
-        BandedResult result = MatrixUtils.getBandedMatrix(mat, symmetric);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of getBandwidthByPerm method, of class MatrixUtils.
@@ -192,17 +176,16 @@ public class MatrixUtilsTest {
         int propBase=5;
         int prop;
         
-        boolean symmetric = false;
-        boolean spd = false;
+        byte flag=MatrixUtils.UNSYMMETRICAL;
         for(int i=0;i<repeat;i++){
             prop = new Random().nextInt(propRange) + propBase;
-            testCase_02(size, prop, symmetric, spd);
+            testCase_02(size, prop, flag);
         }
         System.out.println("symmetric random case");
-        symmetric = true;
+        flag=MatrixUtils.SYMMETRICAL;
         for(int i=0;i<repeat;i++){
             prop = new Random().nextInt(propRange) + propBase;
-            testCase_02(size, prop, symmetric, spd);
+            testCase_02(size, prop, flag);
         }
 
 //        System.out.println("symmetric spd random case");
@@ -213,10 +196,10 @@ public class MatrixUtilsTest {
 //        }
     }
 
-    private void testCase_02(int size, int prop, boolean symmetric, boolean spd) {
+    private void testCase_02(int size, int prop, byte flag) {
         System.out.println("size:" + size + ", prop:" + prop);
 
-        FlexCompRowMatrix mat = getRandomFullRankMatrix_02(size, prop, symmetric, spd);
+        FlexCompRowMatrix mat = getRandomFullRankMatrix_02(size, prop, flag);
         Vector b = new DenseVector(size);
         for (int i = 0; i < b.size(); i++) {
             b.set(i, 1);
@@ -230,16 +213,16 @@ public class MatrixUtilsTest {
         
         Bandwidth bandOri=MatrixUtils.getBandwidth(mat);
         System.out.println("bandOri (u l) = ("+bandOri.upBandwidth+" "+bandOri.lowBandwidth);
-        int [] perm=RcmJna.genrcm2(mat, symmetric, 0).perm;
+        int [] perm=RcmJna.genrcm2(mat, flag, 0).perm;
         Bandwidth bandPermd=MatrixUtils.getBandwidthByPerm(mat, perm);
         System.out.println("bandPermd (u l) = ("+bandPermd.upBandwidth+" "+bandPermd.lowBandwidth);
         DenseMatrix denseMat = new DenseMatrix(mat);
         DenseVector expResult = (DenseVector) denseMat.solve(b, new DenseVector(size));
-        DenseVector result = MatrixUtils.solveFlexCompRowMatrixByBandMethod(mat, b, symmetric, spd);
+        DenseVector result = MatrixUtils.solveFlexCompRowMatrixByBandMethod(mat, b, flag);
         assertArrayEquals(expResult.getData(), result.getData(), 1e-5);
     }
 
-    public static FlexCompRowMatrix getRandomFullRankMatrix_02(int numRow, int transTime, boolean symmetric, boolean spd) {
+    public static FlexCompRowMatrix getRandomFullRankMatrix_02(int numRow, int transTime,byte flag) {
         FlexCompRowMatrix mat = new FlexCompRowMatrix(numRow, numRow);
 
         Random rand = new JDKRandomGenerator();
@@ -252,7 +235,7 @@ public class MatrixUtilsTest {
             int to = rand.nextInt(numRow);
             double scale = rand.nextDouble() - 0.5;
 
-            if (symmetric) {
+            if ((flag & MatrixUtils.SYMMETRICAL)!=0) {
                 for (VectorEntry ve : mat.getRow(from)) {
                     mat.add(to, ve.index(), ve.get() * scale);
                 }
@@ -275,7 +258,7 @@ public class MatrixUtilsTest {
 
             }
         }
-        if (spd) {
+        if ((flag & MatrixUtils.SPD)!=0) {
             Matrix transpose = mat.transpose(new FlexCompRowMatrix(numRow, numRow));
             mat = (FlexCompRowMatrix) transpose.mult(mat, new FlexCompRowMatrix(numRow, numRow));
         }

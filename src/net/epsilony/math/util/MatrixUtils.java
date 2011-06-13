@@ -19,11 +19,19 @@ import no.uib.cipr.matrix.sparse.SparseVector;
  * @author epsilon
  */
 public class MatrixUtils {
-    
+
+    public static final byte UNSYMMETRICAL = 0x02;
+    public static final byte SYMMETRICAL = 0x01;
+//    public static final byte UNSYMMETRICAL_AND_COMPLETE = 0x02;
+    public static final byte SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF = 0x06;
+//   public static final byte SYMMETRIAL_BUT_RECORD_ONLY_LOW_HALF=0x0B;
+    public static final byte SPD = 0x10;
+
     /**
      * 关连信息
      */
     public static class Adjacency {
+
         /**
          * <p> 起始编号base为0时结点i的关联关系由：adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]表示</p>
          * <p> adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]不包含i,且可为空集 </p>
@@ -32,7 +40,7 @@ public class MatrixUtils {
          */
         public int[] adjRow;
         public int[] adjVec;
-        public int base=0;
+        public int base = 0;
 
         public Adjacency(int[] adjRow, int[] adjVec, int base) {
             this.adjRow = adjRow;
@@ -45,21 +53,21 @@ public class MatrixUtils {
             this.adjVec = adjVec;
         }
     }
-    
+
     /**
      * 计数inMat阵中的有用元素个数，计数前将调用inMat.compact()
      */
-    public static int getUsed(FlexCompRowMatrix inMat){
-        return getUsed(inMat,true);
+    public static int getUsed(FlexCompRowMatrix inMat) {
+        return getUsed(inMat, true);
     }
-    
+
     /**
      * 计数inMat阵中的有用元素个数
      * @param compactBefore 是否在计数之前调用inMat.compact()
      * @return 
      */
     public static int getUsed(FlexCompRowMatrix inMat, boolean compactBefore) {
-        if(compactBefore){
+        if (compactBefore) {
             inMat.compact();
         }
         int sumUsed = 0;
@@ -70,16 +78,6 @@ public class MatrixUtils {
     }
 
     /**
-     * 如inMat是对称的（isInMatSymmetrixal决定，非内部计算）获取inMat的Adjacency ，否则获取inMat.^2+(inMat.^2)'的Adjacency
-     * @param inMat  要求方阵，否则结果可能不正确
-     * @param isInMatSymmetrical inMat 本身是否是对称的
-     * @param base return的Adjacency有关的起始编号
-     * @return 
-     */
-    public static Adjacency getAdjacency(FlexCompRowMatrix inMat,boolean isInMatSymmetrical, int base){
-        return getAdjacency(inMat, isInMatSymmetrical, base, true);
-    }
-    /**
      * 获取inMat的Adjacency 
      * @param inMat  要求方阵，否则结果可能不正确
      * @param isInMatSymmetrical inMat 本身是否是对称的
@@ -87,11 +85,12 @@ public class MatrixUtils {
      * @param fakeSymmetrilize 对于非对称的inMat改为输出inMat.^2+(inMat.^2)'的Adjacency
      * @return 
      */
-    public static Adjacency getAdjacency(FlexCompRowMatrix inMat, boolean isInMatSymmetrical, int base,boolean fakeSymmetrilize) {
+    public static Adjacency getAdjacency(FlexCompRowMatrix inMat, byte flag, int base) {
         int[] adjVec, adjRow;
         int nodeNum = inMat.numRows();
         adjRow = new int[nodeNum + 1];
-        if (isInMatSymmetrical||!fakeSymmetrilize) {
+//        if (isInMatSymmetrical||!fakeSymmetrilize) {
+        if ((flag & MatrixUtils.SYMMETRICAL) != 0) {
             int adjNum = getUsed(inMat) - nodeNum;
             adjVec = new int[adjNum];
             for (int rowI = 0, adjVecIndex = 0; rowI < inMat.numRows(); rowI++) {
@@ -218,9 +217,9 @@ public class MatrixUtils {
             this.upBandwidth = upBandwidth;
             this.lowBandwidth = lowBandwidth;
         }
-        
-        public int getBandwidth(){
-            return upBandwidth+lowBandwidth+1;
+
+        public int getBandwidth() {
+            return upBandwidth + lowBandwidth + 1;
         }
     }
 
@@ -234,7 +233,6 @@ public class MatrixUtils {
             this.permInv = permInv;
             this.bandwith = bandwith;
         }
-
         public Matrix bandedMatrix;
         public int[] permInv;
         public MatrixUtils.Bandwidth bandwith;
@@ -248,23 +246,48 @@ public class MatrixUtils {
      * @param symmetric
      * @return 
      */
-    public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, boolean symmetric) {
+    public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, byte flag) {
 //        int[] perm = RcmJna.genrcm(mat, symmetric, 0);
-        int[] perm = RcmJna.genrcm2(mat, symmetric, 0).perm;
+        int[] perm = RcmJna.genrcm2(mat, flag, 0).perm;
         int[] permInv = RcmJna.getPermInv(perm, 0);
         Bandwidth bandwidth = getBandwidthByPerm(mat, perm);
         Matrix matrix;
-        if (symmetric) {
-            matrix = new UpperSymmBandMatrix(mat.numRows(), bandwidth.upBandwidth);
-
+        if ((flag & SYMMETRICAL) != 0||(flag & SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF)==SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF) {
+            if ((flag & SPD) != 0) {
+                matrix = new UpperSPDBandMatrix(mat.numRows(), bandwidth.upBandwidth);
+            } else {
+                matrix = new UpperSymmBandMatrix(mat.numRows(), bandwidth.upBandwidth);
+            }
         } else {
             matrix = new BandMatrix(mat.numRows(), bandwidth.lowBandwidth, bandwidth.upBandwidth);
         }
 
-        for (MatrixEntry me : mat) {
-            matrix.set(perm[me.row()], perm[me.column()], me.get());
+        if ((flag & SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF) == SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF) {
+            for (MatrixEntry me : mat) {
+                int row = perm[me.row()];
+                int col = perm[me.column()];
+                if (row < col) {
+                    matrix.set(row, col, me.get());
+                } else {
+                    matrix.set(col, row, me.get());
+                }
+            }
+        } else if ((flag & SYMMETRICAL) != 0) {
+            for (MatrixEntry me : mat) {
+                int row = perm[me.row()];
+                int col = perm[me.column()];
+                if (row < col) {
+                    matrix.set(row, col, me.get());
+                }
+            }
+        } else {
+            for (MatrixEntry me : mat) {
+                int row = perm[me.row()];
+                int col = perm[me.column()];
+                matrix.set(row, col, me.get());
+            }
         }
-        return new BandedResult(matrix, permInv,bandwidth);
+        return new BandedResult(matrix, permInv, bandwidth);
     }
 
     /**
@@ -279,7 +302,7 @@ public class MatrixUtils {
             int[] rowIndes = mat.getRow(rowI).getIndex();
             int nodePermed = perm[rowI];
             for (int colI = 0; colI < rowIndes.length; colI++) {
-                int dis = perm[rowIndes[colI]]-nodePermed;
+                int dis = perm[rowIndes[colI]] - nodePermed;
                 if (dis < lowBandwidth) {
                     lowBandwidth = dis;
                 } else if (dis > upBandwidth) {
@@ -291,35 +314,40 @@ public class MatrixUtils {
         return new Bandwidth(upBandwidth, lowBandwidth);
     }
 
-    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat, Vector b, boolean symmetric, boolean spd) {
-        BandedResult bandedResult = getBandedMatrix(mat, symmetric);
+    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat, Vector b, byte flag) {
+        BandedResult bandedResult = getBandedMatrix(mat, flag);
         DenseVector bx;
-        if (!spd) {
-            bx = (DenseVector) bandedResult.bandedMatrix.solve(b, new DenseVector(mat.numRows()));
-        } else {
-            bx = (DenseVector) new UpperSPDBandMatrix(bandedResult.bandedMatrix, bandedResult.bandwith.upBandwidth,false).solve(b, new DenseVector(mat.numRows()));  
-        }
+        bx = (DenseVector) bandedResult.bandedMatrix.solve(b, new DenseVector(mat.numRows()));
         DenseVector x = new DenseVector(bx.size());
         for (int i = 0; i < x.size(); i++) {
             x.set(bandedResult.permInv[i], bx.get(i));
         }
         return x;
     }
-    
-    public static Bandwidth getBandwidth(FlexCompRowMatrix mat){
-        int low=0,up=0;
-        for (int rowI=0;rowI<mat.numRows();rowI++){
-            int[] rowIndes=mat.getRow(rowI).getIndex();
-            int t=rowIndes[0]-rowI;
-            if(t<low){
-                low=t;
-            }
-            t=rowIndes[rowIndes.length-1]-rowI;
-            if(t>up){
-                up=t;
+
+    public static boolean isSymmetric(FlexCompRowMatrix mat, double eps) {
+        for (MatrixEntry me : mat) {
+            if (me.get() - mat.get(me.column(), me.row()) > eps) {
+                return false;
             }
         }
-        low=-low;
+        return true;
+    }
+
+    public static Bandwidth getBandwidth(FlexCompRowMatrix mat) {
+        int low = 0, up = 0;
+        for (int rowI = 0; rowI < mat.numRows(); rowI++) {
+            int[] rowIndes = mat.getRow(rowI).getIndex();
+            int t = rowIndes[0] - rowI;
+            if (t < low) {
+                low = t;
+            }
+            t = rowIndes[rowIndes.length - 1] - rowI;
+            if (t > up) {
+                up = t;
+            }
+        }
+        low = -low;
         return new Bandwidth(up, low);
     }
 }
