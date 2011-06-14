@@ -20,11 +20,9 @@ import no.uib.cipr.matrix.sparse.SparseVector;
  */
 public class MatrixUtils {
 
-    public static final byte UNSYMMETRICAL = 0x02;
+    public static final byte UNSYMMETRICAL = 0x00;
     public static final byte SYMMETRICAL = 0x01;
-//    public static final byte UNSYMMETRICAL_AND_COMPLETE = 0x02;
-    public static final byte SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF = 0x06;
-//   public static final byte SYMMETRIAL_BUT_RECORD_ONLY_LOW_HALF=0x0B;
+    public static final byte UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF = 0x02;
     public static final byte SPD = 0x10;
 
     /**
@@ -85,7 +83,7 @@ public class MatrixUtils {
      * @param fakeSymmetrilize 对于非对称的inMat改为输出inMat.^2+(inMat.^2)'的Adjacency
      * @return 
      */
-    public static Adjacency getAdjacency(FlexCompRowMatrix inMat, byte flag, int base) {
+    public static Adjacency getAdjacency(FlexCompRowMatrix inMat, int flag, int base) {
         int[] adjVec, adjRow;
         int nodeNum = inMat.numRows();
         adjRow = new int[nodeNum + 1];
@@ -211,6 +209,11 @@ public class MatrixUtils {
      */
     public static class Bandwidth {
 
+        @Override
+        public String toString() {
+            return "Bandwidth{" + "upBandwidth=" + upBandwidth + ", lowBandwidth=" + lowBandwidth + ", bandwidth"+(1+upBandwidth+lowBandwidth)+'}';
+        }
+
         public int upBandwidth, lowBandwidth;
 
         public Bandwidth(int upBandwidth, int lowBandwidth) {
@@ -227,15 +230,18 @@ public class MatrixUtils {
      * 带状化后的矩阵结果，bandedMatrix中(permInv[i]，perInv[j])即为原矩阵的(i,j)
      */
     public static class BandedResult {
+        
 
-        public BandedResult(Matrix bandedMatrix, int[] permInv, Bandwidth bandwith) {
+        public BandedResult(Matrix bandedMatrix, int[] perm,int[] permInv, Bandwidth bandwith) {
             this.bandedMatrix = bandedMatrix;
             this.permInv = permInv;
+            this.perm=perm;
             this.bandwith = bandwith;
         }
         public Matrix bandedMatrix;
         public int[] permInv;
         public MatrixUtils.Bandwidth bandwith;
+        private int[] perm;
     }
 
     /**
@@ -246,37 +252,43 @@ public class MatrixUtils {
      * @param symmetric
      * @return 
      */
-    public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, byte flag) {
+    public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, int flag) {
 //        int[] perm = RcmJna.genrcm(mat, symmetric, 0);
         int[] perm = RcmJna.genrcm2(mat, flag, 0).perm;
         int[] permInv = RcmJna.getPermInv(perm, 0);
         Bandwidth bandwidth = getBandwidthByPerm(mat, perm);
         Matrix matrix;
-        if ((flag & SYMMETRICAL) != 0||(flag & SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF)==SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF) {
-            if ((flag & SPD) != 0) {
+        if ((flag & SYMMETRICAL) == SYMMETRICAL ) {
+            if ((flag & SPD) == SPD) {
                 matrix = new UpperSPDBandMatrix(mat.numRows(), bandwidth.upBandwidth);
             } else {
                 matrix = new UpperSymmBandMatrix(mat.numRows(), bandwidth.upBandwidth);
             }
-        } else {
+        } else if((flag & UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) == UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF){
+            if ((flag & SPD) == SPD) {
+                matrix = new UpperSPDBandMatrix(mat.numRows(), Math.max(bandwidth.lowBandwidth, bandwidth.upBandwidth));
+            } else {
+                matrix = new UpperSymmBandMatrix(mat.numRows(), Math.max(bandwidth.lowBandwidth, bandwidth.upBandwidth));
+            }
+        }else {
             matrix = new BandMatrix(mat.numRows(), bandwidth.lowBandwidth, bandwidth.upBandwidth);
         }
 
-        if ((flag & SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF) == SYMMETRICAL_BUT_RECORD_ONLY_UP_HALF) {
+        if ((flag & UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) == UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) {
             for (MatrixEntry me : mat) {
                 int row = perm[me.row()];
                 int col = perm[me.column()];
-                if (row < col) {
+                if (row <= col) {
                     matrix.set(row, col, me.get());
                 } else {
                     matrix.set(col, row, me.get());
                 }
             }
-        } else if ((flag & SYMMETRICAL) != 0) {
+        } else if ((flag & SYMMETRICAL) == SYMMETRICAL) {
             for (MatrixEntry me : mat) {
                 int row = perm[me.row()];
                 int col = perm[me.column()];
-                if (row < col) {
+                if (row <= col) {
                     matrix.set(row, col, me.get());
                 }
             }
@@ -287,7 +299,7 @@ public class MatrixUtils {
                 matrix.set(row, col, me.get());
             }
         }
-        return new BandedResult(matrix, permInv, bandwidth);
+        return new BandedResult(matrix, perm,permInv, bandwidth);
     }
 
     /**
@@ -309,20 +321,22 @@ public class MatrixUtils {
                     upBandwidth = dis;
                 }
             }
-        }
+        }       
         lowBandwidth = -lowBandwidth;
         return new Bandwidth(upBandwidth, lowBandwidth);
     }
 
-    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat, Vector b, byte flag) {
+    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat, Vector b, int flag) {
         BandedResult bandedResult = getBandedMatrix(mat, flag);
-        DenseVector bx;
-        bx = (DenseVector) bandedResult.bandedMatrix.solve(b, new DenseVector(mat.numRows()));
-        DenseVector x = new DenseVector(bx.size());
-        for (int i = 0; i < x.size(); i++) {
-            x.set(bandedResult.permInv[i], bx.get(i));
+        DenseVector vec=new DenseVector(b.size());
+        for(int i=0;i<b.size();i++){
+            vec.set(bandedResult.perm[i], b.get(i));
         }
-        return x;
+        DenseVector vecUnInvPermed = (DenseVector) bandedResult.bandedMatrix.solve(vec, new DenseVector(mat.numRows()));
+        for (int i = 0; i < vec.size(); i++) {
+            vec.set(bandedResult.permInv[i], vecUnInvPermed.get(i));
+        }
+        return vec;
     }
 
     public static boolean isSymmetric(FlexCompRowMatrix mat, double eps) {

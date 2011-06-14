@@ -25,12 +25,38 @@ public class RcmJna {
     public static final int RCM_NO_REVERSE =  16;
     public static final int RCM_USE_MASK = 32;
 
+    /**
+     * may have bug in librcm.so
+     */
+    public interface Librcm extends Library {
+
+        //librcm.so is complied by jni/rcm/RCMNetBeans/...
+        Librcm INSTANCE = (Librcm) Native.loadLibrary("rcm",
+                Librcm.class);
+
+        void _Z6genrcmiiPiS_S_(int node_num, int adj_num, int[] adj_row, int[] adj, int[] perm);
+    }
+
     public interface Librcm2 extends Library {
 
         //librcm.so is complied by jni/rcm/RcmNetBeans2/...
         Librcm2 INSTANCE = (Librcm2) Native.loadLibrary("rcm2", Librcm2.class);
 
-        void genrcmi(int n, int flags, int[] xadj, int[] adj, int[] perm, byte[] mask, int[] deg);
+        void genrcmi(final int n, final int flags, final int[] xadj, final int[] adj, int[] perm, byte[] mask, int[] deg);
+    }
+
+
+    public static int[] genrcm(FlexCompRowMatrix inMat, int flag, int base) {
+        Adjacency adj = MatrixUtils.getAdjacency(inMat, flag, 1);
+        int[] perm = new int[inMat.numRows()];
+        Librcm.INSTANCE._Z6genrcmiiPiS_S_(inMat.numRows(), adj.adjVec.length, adj.adjRow, adj.adjVec, perm);
+        if (base != 1) {
+            int delta = base - 1;
+            for (int i = 0; i < perm.length; i++) {
+                perm[i] += delta;
+            }
+        }
+        return perm;
     }
 
     public static int[] getPermInv(int[] perm, int base) {
@@ -42,10 +68,10 @@ public class RcmJna {
     }
     
     public static class RcmResult {
-        int[] perm;
-        byte[] mask;
-        int[] deg;
-        int base=0;
+        public int[] perm;
+        public byte[] mask;
+        public int[] deg;
+        public int base=0;
 
         /**
          * 
@@ -76,7 +102,7 @@ public class RcmJna {
      * @param base 输出的perm中元素的起始编号
      * @return 
      */
-    public static RcmResult genrcm2(FlexCompRowMatrix inMat, byte flag, int base) {
+    public static RcmResult genrcm2(FlexCompRowMatrix inMat, int flag, int base) {
         Adjacency adj = MatrixUtils.getAdjacency(inMat, flag, 0);
         int[] perm = new int[inMat.numRows()];
         byte[] mask=new byte[inMat.numRows()];
