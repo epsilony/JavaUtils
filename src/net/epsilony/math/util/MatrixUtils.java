@@ -4,6 +4,7 @@
  */
 package net.epsilony.math.util;
 
+import java.util.LinkedList;
 import no.uib.cipr.matrix.BandMatrix;
 import no.uib.cipr.matrix.DenseVector;
 import no.uib.cipr.matrix.Matrix;
@@ -227,21 +228,20 @@ public class MatrixUtils {
     }
 
     /**
-     * 带状化后的矩阵结果，bandedMatrix中(permInv[i]，perInv[j])即为原矩阵的(i,j)
+     * 带状化后的矩阵结果，bandedMatrix中(perm[i]，perm[j])即为原矩阵的(i,j)
      */
     public static class BandedResult {
         
 
-        public BandedResult(Matrix bandedMatrix, int[] perm,int[] permInv, Bandwidth bandwith) {
+        public BandedResult(Matrix bandedMatrix, RcmJna.RcmResult rcmResult, Bandwidth bandwith) {
             this.bandedMatrix = bandedMatrix;
-            this.permInv = permInv;
-            this.perm=perm;
+            this.rcmResult=rcmResult;
             this.bandwith = bandwith;
         }
         public Matrix bandedMatrix;
-        public int[] permInv;
+        public RcmJna.RcmResult rcmResult;
         public MatrixUtils.Bandwidth bandwith;
-        private int[] perm;
+
     }
 
     /**
@@ -254,9 +254,10 @@ public class MatrixUtils {
      */
     public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, int flag) {
 //        int[] perm = RcmJna.genrcm(mat, symmetric, 0);
-        int[] perm = RcmJna.genrcm2(mat, flag, 0).perm;
-        int[] permInv = RcmJna.getPermInv(perm, 0);
-        Bandwidth bandwidth = getBandwidthByPerm(mat, perm);
+        RcmJna.RcmResult rcmResult=RcmJna.genrcm2(mat, flag, 0);
+        int[] perm = rcmResult.perm;
+        int[] permInv = rcmResult.permInv;
+        Bandwidth bandwidth = getBandwidthByInvPerm(mat, permInv);
         Matrix matrix;
         if ((flag & SYMMETRICAL) == SYMMETRICAL ) {
             if ((flag & SPD) == SPD) {
@@ -276,8 +277,8 @@ public class MatrixUtils {
 
         if ((flag & UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) == UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) {
             for (MatrixEntry me : mat) {
-                int row = perm[me.row()];
-                int col = perm[me.column()];
+                int row = permInv[me.row()];
+                int col = permInv[me.column()];
                 if (row <= col) {
                     matrix.set(row, col, me.get());
                 } else {
@@ -286,35 +287,35 @@ public class MatrixUtils {
             }
         } else if ((flag & SYMMETRICAL) == SYMMETRICAL) {
             for (MatrixEntry me : mat) {
-                int row = perm[me.row()];
-                int col = perm[me.column()];
+                int row = permInv[me.row()];
+                int col = permInv[me.column()];
                 if (row <= col) {
                     matrix.set(row, col, me.get());
                 }
             }
         } else {
             for (MatrixEntry me : mat) {
-                int row = perm[me.row()];
-                int col = perm[me.column()];
+                int row = permInv[me.row()];
+                int col = permInv[me.column()];
                 matrix.set(row, col, me.get());
             }
         }
-        return new BandedResult(matrix, perm,permInv, bandwidth);
+        return new BandedResult(matrix, rcmResult, bandwidth);
     }
 
     /**
-     * 获取重排列perm下的矩阵带宽。perm使得mat中的元素(i,j)对应重排列后的矩阵元素(perm[i],perm[j])
+     * 获取重排列permInv下的矩阵带宽。permInv使得mat中的元素(i,j)对应重排列后的矩阵元素(permInv[i],permInv[j])
      * @param mat 要求方阵，否则结果可能不正确
-     * @param perm 重排列数组，要求perm中元素值在[0,mat.numRows()-1]内，如perm需用于解方程组，则perm是0,1,...,mat.nunRows()-1的一个排列。
+     * @param permInv 重排列数组，要求permInv中元素值在[0,mat.numRows()-1]内，如permInv需用于解方程组，则permInv是0,1,...,mat.nunRows()-1的一个排列。
      * @return 
      */
-    public static Bandwidth getBandwidthByPerm(FlexCompRowMatrix mat, int[] perm) {
+    public static Bandwidth getBandwidthByInvPerm(FlexCompRowMatrix mat, int[] permInv) {
         int upBandwidth = 0, lowBandwidth = 0;
         for (int rowI = 0; rowI < mat.numRows(); rowI++) {
             int[] rowIndes = mat.getRow(rowI).getIndex();
-            int nodePermed = perm[rowI];
+            int nodePermed = permInv[rowI];
             for (int colI = 0; colI < rowIndes.length; colI++) {
-                int dis = perm[rowIndes[colI]] - nodePermed;
+                int dis = permInv[rowIndes[colI]] - nodePermed;
                 if (dis < lowBandwidth) {
                     lowBandwidth = dis;
                 } else if (dis > upBandwidth) {
@@ -326,15 +327,22 @@ public class MatrixUtils {
         return new Bandwidth(upBandwidth, lowBandwidth);
     }
 
-    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat, Vector b, int flag) {
+    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat,Vector b,int flag){
+        return solveFlexCompRowMatrixByBandMethod(mat, b, flag, null);
+    }
+    
+    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat, Vector b, int flag,LinkedList<BandedResult> bandedResultOutput) {
         BandedResult bandedResult = getBandedMatrix(mat, flag);
+        if(bandedResultOutput!=null){
+            bandedResultOutput.add(bandedResult);
+        }
         DenseVector vec=new DenseVector(b.size());
         for(int i=0;i<b.size();i++){
-            vec.set(bandedResult.perm[i], b.get(i));
+            vec.set(bandedResult.rcmResult.permInv[i], b.get(i));
         }
-        DenseVector vecUnInvPermed = (DenseVector) bandedResult.bandedMatrix.solve(vec, new DenseVector(mat.numRows()));
+        DenseVector resultUnPermed = (DenseVector) bandedResult.bandedMatrix.solve(vec, new DenseVector(mat.numRows()));
         for (int i = 0; i < vec.size(); i++) {
-            vec.set(bandedResult.permInv[i], vecUnInvPermed.get(i));
+            vec.set(bandedResult.rcmResult.perm[i], resultUnPermed.get(i));
         }
         return vec;
     }

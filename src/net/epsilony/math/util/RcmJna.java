@@ -11,8 +11,8 @@ import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 
 /**
  * <p> if mat is banded to mat2 then:</p>
- * <p> mat{perm[i],perm[j]}=mat2{i,j}</p>
- * <p> mat2{permInv[i],permInv[j]}=mat{i,j}</p>
+ * <p> mat{permInv[i],permInv[j]}=mat2{i,j}</p>
+ * <p> mat2{perm[i],perm[j]}=mat{i,j}</p>
  * @see MatrixUtils
  * @author epsilon
  */
@@ -67,8 +67,13 @@ public class RcmJna {
         return permInv;
     }
     
+    public static int[] getPermInv(int[] perm){
+        return getPermInv(perm,0);
+    }
+    
     public static class RcmResult {
         public int[] perm;
+        public int[] permInv;
         public byte[] mask;
         public int[] deg;
         public int base=0;
@@ -83,6 +88,7 @@ public class RcmJna {
             this.perm = perm;
             this.mask = mask;
             this.deg = deg;
+            permInv=getPermInv(perm, 0);
         }
 
         public RcmResult(int[] perm, byte[] mask, int[] deg,int base) {
@@ -90,6 +96,7 @@ public class RcmJna {
             this.mask = mask;
             this.deg = deg;
             this.base=base;
+            permInv=getPermInv(perm, base);
         }
         
         

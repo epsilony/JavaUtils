@@ -106,15 +106,12 @@ public class RcmJnaTest {
             FlexCompRowMatrix matrix = MatrixUtilsTest.getRandomFullRankMatrix_02(size, transTime, flag);
             matrix.compact();
 
-            int[] perm = RcmJna.genrcm(matrix, flag,0);
-            int[] perm2 = RcmJna.genrcm2(matrix, flag,0).perm;
-            if (perm[perm.length - 1] == -1) {
-                perm[perm.length - 1] = 0;
-                System.out.println("bad!----------------------------");
-            }
+            int[] permInv = RcmJna.getPermInv(RcmJna.genrcm(matrix, flag,0));
+            int[] permInv2 = RcmJna.genrcm2(matrix, flag,0).permInv;
+           
             Bandwidth bandOri = MatrixUtils.getBandwidth(matrix);
-            Bandwidth band = MatrixUtils.getBandwidthByPerm(matrix, perm);
-            Bandwidth band2 = MatrixUtils.getBandwidthByPerm(matrix, perm2);
+            Bandwidth band = MatrixUtils.getBandwidthByInvPerm(matrix, permInv);
+            Bandwidth band2 = MatrixUtils.getBandwidthByInvPerm(matrix, permInv2);
             String f = "%s -up:%d -low:%d";
             System.out.println(String.format(f, "ori", bandOri.upBandwidth, bandOri.lowBandwidth));
             System.out.println(String.format(f, "1", band.upBandwidth, band.lowBandwidth));

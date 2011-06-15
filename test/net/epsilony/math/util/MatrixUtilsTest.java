@@ -148,15 +148,15 @@ public class MatrixUtilsTest {
     }
 
     /**
-     * Test of getBandwidthByPerm method, of class MatrixUtils.
+     * Test of getBandwidthByInvPerm method, of class MatrixUtils.
      */
     //@Test
-    public void testGetBandwidthByPerm() {
+    public void testGetBandwidthByInvPerm() {
         System.out.println("getBandwidthByPerm");
         FlexCompRowMatrix mat = null;
-        int[] perm = null;
+        int[] permInv = null;
         Bandwidth expResult = null;
-        Bandwidth result = MatrixUtils.getBandwidthByPerm(mat, perm);
+        Bandwidth result = MatrixUtils.getBandwidthByInvPerm(mat, permInv);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -226,8 +226,8 @@ public class MatrixUtilsTest {
                 }
             }
         }
-        int[] perm = RcmJna.genrcm2(mat, flag, 0).perm;
-        Bandwidth bandPermd = MatrixUtils.getBandwidthByPerm(mat, perm);
+        int[] permInv = RcmJna.genrcm2(mat, flag, 0).permInv;
+        Bandwidth bandPermd = MatrixUtils.getBandwidthByInvPerm(mat, permInv);
         System.out.println("bandPermd (u l) = (" + bandPermd.upBandwidth + " " + bandPermd.lowBandwidth);
         
         DenseVector result = MatrixUtils.solveFlexCompRowMatrixByBandMethod(mat, b, flag);
