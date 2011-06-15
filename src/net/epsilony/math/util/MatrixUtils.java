@@ -27,16 +27,14 @@ public class MatrixUtils {
     public static final byte SPD = 0x10;
 
     /**
-     * 关连信息
+     * <p> 另请见<a href="http://epsilony.net/mywiki/Academic/RcmResources#Adjacency">MyWiki 上的释例程</a></p>
+     * <p> 起始编号base为0时结点i的关联关系由：adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]表示</p>
+     * <p> adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]不包含i,且可为空集 </p>
+     * <p> adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]为严格的升序跋 </p>
+     * <p> {@link #base} 默认为0 </p>
      */
     public static class Adjacency {
 
-        /**
-         * <p> 起始编号base为0时结点i的关联关系由：adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]表示</p>
-         * <p> adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]不包含i,且可为空集 </p>
-         * <p> adjVec[adjRow[i]]至adjVec[adjRow[i+1]-1]为严格的升序跋 </p>
-         * <p> base 默认为0 </p>
-         */
         public int[] adjRow;
         public int[] adjVec;
         public int base = 0;
@@ -79,9 +77,8 @@ public class MatrixUtils {
     /**
      * 获取inMat的Adjacency 
      * @param inMat  要求方阵，否则结果可能不正确
-     * @param isInMatSymmetrical inMat 本身是否是对称的
+     * @param flag inMat本身是对称的:{@link #SYMMETRICAL} inMat本身不是对称的，但是其是一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
      * @param base 返回的Adjacency有关的起始编号
-     * @param fakeSymmetrilize 对于非对称的inMat改为输出inMat.^2+(inMat.^2)'的Adjacency
      * @return 
      */
     public static Adjacency getAdjacency(FlexCompRowMatrix inMat, int flag, int base) {
@@ -212,9 +209,8 @@ public class MatrixUtils {
 
         @Override
         public String toString() {
-            return "Bandwidth{" + "upBandwidth=" + upBandwidth + ", lowBandwidth=" + lowBandwidth + ", bandwidth"+(1+upBandwidth+lowBandwidth)+'}';
+            return "Bandwidth{" + "upBandwidth=" + upBandwidth + ", lowBandwidth=" + lowBandwidth + ", bandwidth" + (1 + upBandwidth + lowBandwidth) + '}';
         }
-
         public int upBandwidth, lowBandwidth;
 
         public Bandwidth(int upBandwidth, int lowBandwidth) {
@@ -228,20 +224,18 @@ public class MatrixUtils {
     }
 
     /**
-     * 带状化后的矩阵结果，bandedMatrix中(perm[i]，perm[j])即为原矩阵的(i,j)
+     * 带状化后的矩阵结果，bandedMatrix中(rcmResult.perm[i]，rcmResult.perm[j])即为原矩阵的(i,j)
      */
     public static class BandedResult {
-        
 
         public BandedResult(Matrix bandedMatrix, RcmJna.RcmResult rcmResult, Bandwidth bandwith) {
             this.bandedMatrix = bandedMatrix;
-            this.rcmResult=rcmResult;
+            this.rcmResult = rcmResult;
             this.bandwith = bandwith;
         }
         public Matrix bandedMatrix;
         public RcmJna.RcmResult rcmResult;
         public MatrixUtils.Bandwidth bandwith;
-
     }
 
     /**
@@ -249,29 +243,29 @@ public class MatrixUtils {
      * <p> 采用RCM - Reverse Cuthill McKee Ordering方法 </p>
      * <p> 只依参数symmetric判定mat是否为对称阵
      * @param mat  要求方阵，否则结果可能不正确
-     * @param symmetric
+     * @param flag inMat本身是对称的:{@link #SYMMETRICAL} inMat本身不是对称的，但是其是一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
      * @return 
      */
     public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, int flag) {
 //        int[] perm = RcmJna.genrcm(mat, symmetric, 0);
-        RcmJna.RcmResult rcmResult=RcmJna.genrcm2(mat, flag, 0);
+        RcmJna.RcmResult rcmResult = RcmJna.genrcm2(mat, flag, 0);
         int[] perm = rcmResult.perm;
         int[] permInv = rcmResult.permInv;
         Bandwidth bandwidth = getBandwidthByInvPerm(mat, permInv);
         Matrix matrix;
-        if ((flag & SYMMETRICAL) == SYMMETRICAL ) {
+        if ((flag & SYMMETRICAL) == SYMMETRICAL) {
             if ((flag & SPD) == SPD) {
                 matrix = new UpperSPDBandMatrix(mat.numRows(), bandwidth.upBandwidth);
             } else {
                 matrix = new UpperSymmBandMatrix(mat.numRows(), bandwidth.upBandwidth);
             }
-        } else if((flag & UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) == UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF){
+        } else if ((flag & UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) == UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) {
             if ((flag & SPD) == SPD) {
                 matrix = new UpperSPDBandMatrix(mat.numRows(), Math.max(bandwidth.lowBandwidth, bandwidth.upBandwidth));
             } else {
                 matrix = new UpperSymmBandMatrix(mat.numRows(), Math.max(bandwidth.lowBandwidth, bandwidth.upBandwidth));
             }
-        }else {
+        } else {
             matrix = new BandMatrix(mat.numRows(), bandwidth.lowBandwidth, bandwidth.upBandwidth);
         }
 
@@ -304,7 +298,7 @@ public class MatrixUtils {
     }
 
     /**
-     * 获取重排列permInv下的矩阵带宽。permInv使得mat中的元素(i,j)对应重排列后的矩阵元素(permInv[i],permInv[j])
+     * 获取重排列permInv下的矩阵带宽。permInv使得mat中的元素(i,j)对应重排列后的带状矩阵元素(permInv[i],permInv[j])
      * @param mat 要求方阵，否则结果可能不正确
      * @param permInv 重排列数组，要求permInv中元素值在[0,mat.numRows()-1]内，如permInv需用于解方程组，则permInv是0,1,...,mat.nunRows()-1的一个排列。
      * @return 
@@ -322,25 +316,40 @@ public class MatrixUtils {
                     upBandwidth = dis;
                 }
             }
-        }       
+        }
         lowBandwidth = -lowBandwidth;
         return new Bandwidth(upBandwidth, lowBandwidth);
     }
 
-    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat,Vector b,int flag){
-        return solveFlexCompRowMatrixByBandMethod(mat, b, flag, null);
+    /**
+     * 用RCM方法缩减矩阵带宽求解方程Ax=b
+     * @param matA 满矩方阵 A
+     * @param vecB b 向量
+     * @param flag matA本身是对称的:{@link #SYMMETRICAL} inMat本身不是对称的，但是其是一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
+     * @return Ax=b 的 结果 x
+     */
+    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix matA, Vector vecB, int flag) {
+        return solveFlexCompRowMatrixByBandMethod(matA, vecB, flag, null);
     }
-    
-    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix mat, Vector b, int flag,LinkedList<BandedResult> bandedResultOutput) {
-        BandedResult bandedResult = getBandedMatrix(mat, flag);
-        if(bandedResultOutput!=null){
+
+    /**
+     * 用RCM方法缩减矩阵带宽求解方程Ax=b
+     * @param matA 满矩方阵 A
+     * @param vecB b 向量
+     * @param flag matA本身是对称的:{@link #SYMMETRICAL} inMat本身不是对称的，但是其是一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
+     * @param bandedResultOutput 用以提取中间结果钩子，如为null则不矛理采。
+     * @return Ax=b 的 结果 x
+     */
+    public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix matA, Vector vecB, int flag, LinkedList<BandedResult> bandedResultOutput) {
+        BandedResult bandedResult = getBandedMatrix(matA, flag);
+        if (bandedResultOutput != null) {
             bandedResultOutput.add(bandedResult);
         }
-        DenseVector vec=new DenseVector(b.size());
-        for(int i=0;i<b.size();i++){
-            vec.set(bandedResult.rcmResult.permInv[i], b.get(i));
+        DenseVector vec = new DenseVector(vecB.size());
+        for (int i = 0; i < vecB.size(); i++) {
+            vec.set(bandedResult.rcmResult.permInv[i], vecB.get(i));
         }
-        DenseVector resultUnPermed = (DenseVector) bandedResult.bandedMatrix.solve(vec, new DenseVector(mat.numRows()));
+        DenseVector resultUnPermed = (DenseVector) bandedResult.bandedMatrix.solve(vec, new DenseVector(matA.numRows()));
         for (int i = 0; i < vec.size(); i++) {
             vec.set(bandedResult.rcmResult.perm[i], resultUnPermed.get(i));
         }
@@ -356,6 +365,12 @@ public class MatrixUtils {
         return true;
     }
 
+    /**
+     * 
+     * @param mat
+     * @return {@link Bandwidth} 
+     * @see Bandwidth
+     */
     public static Bandwidth getBandwidth(FlexCompRowMatrix mat) {
         int low = 0, up = 0;
         for (int rowI = 0; rowI < mat.numRows(); rowI++) {
