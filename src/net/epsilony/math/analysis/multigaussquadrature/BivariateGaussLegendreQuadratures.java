@@ -5,7 +5,7 @@
 package net.epsilony.math.analysis.multigaussquadrature;
 
 import java.util.Collection;
-import net.epsilony.math.analysis.GaussLegendreQuadrature;
+import net.epsilony.math.analysis.GaussLegendreQuadratureUtils;
 import net.epsilony.math.polynomial.BivariateRealFunction;
 import net.epsilony.math.util.CoonsBivariateMapper;
 import net.epsilony.math.util.GeneralPolarToCartesianChange2D;
@@ -22,13 +22,7 @@ final public class BivariateGaussLegendreQuadratures {
     public static class GeneralSectorQuadrature {
 
         private static GeneralPolarToCartesianChange2D gptcChange = new GeneralPolarToCartesianChange2D();
-        private static double[] radCoefs = new double[14];
-        private static double[] radPts = new double[14];
-        private static double[] cirCoefs = new double[14];
-        private static double[] cirPts = new double[14];
         private static double[] gptcResults = new double[3];
-        static double fnRad = -1;
-        static double fnCir = -1;
 
         /**
          * 利用GeneralPolarToCartesianChange2D做一个扇形区域的积分。
@@ -46,16 +40,14 @@ final public class BivariateGaussLegendreQuadratures {
             double result = 0;
             gptcChange.setOri(x0, y0);
             gptcChange.setPathInfoNode(arcInfo);
-            if (fnRad != nRad) {
-                GaussLegendreQuadrature.getGaussLegendreQuadraturePoints(nRad, radPts);
-                GaussLegendreQuadrature.getGaussLegendreQuadratureCoefficients(nRad, radCoefs);
-                fnRad = nRad;
-            }
-            if (fnCir != nCir) {
-                GaussLegendreQuadrature.getGaussLegendreQuadraturePoints(nCir, cirPts);
-                GaussLegendreQuadrature.getGaussLegendreQuadratureCoefficients(nCir, cirCoefs);
-                fnCir = nCir;
-            }
+            double[] radPts, radCoefs, cirPts, cirCoefs;
+            
+            radPts = GaussLegendreQuadratureUtils.positionsArrays[nRad - 1];
+            radCoefs = GaussLegendreQuadratureUtils.weightsArrays[nRad - 1];
+
+            cirPts = GaussLegendreQuadratureUtils.positionsArrays[nCir - 1];
+            cirCoefs = GaussLegendreQuadratureUtils.weightsArrays[nCir - 1];
+
             int i, j;
             for (i = 0; i < nRad; i++) {
                 for (j = 0; j < nCir; j++) {
@@ -81,25 +73,19 @@ final public class BivariateGaussLegendreQuadratures {
             ccc.setInfos(infos);
             return quadrate(fun, nRows, nCols);
         }
-        static double[] rCoefs = new double[14];
-        static double[] rPts = new double[14];
-        static double[] cCoefs = new double[14];
-        static double[] cPts = new double[14];
+
         static double[] cccResults = new double[3];
-        static int fnRows = -1;
-        static int fnCols = -1;
+
 
         private static double quadrate(BivariateRealFunction fun, int nRows, int nCols) throws ArgumentOutsideDomainException, FunctionEvaluationException {
-            if (nRows != fnRows) {
-                GaussLegendreQuadrature.getGaussLegendreQuadraturePoints(nRows, rPts);
-                GaussLegendreQuadrature.getGaussLegendreQuadratureCoefficients(nRows, rCoefs);
-                fnRows = nRows;
-            }
-            if (nCols != fnCols) {
-                GaussLegendreQuadrature.getGaussLegendreQuadraturePoints(nCols, cPts);
-                GaussLegendreQuadrature.getGaussLegendreQuadratureCoefficients(nCols, cCoefs);
-                fnCols = nCols;
-            }
+
+            double[] rPts, rCoefs, cPts, cCoefs;
+            rPts = GaussLegendreQuadratureUtils.positionsArrays[nRows - 1];
+            rCoefs = GaussLegendreQuadratureUtils.weightsArrays[nRows - 1];
+
+            cPts = GaussLegendreQuadratureUtils.positionsArrays[nCols - 1];
+            cCoefs = GaussLegendreQuadratureUtils.weightsArrays[nCols - 1];
+
             int i, j;
             double result = 0;
             for (i = 0; i < nRows; i++) {

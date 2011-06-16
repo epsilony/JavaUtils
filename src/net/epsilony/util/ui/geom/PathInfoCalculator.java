@@ -6,8 +6,9 @@ package net.epsilony.util.ui.geom;
 
 import java.awt.geom.PathIterator;
 import net.epsilony.math.analysis.DifferentiableUnivariateVectorFunction;
-import net.epsilony.math.analysis.GaussLegendreQuadrature;
+import net.epsilony.math.analysis.GaussLegendreQuadratureUtils;
 import net.epsilony.math.analysis.UnivariateVectorFunction;
+import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import static java.lang.Math.*;
@@ -204,17 +205,15 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
         }
     }
     ForGetLengthUse fgluFun = new ForGetLengthUse();
-    GaussLegendreQuadrature glqForGetLength = new GaussLegendreQuadrature(3, fgluFun);
-
-    public double getLength() throws FunctionEvaluationException {
+    public double getLength() throws FunctionEvaluationException, ConvergenceException {
         double[] datas = pathInfoNode.getDatas();
         switch (getPathType()) {
             case PathIterator.SEG_CUBICTO:
-                return glqForGetLength.quadrate(0, 1);
+                return GaussLegendreQuadratureUtils.quadrate(fgluFun,3,0, 1);
             case PathIterator.SEG_LINETO:
                 return sqrt((datas[0] - datas[2]) * (datas[0] - datas[2]) + (datas[1] - datas[3]) * (datas[1] - datas[3]));
             case PathIterator.SEG_QUADTO:
-                return glqForGetLength.quadrate(0, 1);
+                return GaussLegendreQuadratureUtils.quadrate(fgluFun,3,0, 1);
             default:
                 return -1;
         }

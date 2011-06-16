@@ -44,8 +44,8 @@ public class BivariateGaussLegendreQuadrature {
             this.rowcol = rowcol;
             this.fun = fun;
             this.mapper = mapper;
-            coefs = GaussLegendreQuadrature.getGaussLegendreQuadratureCoefficients(rowcol);
-            pts = GaussLegendreQuadrature.getGaussLegendreQuadraturePoints(rowcol);
+            coefs = GaussLegendreQuadratureUtils.getWeights(rowcol);
+            pts = GaussLegendreQuadratureUtils.getPositions(rowcol);
         } catch (ArgumentOutsideDomainException ex) {
             Logger.getLogger(BivariateGaussLegendreQuadrature.class.getName()).log(Level.SEVERE, null, ex);
         }

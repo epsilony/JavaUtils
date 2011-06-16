@@ -8,7 +8,7 @@ import net.epsilony.math.analysis.MultivariateRealFunction;
 import static java.lang.Math.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.epsilony.math.analysis.GaussLegendreQuadrature;
+import net.epsilony.math.analysis.GaussLegendreQuadratureUtils;
 import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
@@ -480,14 +480,14 @@ public class MultiGaussLegendreQuadrature implements GaussQuadrature, MultiGauss
     @Override
     public double[] GetGaussQuadraturePoints(int nPoints) throws ArgumentOutsideDomainException {
 
-            return GaussLegendreQuadrature.getGaussLegendreQuadraturePoints(nPoints);
+            return GaussLegendreQuadratureUtils.getPositions(nPoints);
 
     }
 
  
     @Override
     public double[] GetGaussQuadratureCoefs(int nPoints) throws ArgumentOutsideDomainException  {
-            return GaussLegendreQuadrature.getGaussLegendreQuadratureCoefficients(nPoints);
+            return GaussLegendreQuadratureUtils.getWeights(nPoints);
     }
 
     /**decide whether sample point is in the domain or not

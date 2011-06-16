@@ -7,7 +7,7 @@ package net.epsilony.math.analysis.multigaussquadrature;
 import java.awt.geom.Ellipse2D;
 import java.util.Arrays;
 import java.util.LinkedList;
-import net.epsilony.math.analysis.GaussLegendreQuadrature;
+import net.epsilony.math.analysis.GaussLegendreQuadratureUtils;
 import net.epsilony.math.polynomial.BivariateRealFunction;
 import net.epsilony.util.ui.geom.PathInfoNode;
 import net.epsilony.util.ui.geom.ShapeUtils;
@@ -63,8 +63,8 @@ public class BivariateGaussLegendreQuadratureTest {
         double err=abs((expResult-result)/expResult);
         System.out.println("Result:"+result);
         System.out.println("err:"+err);
-        System.out.println("Coefs:"+Arrays.toString(GaussLegendreQuadrature.getGaussLegendreQuadratureCoefficients(2)));
-        System.out.println("points"+Arrays.toString(GaussLegendreQuadrature.getGaussLegendreQuadraturePoints(2)));
+        System.out.println("Coefs:"+Arrays.toString(GaussLegendreQuadratureUtils.getWeights(2)));
+        System.out.println("points"+Arrays.toString(GaussLegendreQuadratureUtils.getPositions(2)));
         isGood=isGood&&err<2e-3;
         assertTrue(isGood);
         // TODO review the generated test code and remove the default call to fail.
