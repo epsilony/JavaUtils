@@ -11,9 +11,10 @@ import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 
 /**
  * <p>RCM - Reverse Cuthill McKee Ordering获取带宽缩减信息</p>
- * <p> if mat is banded to mat2 then:</p>
- * <p> mat{permInv[i],permInv[j]}=mat2{i,j}</p>
- * <p> mat2{perm[i],perm[j]}=mat{i,j}</p>
+ * <p> if mat  A is banded to A2 then:</p>
+ * <p> A[i][j]=A2[permInv[i]][permInv[j]]</p>
+ * <p> A2[i][j]=A[perm[i],perm[j]}</p>
+ * <p> 另可见 <a href="http://epsilony.net/mywiki/Academic/RcmResources#David> Man Yuan的wiki </a>
  * @see MatrixUtils
  * @author epsilon
 
@@ -55,7 +56,7 @@ public class RcmJna {
      * <p> 该接口的C语言后台下载自
      * <a href=”http://www.math.temple.edu/~daffi/software/rcm/">
      * David Fritzsche 的RCM C实现</a>
-     * 一个便于编译中librcm2.so的Netbeans C项目可以从<a href="http://epsilony.net/mywiki/Academic/RcmResources#John">Man Yuan的wiki</a>
+     * 一个便于编译中librcm2.so的Netbeans C项目可以从<a href="http://epsilony.net/mywiki/Academic/RcmResources#David">Man Yuan的wiki</a>
      * 下载。</p>
      * <p> librcm2.so 也可由 svn://epsilony.net/epsilonRepos/jni/rcm/Rcm2NetBeans 项目编译获得 </p>     */
     public interface Librcm2 extends Library {
@@ -77,10 +78,10 @@ public class RcmJna {
          *        MyWiki 上的解释。</a>
          * @param adjVec 见<a href="http://epsilony.net/mywiki/Academic/RcmResouces#Adjacency">
          *        MyWiki 上的解释。</a>
-         * @param perm 见<a href="http://epsilony.net/mywiki/Academic/RcmResouces#Adjacency">
+         * @param perm 见<a href="http://epsilony.net/mywiki/Academic/RcmResouces#David">
          *        MyWiki 上的解释。</a>
          * @param mask 输入时用于标记哪个结点不重排，输出时表明哪个结点被重排过了。
-         * @param deg 结点的度
+         * @param deg 结点的度 <a href="http://www.math.temple.edu/~daffi/software/rcm/doxy/html/rcm_8h.html#a7">见原C代码说明 </a>
          */
         void genrcmi(final int n, final int flags, final int[] adjRow, final int[] adjVec, int[] perm, byte[] mask, int[] deg);
     }
@@ -120,7 +121,7 @@ public class RcmJna {
     }
 
     /**
-     * <p>由perm获取permInv这两者的关系请见<a href="http://epsilony.net/mywiki/Academic/RcmResources#John">MyWiki 上的解释</a></p>
+     * <p>由perm获取permInv这两者的关系请见<a href="http://epsilony.net/mywiki/Academic/RcmResources#David">MyWiki 上的解释</a></p>
      * <p>输入与返回的数列其<strong> Index Base 必须为 0</strong> </p>
      * @param perm
      * @return permInv
@@ -135,11 +136,11 @@ public class RcmJna {
     public static class RcmResult {
 
         /**
-         * 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#John">MyWiki 上的解释</a>
+         * 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#David">MyWiki 上的解释</a>
          */
         public int[] perm;
         /**
-         * 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#John">MyWiki 上的解释</a>
+         * 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#David">MyWiki 上的解释</a>
          */
         public int[] permInv;
         public byte[] mask;
@@ -148,7 +149,7 @@ public class RcmJna {
 
         /**
          * 
-         * @param perm 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#John">MyWiki 上的解释</a>
+         * @param perm 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#David">MyWiki 上的解释</a>
          * @param mask 见<a href="http://www.math.temple.edu/~daffi/software/rcm/doxy/html/rcm_8h.html#a7">genrcmi原生文档</a>
          * @param deg 结点的度，与perm一样长度
          */
@@ -160,7 +161,7 @@ public class RcmJna {
         }
 
         /**
-         * @param perm 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#John">MyWiki 上的解释</a>
+         * @param perm 见<a href="http://epsilony.net/mywiki/Academic/RcmResources#David">MyWiki 上的解释</a>
          * @param mask 见<a href="http://www.math.temple.edu/~daffi/software/rcm/doxy/html/rcm_8h.html#a7">genrcmi原生文档</a>
          * @param deg 结点的度，与perm一样长度
          * @param base deg perm 与 permInv的index base
@@ -175,7 +176,8 @@ public class RcmJna {
     }
 
     /**
-     * 利用RCM - Reverse Cuthill McKee Ordering获取带宽缩减信息
+     * <p>利用RCM - Reverse Cuthill McKee Ordering获取带宽缩减信息</p>
+     * <p> 后台采用见<a href="http://www.math.temple.edu/~daffi/software/rcm/doxy/html/rcm_8h.html#a7">David Fritzsche的C实现</a>
      * @param inMat 须是方阵
      * @param {@link MatrixUtils#SPD MatrixlUtils}中的flag <strong> 非调用Jna genrcmi所用的flag </strong>
      * @param base 输出的结果中permInv与perm中元素的起始编号
