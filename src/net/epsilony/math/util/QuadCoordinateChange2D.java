@@ -3,8 +3,8 @@
  * and open the template in the editor.
  */
 package net.epsilony.math.util;
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorFunction;
-import net.epsilony.math.analysis.UnivariateVectorFunction;
+import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 /**
@@ -21,17 +21,17 @@ public class QuadCoordinateChange2D implements BivariateMapper{
     private double x,  y;
     private double t1,  t2,  t3,  t4,  t5,  vx31,  vx42,  vy31,  vy42;
     private double tdnom,  tnum;
-    DifferentiableUnivariateVectorFunction[] funs;
-    UnivariateVectorFunction[] derivatedFuns;
+    DifferentiableUnivariateVectorialFunctionEx[] funs;
+    UnivariateVectorialFunctionEx[] derivatedFuns;
 
-    public void setup(DifferentiableUnivariateVectorFunction[] funs){
+    public final void setup(DifferentiableUnivariateVectorialFunctionEx[] funs){
         this.funs = funs;
         for(int i=0;i<4;i++){
             derivatedFuns[i]=funs[i].vectorDerivative();
         }
     }
     
-    public QuadCoordinateChange2D(DifferentiableUnivariateVectorFunction[] funs) {
+    public QuadCoordinateChange2D(DifferentiableUnivariateVectorialFunctionEx[] funs) {
         setup(funs);
     }
 
@@ -114,16 +114,16 @@ public class QuadCoordinateChange2D implements BivariateMapper{
      */
     private double []pt=new double[2];
     private void generatePoints(double u, double v) throws FunctionEvaluationException{
-        funs[0].values(u, pt);
+        funs[0].value(u, pt);
         x1=pt[0];
         y1=pt[1];
-        funs[1].values(v, pt);
+        funs[1].value(v, pt);
         x2=pt[0];
         y2=pt[1];
-        funs[2].values(u, pt);
+        funs[2].value(u, pt);
         x3=pt[0];
         y3=pt[1];
-        funs[3].values(v, pt);
+        funs[3].value(v, pt);
         x4=pt[0];
         y4=pt[1];
     }
@@ -135,16 +135,16 @@ public class QuadCoordinateChange2D implements BivariateMapper{
      * @return{{dx1/du,dy1/du},{dx2/dv,dy2/dv},{dx3/du,dy3/du},{dx4/dv,dy4/dv}}
      */
     private void generateDiffs(double u, double v) throws FunctionEvaluationException{
-        derivatedFuns[0].values(u, pt);
+        derivatedFuns[0].value(u, pt);
         diffs[0][0]=pt[0];
         diffs[0][1]=pt[1];
-        derivatedFuns[1].values(v, pt);
+        derivatedFuns[1].value(v, pt);
         diffs[1][0]=pt[0];
         diffs[1][1]=pt[1];
-        derivatedFuns[2].values(u, pt);
+        derivatedFuns[2].value(u, pt);
         diffs[2][0]=pt[0];
         diffs[2][1]=pt[1];
-        derivatedFuns[3].values(v, pt);
+        derivatedFuns[3].value(v, pt);
         diffs[3][0]=pt[0];
         diffs[3][1]=pt[1];
     }

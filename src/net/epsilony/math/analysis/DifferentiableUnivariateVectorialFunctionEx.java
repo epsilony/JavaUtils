@@ -9,6 +9,6 @@ package net.epsilony.math.analysis;
  *
  * @author epsilon
  */
-public interface DifferentiableUnivariateVectorFunction extends UnivariateVectorFunction{
-    UnivariateVectorFunction vectorDerivative();
+public interface DifferentiableUnivariateVectorialFunctionEx extends UnivariateVectorialFunctionEx{
+    UnivariateVectorialFunctionEx vectorDerivative();
 }

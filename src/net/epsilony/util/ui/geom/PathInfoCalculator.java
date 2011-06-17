@@ -5,9 +5,9 @@
 package net.epsilony.util.ui.geom;
 
 import java.awt.geom.PathIterator;
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorFunction;
-import net.epsilony.math.analysis.GaussLegendreQuadratureUtils;
-import net.epsilony.math.analysis.UnivariateVectorFunction;
+import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.math.util.GaussLegendreQuadratureUtils;
+import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
@@ -17,7 +17,7 @@ import static java.lang.Math.*;
  *
  * @author epsilon
  */
-final public class PathInfoCalculator implements DifferentiableUnivariateVectorFunction {
+final public class PathInfoCalculator implements DifferentiableUnivariateVectorialFunctionEx {
 
     PathInfoNode pathInfoNode;
 
@@ -136,7 +136,7 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
     }
 
     @Override
-    public double[] values(double input, double[] results) throws FunctionEvaluationException {
+    public double[] value(double input, double[] results) throws FunctionEvaluationException {
         if (input > 1 || input < 0) {
             throw new IllegalArgumentException("the input can only be in [0,1]");
         }
@@ -151,20 +151,20 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
    
 
     @Override
-    public double[] values(double input) throws FunctionEvaluationException {
+    public double[] value(double input) throws FunctionEvaluationException {
         double[] results = new double[getDimension()];
-        return values(input, results);
+        return value(input, results);
     }
     UnivariateVectorFunctionImpl derivative = new UnivariateVectorFunctionImpl();
 
     @Override
-    public UnivariateVectorFunction vectorDerivative() {
+    public UnivariateVectorialFunctionEx vectorDerivative() {
         return derivative;
     }
 
     
 
-    final private class UnivariateVectorFunctionImpl implements UnivariateVectorFunction {
+    final private class UnivariateVectorFunctionImpl implements UnivariateVectorialFunctionEx {
 
         public UnivariateVectorFunctionImpl() {
         }
@@ -175,7 +175,7 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
         }
 
         @Override
-        public double[] values(double input, double[] results) throws FunctionEvaluationException {
+        public double[] value(double input, double[] results) throws FunctionEvaluationException {
             if (input > 1 || input < 0) {
                 throw new IllegalArgumentException("the input can only be in [0,1]");
             }
@@ -188,9 +188,9 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
         }
 
         @Override
-        public double[] values(double input) throws FunctionEvaluationException {
+        public double[] value(double input) throws FunctionEvaluationException {
             double[] results = new double[getDimension()];
-            return values(input, results);
+            return value(input, results);
         }
     }
 
@@ -200,7 +200,7 @@ final public class PathInfoCalculator implements DifferentiableUnivariateVectorF
 
         @Override
         public double value(double x) throws FunctionEvaluationException {
-            derivative.values(x, tds);
+            derivative.value(x, tds);
             return sqrt(tds[0] * tds[0] + tds[1] * tds[1]);
         }
     }

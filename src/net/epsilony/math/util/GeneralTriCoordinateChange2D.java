@@ -5,8 +5,8 @@
 
 package net.epsilony.math.util;
 
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorFunction;
-import net.epsilony.math.analysis.UnivariateVectorFunction;
+import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 
@@ -25,17 +25,17 @@ public class GeneralTriCoordinateChange2D implements BivariateMapper{
     private double x1,x2,y1,y2;
     double[] pt=new double[2];
     double[]diffs;
-    DifferentiableUnivariateVectorFunction fun;
-    UnivariateVectorFunction derivatedFun;
+    DifferentiableUnivariateVectorialFunctionEx fun;
+    UnivariateVectorialFunctionEx derivatedFun;
     
-    public void setup(double[] oriPoint,DifferentiableUnivariateVectorFunction fun){
+    public void setup(double[] oriPoint,DifferentiableUnivariateVectorialFunctionEx fun){
         this.fun=fun;
         derivatedFun=fun.vectorDerivative();
         x1=oriPoint[0];
         y1=oriPoint[1];     
     }
 
-    public GeneralTriCoordinateChange2D(double [] oriPoint,DifferentiableUnivariateVectorFunction fun) {
+    public GeneralTriCoordinateChange2D(double [] oriPoint,DifferentiableUnivariateVectorialFunctionEx fun) {
          setup(oriPoint,fun);
     }
     
@@ -57,7 +57,7 @@ public class GeneralTriCoordinateChange2D implements BivariateMapper{
      * @return {{x2(u),y2(u)}
      */
     private void generatePoint(double u) throws FunctionEvaluationException{
-        fun.values(u,pt);
+        fun.value(u,pt);
         x2=pt[0];
         y2=pt[1];
     }
@@ -70,7 +70,7 @@ public class GeneralTriCoordinateChange2D implements BivariateMapper{
      * @return{dx2/du,dy2/du}
      */
     private void generateDiffs(double u) throws FunctionEvaluationException{
-        derivatedFun.values(u, diffs);
+        derivatedFun.value(u, diffs);
     }
             
 

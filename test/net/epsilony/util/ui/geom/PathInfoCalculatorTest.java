@@ -8,7 +8,7 @@ package net.epsilony.util.ui.geom;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.PathIterator;
 import java.util.LinkedList;
-import net.epsilony.math.analysis.UnivariateVectorFunction;
+import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.integration.RombergIntegrator;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
@@ -52,13 +52,13 @@ public class PathInfoCalculatorTest {
         LinkedList<int[]> closedIndes=new LinkedList<int[]>();
         ShapeUtils.getPathInfo(el, infos, closedIndes);
         PathInfoCalculator instance = new PathInfoCalculator(infos.getFirst());
-        final UnivariateVectorFunction deriFun=instance.vectorDerivative();
+        final UnivariateVectorialFunctionEx deriFun=instance.vectorDerivative();
         final double [] tds=new double[2];
         UnivariateRealFunction lengthFun=new UnivariateRealFunction() {
 
             @Override
             public double value(double x) throws FunctionEvaluationException {
-                deriFun.values(x, tds);
+                deriFun.value(x, tds);
                 return Math.sqrt(tds[0]*tds[0]+tds[1]*tds[1]);
                        
             }

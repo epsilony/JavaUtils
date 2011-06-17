@@ -6,7 +6,7 @@
 package net.epsilony.math.util;
 
 import net.epsilony.util.ui.geom.PathInfoCalculator;
-import net.epsilony.math.analysis.UnivariateVectorFunction;
+import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
 import net.epsilony.util.ui.geom.PathInfoNode;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
@@ -18,7 +18,7 @@ import static java.lang.Math.abs;
  */
 public class GeneralPolarToCartesianChange2D implements BivariateMapper{
     PathInfoCalculator pathInfoCal;
-    UnivariateVectorFunction diffFun;
+    UnivariateVectorialFunctionEx diffFun;
     double xOri,yOri;
 
     public GeneralPolarToCartesianChange2D() {
@@ -65,10 +65,10 @@ public class GeneralPolarToCartesianChange2D implements BivariateMapper{
         double ro,th,tdxro,tdxth,tdyro,tdyth;
         ro=(u+1)/2;
         th=(v+1)/2;
-        pathInfoCal.values(th, tds);
+        pathInfoCal.value(th, tds);
         results[0]=xOri*(1-ro)+tds[0]*ro;
         results[1]=yOri*(1-ro)+tds[1]*ro;
-        diffFun.values(th, tds2);
+        diffFun.value(th, tds2);
         tdxro=-xOri+tds[0];
         tdxth=tds2[0]*ro;
         tdyro=-yOri+tds[1];

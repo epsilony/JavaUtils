@@ -6,7 +6,6 @@ package net.epsilony.math.util;
 
 import java.util.Arrays;
 import java.util.Random;
-import net.epsilony.math.analysis.SimpsonIntegratorOnTriangleDomain;
 import org.apache.commons.math.analysis.BivariateRealFunction;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

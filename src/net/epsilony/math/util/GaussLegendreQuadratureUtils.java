@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.analysis;
+package net.epsilony.math.util;
 
 import java.util.Arrays;
 import static java.lang.Math.*;

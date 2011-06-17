@@ -6,15 +6,15 @@
 package net.epsilony.math.polynomial;
 
 import java.util.Arrays;
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorFunction;
-import net.epsilony.math.analysis.UnivariateVectorFunction;
+import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;
 
 /**
  *
  * @author epsilon
  */
-public class LinePolynomial implements DifferentiableUnivariateVectorFunction{
+public class LinePolynomial implements DifferentiableUnivariateVectorialFunctionEx{
 
     private int dimension;
     double[][] pts;
@@ -33,7 +33,7 @@ public class LinePolynomial implements DifferentiableUnivariateVectorFunction{
     }
 
     @Override
-    public double[] values(double input, double[] results) throws FunctionEvaluationException {
+    public double[] value(double input, double[] results) throws FunctionEvaluationException {
         for(int i=0;i<dimension;i++){
             results[i]=pts[0][i]+input*(pts[1][i]-pts[0][i]);
         }
@@ -41,14 +41,14 @@ public class LinePolynomial implements DifferentiableUnivariateVectorFunction{
     }
 
     @Override
-    public double[] values(double input) throws FunctionEvaluationException {
+    public double[] value(double input) throws FunctionEvaluationException {
         double [] results=new double[dimension];
-        return values(input,results);
+        return value(input,results);
     }
 
     @Override
-    public UnivariateVectorFunction vectorDerivative() {
-        return new UnivariateVectorFunction() {
+    public UnivariateVectorialFunctionEx vectorDerivative() {
+        return new UnivariateVectorialFunctionEx() {
             int dim=dimension;
             double[] diffs=new double[dim];
             {
@@ -62,15 +62,13 @@ public class LinePolynomial implements DifferentiableUnivariateVectorFunction{
             }
 
             @Override
-            public double[] values(double input, double[] results) throws FunctionEvaluationException {
-                for(int i=0;i<dim;i++){
-                    results[i]=diffs[i];
-                }
+            public double[] value(double input, double[] results) throws FunctionEvaluationException {
+                System.arraycopy(diffs, 0, results, 0, dim);
                 return results;
             }
 
             @Override
-            public double[] values(double input) throws FunctionEvaluationException {
+            public double[] value(double input) throws FunctionEvaluationException {
                 return Arrays.copyOf(diffs, dim);
             }
         };

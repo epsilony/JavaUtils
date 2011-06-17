@@ -59,18 +59,18 @@ final public class CoonsBivariateMapper implements BivariateMapper {
         u = (u + 1) / 2;
         v = (v + 1) / 2;
 
-        pICs[0].values(v, p0v);
-        pICs[2].values(1 - v, p1v);
-        pICs[1].values(u, pu1);
-        pICs[3].values(1 - u, pu0);
+        pICs[0].value(v, p0v);
+        pICs[2].value(1 - v, p1v);
+        pICs[1].value(u, pu1);
+        pICs[3].value(1 - u, pu0);
         results[0] = p0v[0] * (1 - u) + p1v[0] * u + pu0[0] * (1 - v) + pu1[0] * v - ((starts[0] * (1 - v) + starts[2] * v) * (1 - u) + (starts[6] * (1 - v) + starts[4] * v) * u);
         results[1] = p0v[1] * (1 - u) + p1v[1] * u + pu0[1] * (1 - v) + pu1[1] * v - ((starts[1] * (1 - v) + starts[3] * v) * (1 - u) + (starts[7] * (1 - v) + starts[5] * v) * u);
 
         double dxu, dxv, dyu, dyv;
-        pICs[0].vectorDerivative().values(v, d0v);
-        pICs[2].vectorDerivative().values(1 - v, d1v);
-        pICs[1].vectorDerivative().values(u, du1);
-        pICs[3].vectorDerivative().values(1 - u, du0);
+        pICs[0].vectorDerivative().value(v, d0v);
+        pICs[2].vectorDerivative().value(1 - v, d1v);
+        pICs[1].vectorDerivative().value(u, du1);
+        pICs[3].vectorDerivative().value(1 - u, du0);
         dxu = -p0v[0] + p1v[0] - du0[0] * (1 - v) + du1[0] * v - (-(starts[0] * (1 - v) + starts[2] * v) + (starts[6] * (1 - v) + starts[4] * v));
         dyu = -p0v[1] + p1v[1] - du0[1] * (1 - v) + du1[1] * v - (-(starts[1] * (1 - v) + starts[3] * v) + (starts[7] * (1 - v) + starts[5] * v));
 
