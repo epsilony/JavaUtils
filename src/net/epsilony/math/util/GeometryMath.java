@@ -11,7 +11,12 @@ import java.util.Iterator;
  *
  * @author epsilon
  */
-public class Geometry {
+public class GeometryMath {
+    
+    public static boolean isCounterClockwise(Iterable<? extends Point2D.Double> pointsIt){
+        return isCounterClockwise(pointsIt.iterator());
+    }
+    
     public static boolean isCounterClockwise(Iterator<? extends Point2D.Double> pointsIt){
         Point2D.Double first=pointsIt.next();
         Point2D.Double latest=pointsIt.next();
