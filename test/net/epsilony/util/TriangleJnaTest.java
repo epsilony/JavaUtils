@@ -10,6 +10,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import java.nio.Buffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,9 +52,14 @@ public class TriangleJnaTest {
         String s = "pq0nV";
         TriangleJna.triangulateio in = TriangleJna.triangulateio.instanceWithoutAttributes(numberofpoints, pointlist, pointmarkerlist, numberofsegments, segmentlist, segmentmarkerlist,numberofholes, holelist);
         TriangleJna.triangulateio out = new TriangleJna.triangulateio();
-//        Native.setProtected(true);
+
         libTriangleJna.triangulate(s, in, out, new TriangleJna.triangulateio());
-//        System.out.println();
+        System.out.println("pointlist:");
+        System.out.println(Arrays.toString(out.getArrayField("pointlist", true)));
+//        System.out.println("pointmarkerlist");
+//        System.out.println(Arrays.toString(out.pointmarkerlist.getIntArray(0, out.numberofpoints)));
+//        System.out.println("triangles");
+//        System.out.println(Arrays.toString(out.trianglelist.getIntArray(0, out.numberoftriangles*3)));
 
     }
 }
