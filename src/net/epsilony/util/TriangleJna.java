@@ -71,18 +71,26 @@ public class TriangleJna {
         public triangulateio() {
         }
 
-        public void setArrayField(String name, double[] in) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        public void setArrayField(String name, double[] input,int length) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
             Field field = triangulateio.class.getField(name);
-            Memory mem = new Memory(8 * in.length);
-            mem.write(0, in, 0, in.length);
+            Memory mem = new Memory(8 * length);
+            mem.write(0, input, 0, length);
             field.set(this, mem);
         }
+        
+        public void setArrayField(String name,double[] input) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
+            setArrayField(name,input,input.length);
+        }
 
-        public void setArrayField(String name, int[] in) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        public void setArrayField(String name, int[] input,int length) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
             Field field = triangulateio.class.getField(name);
-            Memory mem = new Memory(4 * in.length);
-            mem.write(0, in, 0, in.length);
+            Memory mem = new Memory(4 * length);
+            mem.write(0, input, 0, length);
             field.set(this, mem);
+        }
+        
+        public void setArrayField(String name, int[] input) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
+            setArrayField(name,input,input.length);
         }
 
         public double[] getArrayField(String name, boolean free) {
@@ -184,27 +192,365 @@ public class TriangleJna {
 
         LibTriangleJna INSTANCE = (LibTriangleJna) Native.loadLibrary("Triangle", LibTriangleJna.class);
 
-        public void triangulate(String flag, triangulateio in, triangulateio out, triangulateio vorout);
+        public void triangulate(String switcher, triangulateio in, triangulateio out, triangulateio vorout);
     }
+    public triangulateio in=new triangulateio();
+    public triangulateio out=new triangulateio();
+    public triangulateio vorout=new triangulateio();
     boolean zeroBased = true;  //-z
     boolean quite = true;     //-Q
     boolean verbose = false;  //-V
-    double qualityAngle = 20;  //-q:20, >0: -qXX.XX, <0: NONE
+    double qualityAngle = 20;  //-q:20, >0: -qXX.XX, <=0: NONE
     double areaConstraint = -1;  //-a >0 :-aXX, <0: NONE, 0: use trianglearealist
     boolean refine = false;   //-r, neighbourlist may be ignorned
     boolean noNodesOutput = false; //-N pointlist,pointmarkerlist,pointattributelist not output,
     boolean noBoundaryMarkersOutput = false;   //-B pointmarkerlist not output
-    boolean noNeighborOutput = true;    // -n neighborlist not output, 
-    boolean noElementOutput = true;   //-E trianglelist, not output, 
+    boolean noNeighborOutput = false;    // -n neighborlist not output, 
+    boolean noElementOutput = false;   //-E trianglelist, not output, 
     boolean segmentConstraint = false; //-p   holelist,numberofholse,regionlist,numberofregions is copied to out， -r 时不起作用。
-    boolean triangleAttributes=false; //-A 
+    boolean takeTriangleAttributes = false; //-A
+    boolean takeVoronoi = false; //-v
     /* If    
     /*      the `E' switch is not used and (`in->numberofelementattributes' is   
     /*      not zero or the `A' switch is used), `elementattributelist' must be  
     /*      initialized.  `trianglearealist' may be ignored. */
+
+    public boolean isTakeVoronoi() {
+        return takeVoronoi;
+    }
+
+    /**
+     * set the '-v' switcher, the default is false.
+     * @param takeVoronoi 
+     */
+    public void setTakeVoronoi(boolean voronoi) {
+        this.takeVoronoi = voronoi;
+        vorout=new triangulateio();
+    }
+
+    public triangulateio getVorout() {
+        return vorout;
+    }
+
+    public double getAreaConstraint() {
+        return areaConstraint;
+    }
+
+    /**
+     * set the switch 'a', when a&lt0 means cancelled, the default is &lt 0
+     * @param areaConstraint 
+     */
+    public void setAreaConstraint(double areaConstraint) {
+        this.areaConstraint = areaConstraint;
+    }
+
+    public boolean isNoBoundaryMarkersOutput() {
+        return noBoundaryMarkersOutput;
+    }
+
+    /**
+     * set the '-B' switcher, the default is false
+     * @param noBoundaryMarkersOutput 
+     */
+    public void setNoBoundaryMarkersOutput(boolean noBoundaryMarkersOutput) {
+        this.noBoundaryMarkersOutput = noBoundaryMarkersOutput;
+    }
+
+    public boolean isNoElementOutput() {
+        return noElementOutput;
+    }
+
+    /**
+     * set the '-E' switcher, the default is false.
+     * @param noElementOutput 
+     */
+    public void setNoElementOutput(boolean noElementOutput) {
+        this.noElementOutput = noElementOutput;
+    }
+
+    public boolean isNoNeighborOutput() {
+        return noNeighborOutput;
+    }
+
+    /**
+     * set the '-n' switcher, the default is false.
+     * @param noNeighborOutput 
+     */
+    public void setNoNeighborOutput(boolean noNeighborOutput) {
+        this.noNeighborOutput = noNeighborOutput;
+    }
+
+    public boolean isNoNodesOutput() {
+        return noNodesOutput;
+    }
+
+    /**
+     * set the '-N' switcher, the default is false.
+     * @param noNodesOutput 
+     */
+    public void setNoNodesOutput(boolean noNodesOutput) {
+        this.noNodesOutput = noNodesOutput;
+    }
+
+    public triangulateio getIn() {
+        return in;
+    }
+
+    public triangulateio getOut() {
+        return out;
+    }
+
+
+    /**
+     * get the 'q' switch value, the unit is degree. the default is 20deg
+     * @return 
+     */
+    public double getQualityAngle() {
+        return qualityAngle;
+    }
+
+    /**
+     * set the 'q' switch value, the default is 20deg.
+     * @param qualityAngle unit is degree, when &lt=0 means q will be canceled. when >0 means the least angle of triangle is qualityAngle
+     */
+    public void setQualityAngle(double qualityAngle) {
+        this.qualityAngle = qualityAngle;
+    }
+
+    /**
+     * set the 'q' switch as the default value 20deg
+     */
+    public void setQualityAngle() {
+        this.qualityAngle = 20;
+    }
+
+    public boolean isQuite() {
+        return quite;
+    }
+
+    /**
+     * set the '-Q' switcher, if take '-Q' the '-V' will not be used., the default is true.
+     * @param quite 
+     */
+    public void setQuite(boolean quite) {
+        this.quite = quite;
+        if (quite) {
+            this.verbose = false;
+        }
+    }
+
+    public boolean isRefine() {
+        return refine;
+    }
+
+    /**
+     * set the '-r' switcher, the default is false.
+     * @param refine 
+     */
+    public void setRefine(boolean refine) {
+        this.refine = refine;
+    }
+
+    /**
+     * get the '-p' switcher imformation
+     * @return 
+     */
+    public boolean isSegmentConstraint() {
+        return segmentConstraint;
+    }
+
+    /**
+     * set the '-p' switcher, the default is false.
+     * @param segmentConstraint 
+     */
+    public void setSegmentConstraint(boolean segmentConstraint) {
+        this.segmentConstraint = segmentConstraint;
+    }
+
+    public boolean isTakeTriangleAttributes() {
+        return takeTriangleAttributes;
+    }
+
+    /**
+     * set the '-A' switcher, the default is false.
+     * @param takeTriangleAttributes 
+     */
+    public void setTakeTriangleAttributes(boolean takeTriangleAttributes) {
+        this.takeTriangleAttributes = takeTriangleAttributes;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * set the '-V' switcher, the default is false.
+     * @param verbose 
+     */
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+        if (verbose) {
+            this.quite = false;
+        }
+    }
+
+    public boolean isZeroBased() {
+        return zeroBased;
+    }
+
+    /**
+     * set the '-z' switcher, , the default is true.
+     * @param zeroBased 
+     */
+    public void setZeroBased(boolean zeroBased) {
+        this.zeroBased = zeroBased;
+    }
+
+    /**
+     * get the switcher of current settings, the switcher will not include the '-' head.
+     * @return 
+     */
+    public String getSwitcher() {
+        StringBuilder sb = new StringBuilder();
+        if (zeroBased) {
+            sb.append('z');
+        }
+        if (quite) {
+            sb.append('Q');
+        }
+        if (verbose) {
+            sb.append('V');
+        }
+        if (qualityAngle > 0) {
+            sb.append('q');
+            if (qualityAngle != 20) {
+                sb.append(String.format("%f", qualityAngle));
+            }
+        }
+        if (areaConstraint >= 0) {
+            sb.append('a');
+            if (areaConstraint != 0) {
+                sb.append(String.format("%f", areaConstraint));
+            }
+        }
+        if (refine) {
+            sb.append('r');
+        }
+        if (noNodesOutput) {
+            sb.append('N');
+        }
+        if (noBoundaryMarkersOutput) {
+            sb.append('B');
+        }
+        if (noNeighborOutput) {
+            sb.append('n');
+        }
+        if (noElementOutput) {
+            sb.append('E');
+        }
+        if (segmentConstraint) {
+            sb.append('p');
+        }
+        if (takeTriangleAttributes) {
+            sb.append('A');
+        }
+        return sb.toString();
+    }
+
+    /**
+     * set the numberofpoint and pointlist of input data
+     * @param input
+     * @param numPoints 
+     */
+    public void setPointList(double[] input,int numPoints) {
+        if (null == in) {
+            in = new triangulateio();
+        }
+        try {
+            in.setArrayField("pointlist", input,2*numPoints);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        in.numberofpoints=numPoints;
+    }
+    
+    /**
+     * set the numberofpoint and pointlist of input data, the numberofpoint=input.length/2
+     * @param input 
+     */
+    public void setPointList(double[] input){
+        setPointList(input,input.length/2);
+    }
+    
+    public void setPointSegmentMarkers(int[] input){
+        if(in.pointlist==null){
+            throw new NullPointerException("The pointlist is still null! the setPointSegmentMarkers operation must be used after the setPointList()!");
+        }
+        try {
+            in.setArrayField("pointmarkerlist", input,in.numberofpoints);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void setSegmentList(int[] input,int numSegments){
+        in.numberofsegments=numSegments;
+        try {
+            in.setArrayField("segmentlist", input,numSegments*2);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void setSegmentMarkers(int []input){
+        if(null==in.segmentlist){
+            throw new NullPointerException("The segmentlist is still null! the setSegmentMarkers operation must be used after the setSegmentList()!");
+        }
+        try {
+            in.setArrayField("segmentmarkerlist", input,in.numberofsegments);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void setHoles(double [] input,int numHoles){
+        in.numberofholes=numHoles;
+        try {
+            in.setArrayField("holelist", input,numHoles*2);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void setHoles(double [] input){
+        setHoles(input,input.length/2);
+    }
+    
+    public void callTriangluate(){
+        LibTriangleJna.INSTANCE.triangulate(getSwitcher(), in, out, vorout);
+    }
 }
-
-
 /*****************************************************************************/
 /*                                                                           */
 /*  (triangle.h)                                                             */

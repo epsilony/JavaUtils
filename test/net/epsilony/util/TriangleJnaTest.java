@@ -4,10 +4,14 @@
  */
 package net.epsilony.util;
 
+import java.awt.geom.PathIterator;
 import java.nio.DoubleBuffer;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
@@ -61,5 +65,24 @@ public class TriangleJnaTest {
 //        System.out.println("triangles");
 //        System.out.println(Arrays.toString(out.trianglelist.getIntArray(0, out.numberoftriangles*3)));
 
+    }
+    
+    @Test
+    public void testCallTrianglute(){
+        TriangleJna jna=new TriangleJna();
+        jna.setNoNeighborOutput(true);
+        jna.setNoElementOutput(true);
+        jna.setNoBoundaryMarkersOutput(true);
+        jna.setQualityAngle();
+        Area area=new Area(new Rectangle2D.Double(0, 0, 20, 20));
+        PathIterator pathIterator = area.getPathIterator(new AffineTransform());
+        while(pathIterator.isDone()==false){
+           
+            double[] ts=new double[6];
+            int flag = pathIterator.currentSegment(ts);
+            pathIterator.next();
+            String str = Arrays.toString(ts);
+            System.out.println(str);
+        }
     }
 }
