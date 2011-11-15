@@ -5,8 +5,8 @@
 package net.epsilony.math.util;
 
 import java.util.Collection;
-import net.epsilony.util.ui.geom.PathInfoCalculator;
-import net.epsilony.util.ui.geom.PathInfoNode;
+import net.epsilony.java2dutil.PathInfoCalculator;
+import net.epsilony.java2dutil.PathInfoNode;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 
