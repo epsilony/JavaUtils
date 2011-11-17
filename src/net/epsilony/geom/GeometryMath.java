@@ -61,4 +61,5 @@ public class GeometryMath {
     public static double crossProduct(double x1, double y1, double x2, double y2, double x3, double y3) {
         return x1 * y2 + x2 * y3 + x3 * y1 - x1 * y3 - x2 * y1 - x3 * y2;
     }
+    
 }
