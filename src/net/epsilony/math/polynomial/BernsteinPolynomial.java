@@ -10,7 +10,7 @@ import static org.apache.commons.math.util.MathUtils.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class BernsteinPolynomial extends PolynomialFunction{
 

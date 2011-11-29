@@ -92,18 +92,23 @@ public class QuadCoordinateChange2D implements BivariateMapper{
      * @return {x,y,jaccobi value}
      */
     @Override
-    public double[] getResults(double u, double v, double[] results) throws FunctionEvaluationException {
-        u=(u+1)/2;
-        v=(v+1)/2;
-        generatePoints(u, v);
-        generateDiffs(u, v);
-        generateTempletVars();
-        generateCrossPt();
-        generatePartitialDiffs();
-        results[0]=x;
-        results[1]=y;
-        results[2]=generateJaccobi();
-        return results;
+    public double[] getResults(double u, double v, double[] results) {
+        try {
+            u=(u+1)/2;
+            v=(v+1)/2;
+            generatePoints(u, v);
+            generateDiffs(u, v);
+            generateTempletVars();
+            generateCrossPt();
+            generatePartitialDiffs();
+            results[0]=x;
+            results[1]=y;
+            results[2]=generateJaccobi();
+            return results;
+        } catch (FunctionEvaluationException ex) {
+        }finally{
+            return null;
+        }
     }
 
     /**

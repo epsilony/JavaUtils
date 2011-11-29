@@ -14,7 +14,7 @@ import org.apache.commons.math.analysis.BivariateRealFunction;
  * <p>the data is copy from: </ br>
  * Table 10.5 Dunavant quadrature for area coordinate triangle , p275,Chapter 10, Finite Element Analysis with Error Estimators, Ed Akin, Elsevere.</p>
  * 
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class TriangleSymmetricQuadrature {
 
@@ -93,7 +93,7 @@ public class TriangleSymmetricQuadrature {
         int numPt = numPts[power - 1];
         for (int i = 0; i < numPts[power - 1]; i++) {
             results[i * 2] = coords[i * 3] * x1 + coords[i * 3 + 1] * x2 + coords[i * 3 + 2] * x3;
-            results[i * 2 + 1] = coords[i * 3 + 1] * y1 + coords[i * 3 + 2] * y2 + coords[i * 3 + 2] * y3;
+            results[i * 2 + 1] = coords[i * 3] * y1 + coords[i * 3 + 1] * y2 + coords[i * 3 + 2] * y3;
         }
         return numPt;
     }
@@ -179,7 +179,7 @@ public class TriangleSymmetricQuadrature {
      * @throws FunctionEvaluationException 
      */
     public static double quadrate(double x1, double y1, double x2, double y2, double x3, double y3, int power, BivariateRealFunction fun) throws FunctionEvaluationException {
-        double area = Math.abs((x1 - x2) * (y3 - y2) - (x3 - x2) * (y1 - y2)) / 2;
+        double area =net.epsilony.geom.GeometryMath.triangleArea(x1, y1, x2, y2, x3, y3);
         return quadrate(x1, y1, x2, y2, x3, y3, power, fun, area);
     }
 

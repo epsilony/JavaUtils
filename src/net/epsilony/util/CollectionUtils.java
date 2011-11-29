@@ -9,7 +9,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class CollectionUtils {
 

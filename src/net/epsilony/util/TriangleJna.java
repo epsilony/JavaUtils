@@ -1,6 +1,6 @@
 /*
  * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * and open the template inIO the editor.
  */
 package net.epsilony.util;
 
@@ -12,58 +12,59 @@ import com.sun.jna.Structure;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.epsilony.geom.Triangle;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class TriangleJna {
 
     public static class triangulateio extends Structure {
 
-        public Pointer pointlist = Pointer.NULL;                                               /* In / out */
+        public Pointer pointlist = Pointer.NULL;                                               /* In / outIO */
 
-        public Pointer pointattributelist = Pointer.NULL;                                      /* In / out */
+        public Pointer pointattributelist = Pointer.NULL;                                      /* In / outIO */
 
-        public Pointer pointmarkerlist = Pointer.NULL;                                          /* In / out */
+        public Pointer pointmarkerlist = Pointer.NULL;                                          /* In / outIO */
 
-        public int numberofpoints;                                            /* In / out */
+        public int numberofpoints;                                            /* In / outIO */
 
-        public int numberofpointattributes;                                   /* In / out */
+        public int numberofpointattributes;                                   /* In / outIO */
 
-        public Pointer trianglelist = Pointer.NULL;                                             /* In / out */
+        public Pointer trianglelist = Pointer.NULL;                                             /* In / outIO */
 
-        public Pointer triangleattributelist = Pointer.NULL;                                   /* In / out */
+        public Pointer triangleattributelist = Pointer.NULL;                                   /* In / outIO */
 
         public Pointer trianglearealist = Pointer.NULL;                                         /* In only */
 
         public Pointer neighborlist = Pointer.NULL;                                             /* Out only */
 
-        public int numberoftriangles;                                         /* In / out */
+        public int numberoftriangles;                                         /* In / outIO */
 
-        public int numberofcorners;                                           /* In / out */
+        public int numberofcorners;                                           /* In / outIO */
 
-        public int numberoftriangleattributes;                                /* In / out */
+        public int numberoftriangleattributes;                                /* In / outIO */
 
-        public Pointer segmentlist = Pointer.NULL;                                              /* In / out */
+        public Pointer segmentlist = Pointer.NULL;                                              /* In / outIO */
 
-        public Pointer segmentmarkerlist = Pointer.NULL;                                        /* In / out */
+        public Pointer segmentmarkerlist = Pointer.NULL;                                        /* In / outIO */
 
-        public int numberofsegments;                                          /* In / out */
+        public int numberofsegments;                                          /* In / outIO */
 
-        public Pointer holelist = Pointer.NULL;                        /* In / pointer to array copied out */
+        public Pointer holelist = Pointer.NULL;                        /* In / pointer to array copied outIO */
 
-        public int numberofholes;                                      /* In / copied out */
+        public int numberofholes;                                      /* In / copied outIO */
 
-        public Pointer regionlist = Pointer.NULL;                      /* In / pointer to array copied out */
+        public Pointer regionlist = Pointer.NULL;                      /* In / pointer to array copied outIO */
 
-        public int numberofregions;                                    /* In / copied out */
+        public int numberofregions;                                    /* In / copied outIO */
 
         public Pointer edgelist = Pointer.NULL;                                                 /* Out only */
 
-        public Pointer edgemarkerlist = Pointer.NULL;            /* Not used with Voronoi diagram; out only */
+        public Pointer edgemarkerlist = Pointer.NULL;            /* Not used with Voronoi diagram; outIO only */
 
-        public Pointer normlist = Pointer.NULL;                /* Used only with Voronoi diagram; out only */
+        public Pointer normlist = Pointer.NULL;                /* Used only with Voronoi diagram; outIO only */
 
         public int numberofedges;                           /* Out only */
 
@@ -71,96 +72,38 @@ public class TriangleJna {
         public triangulateio() {
         }
 
-        public void setArrayField(String name, double[] input,int length) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        public void free() {
+        }
+
+        public void setArrayField(String name, double[] input, int length) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+
             Field field = triangulateio.class.getField(name);
-            Memory mem = new Memory(8 * length);
-            mem.write(0, input, 0, length);
-            field.set(this, mem);
-        }
-        
-        public void setArrayField(String name,double[] input) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
-            setArrayField(name,input,input.length);
+            if (null == input) {
+                field.set(this, Pointer.NULL);
+            } else {
+                Memory mem = new Memory(8 * length);
+                mem.write(0, input, 0, length);
+                field.set(this, mem);
+            }
         }
 
-        public void setArrayField(String name, int[] input,int length) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        public void setArrayField(String name, double[] input) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+            setArrayField(name, input, input.length);
+        }
+
+        public void setArrayField(String name, int[] input, int length) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
             Field field = triangulateio.class.getField(name);
-            Memory mem = new Memory(4 * length);
-            mem.write(0, input, 0, length);
-            field.set(this, mem);
-        }
-        
-        public void setArrayField(String name, int[] input) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
-            setArrayField(name,input,input.length);
-        }
-
-        public double[] getArrayField(String name, boolean free) {
-            int length = 0;
-            Pointer pointer;
-            if (name.equalsIgnoreCase("pointlist")) {
-                length = 2 * numberofpoints;
-                pointer = pointlist;
-            } else if (name.equalsIgnoreCase("pointattributelist")) {
-                length = numberofpointattributes * numberofpoints;
-                pointer = pointattributelist;
-            } else if (name.equalsIgnoreCase("triangleattributelist")) {
-                length = numberoftriangleattributes * numberoftriangles;
-                pointer = triangleattributelist;
-            } else if (name.equalsIgnoreCase("trianglearealist")) {
-                length = numberoftriangles;
-                pointer = trianglearealist;
-            } else if (name.equalsIgnoreCase("holelist")) {
-                length = 2 * numberofholes;
-                pointer = holelist;
-            } else if (name.equalsIgnoreCase("regionlist")) {
-                length = 4 * numberofregions;
-                pointer = regionlist;
-            } else if (name.equalsIgnoreCase("normlist")) {
-                length = 2 * numberofedges;
-                pointer = normlist;
+            if (null == input) {
+                field.set(this, Pointer.NULL);
             } else {
-                throw new IllegalArgumentException(name + " is not a double array field name");
+                Memory mem = new Memory(4 * length);
+                mem.write(0, input, 0, length);
+                field.set(this, mem);
             }
-            double[] outArray = pointer.getDoubleArray(0, length);
-            if (free) {
-                pointer.clear(length * 8);
-            }
-
-            return outArray;
         }
 
-        public double[] getArrayField(String name, double[] outArray, boolean free) {
-            int length = 0;
-            Pointer pointer;
-            if (name.equalsIgnoreCase("pointlist")) {
-                length = 2 * numberofpoints;
-                pointer = pointlist;
-            } else if (name.equalsIgnoreCase("pointattributelist")) {
-                length = numberofpointattributes * numberofpoints;
-                pointer = pointattributelist;
-            } else if (name.equalsIgnoreCase("triangleattributelist")) {
-                length = numberoftriangleattributes * numberoftriangles;
-                pointer = triangleattributelist;
-            } else if (name.equalsIgnoreCase("trianglearealist")) {
-                length = numberoftriangles;
-                pointer = trianglearealist;
-            } else if (name.equalsIgnoreCase("holelist")) {
-                length = 2 * numberofholes;
-                pointer = holelist;
-            } else if (name.equalsIgnoreCase("regionlist")) {
-                length = 4 * numberofregions;
-                pointer = regionlist;
-            } else if (name.equalsIgnoreCase("normlist")) {
-                length = 2 * numberofedges;
-                pointer = normlist;
-            } else {
-                throw new IllegalArgumentException(name + " is not a double array field name");
-            }
-            pointer.read(0, outArray, 0, length);
-            if (free) {
-                pointer.clear(8 * length);
-            }
-
-            return outArray;
+        public void setArrayField(String name, int[] input) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+            setArrayField(name, input, input.length);
         }
 
         public static triangulateio instanceWithoutAttributes(int numberOfPoints, double[] pointList, int[] pointMarkerlist, int numberOfSegments, int[] segmentlist, int[] segmentmarkerlist, int numberOfHoles, double[] holeList) {
@@ -176,11 +119,7 @@ public class TriangleJna {
                 result.numberofholes = numberOfHoles;
                 result.setArrayField("holelist", holeList);
 
-            } catch (NoSuchFieldException ex) {
-                Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
+            } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 return result;
@@ -190,365 +129,49 @@ public class TriangleJna {
 
     public interface LibTriangleJna extends Library {
 
-        LibTriangleJna INSTANCE = (LibTriangleJna) Native.loadLibrary("Triangle", LibTriangleJna.class);
+        LibTriangleJna INSTANCE = (LibTriangleJna) Native.loadLibrary("triangle", LibTriangleJna.class);
 
         public void triangulate(String switcher, triangulateio in, triangulateio out, triangulateio vorout);
-    }
-    public triangulateio in=new triangulateio();
-    public triangulateio out=new triangulateio();
-    public triangulateio vorout=new triangulateio();
-    boolean zeroBased = true;  //-z
-    boolean quite = true;     //-Q
-    boolean verbose = false;  //-V
-    double qualityAngle = 20;  //-q:20, >0: -qXX.XX, <=0: NONE
-    double areaConstraint = -1;  //-a >0 :-aXX, <0: NONE, 0: use trianglearealist
-    boolean refine = false;   //-r, neighbourlist may be ignorned
-    boolean noNodesOutput = false; //-N pointlist,pointmarkerlist,pointattributelist not output,
-    boolean noBoundaryMarkersOutput = false;   //-B pointmarkerlist not output
-    boolean noNeighborOutput = false;    // -n neighborlist not output, 
-    boolean noElementOutput = false;   //-E trianglelist, not output, 
-    boolean segmentConstraint = false; //-p   holelist,numberofholse,regionlist,numberofregions is copied to out， -r 时不起作用。
-    boolean takeTriangleAttributes = false; //-A
-    boolean takeVoronoi = false; //-v
-    /* If    
-    /*      the `E' switch is not used and (`in->numberofelementattributes' is   
-    /*      not zero or the `A' switch is used), `elementattributelist' must be  
-    /*      initialized.  `trianglearealist' may be ignored. */
 
-    public boolean isTakeVoronoi() {
-        return takeVoronoi;
+        public void trifree(triangulateio out);
     }
 
-    /**
-     * set the '-v' switcher, the default is false.
-     * @param takeVoronoi 
-     */
-    public void setTakeVoronoi(boolean voronoi) {
-        this.takeVoronoi = voronoi;
-        vorout=new triangulateio();
+    public static void trifree(triangulateio ob) {
+        LibTriangleJna.INSTANCE.trifree(ob);
     }
 
-    public triangulateio getVorout() {
-        return vorout;
+    public Triangle[] triangluate(double[] points, int pointNum, int[] lines, int lineNum, double[] holes, int holeNum) {
+        triangulateio in = triangulateio.instanceWithoutAttributes(pointNum, points, null, lineNum, lines, null, holeNum, holes);
+        triangulateio out = new triangulateio();
+        String s = "zpqnQ";
+        LibTriangleJna.INSTANCE.triangulate(s, in, out, null);
+        Triangle[] result = convert(out);
+        trifree(out);
+        return result;
+
     }
 
-    public double getAreaConstraint() {
-        return areaConstraint;
-    }
-
-    /**
-     * set the switch 'a', when a&lt0 means cancelled, the default is &lt 0
-     * @param areaConstraint 
-     */
-    public void setAreaConstraint(double areaConstraint) {
-        this.areaConstraint = areaConstraint;
-    }
-
-    public boolean isNoBoundaryMarkersOutput() {
-        return noBoundaryMarkersOutput;
-    }
-
-    /**
-     * set the '-B' switcher, the default is false
-     * @param noBoundaryMarkersOutput 
-     */
-    public void setNoBoundaryMarkersOutput(boolean noBoundaryMarkersOutput) {
-        this.noBoundaryMarkersOutput = noBoundaryMarkersOutput;
-    }
-
-    public boolean isNoElementOutput() {
-        return noElementOutput;
-    }
-
-    /**
-     * set the '-E' switcher, the default is false.
-     * @param noElementOutput 
-     */
-    public void setNoElementOutput(boolean noElementOutput) {
-        this.noElementOutput = noElementOutput;
-    }
-
-    public boolean isNoNeighborOutput() {
-        return noNeighborOutput;
-    }
-
-    /**
-     * set the '-n' switcher, the default is false.
-     * @param noNeighborOutput 
-     */
-    public void setNoNeighborOutput(boolean noNeighborOutput) {
-        this.noNeighborOutput = noNeighborOutput;
-    }
-
-    public boolean isNoNodesOutput() {
-        return noNodesOutput;
-    }
-
-    /**
-     * set the '-N' switcher, the default is false.
-     * @param noNodesOutput 
-     */
-    public void setNoNodesOutput(boolean noNodesOutput) {
-        this.noNodesOutput = noNodesOutput;
-    }
-
-    public triangulateio getIn() {
-        return in;
-    }
-
-    public triangulateio getOut() {
-        return out;
-    }
-
-
-    /**
-     * get the 'q' switch value, the unit is degree. the default is 20deg
-     * @return 
-     */
-    public double getQualityAngle() {
-        return qualityAngle;
-    }
-
-    /**
-     * set the 'q' switch value, the default is 20deg.
-     * @param qualityAngle unit is degree, when &lt=0 means q will be canceled. when >0 means the least angle of triangle is qualityAngle
-     */
-    public void setQualityAngle(double qualityAngle) {
-        this.qualityAngle = qualityAngle;
-    }
-
-    /**
-     * set the 'q' switch as the default value 20deg
-     */
-    public void setQualityAngle() {
-        this.qualityAngle = 20;
-    }
-
-    public boolean isQuite() {
-        return quite;
-    }
-
-    /**
-     * set the '-Q' switcher, if take '-Q' the '-V' will not be used., the default is true.
-     * @param quite 
-     */
-    public void setQuite(boolean quite) {
-        this.quite = quite;
-        if (quite) {
-            this.verbose = false;
+    public static Triangle[] convert(triangulateio out) {
+        double[] outpoints = out.pointlist.getDoubleArray(0, out.numberofpoints * 2);
+        int[] triangles = out.trianglelist.getIntArray(0, 3 * out.numberoftriangles);
+        Triangle[] results = new Triangle[out.numberoftriangles];
+        for (int i = 0; i < out.numberoftriangles; i++) {
+            int index = triangles[i * 3] * 2;
+            double x1 = outpoints[index];
+            double y1 = outpoints[index + 1];
+            index = triangles[i * 3 + 1] * 2;
+            double x2 = outpoints[index];
+            double y2 = outpoints[index + 1];
+            index = triangles[i * 3 + 2] * 2;
+            double x3 = outpoints[index];
+            double y3 = outpoints[index + 1];
+            results[i] = new Triangle(x1, y1, x2, y2, x3, y3);
         }
+        return results;
     }
 
-    public boolean isRefine() {
-        return refine;
-    }
-
-    /**
-     * set the '-r' switcher, the default is false.
-     * @param refine 
-     */
-    public void setRefine(boolean refine) {
-        this.refine = refine;
-    }
-
-    /**
-     * get the '-p' switcher imformation
-     * @return 
-     */
-    public boolean isSegmentConstraint() {
-        return segmentConstraint;
-    }
-
-    /**
-     * set the '-p' switcher, the default is false.
-     * @param segmentConstraint 
-     */
-    public void setSegmentConstraint(boolean segmentConstraint) {
-        this.segmentConstraint = segmentConstraint;
-    }
-
-    public boolean isTakeTriangleAttributes() {
-        return takeTriangleAttributes;
-    }
-
-    /**
-     * set the '-A' switcher, the default is false.
-     * @param takeTriangleAttributes 
-     */
-    public void setTakeTriangleAttributes(boolean takeTriangleAttributes) {
-        this.takeTriangleAttributes = takeTriangleAttributes;
-    }
-
-    public boolean isVerbose() {
-        return verbose;
-    }
-
-    /**
-     * set the '-V' switcher, the default is false.
-     * @param verbose 
-     */
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
-        if (verbose) {
-            this.quite = false;
-        }
-    }
-
-    public boolean isZeroBased() {
-        return zeroBased;
-    }
-
-    /**
-     * set the '-z' switcher, , the default is true.
-     * @param zeroBased 
-     */
-    public void setZeroBased(boolean zeroBased) {
-        this.zeroBased = zeroBased;
-    }
-
-    /**
-     * get the switcher of current settings, the switcher will not include the '-' head.
-     * @return 
-     */
-    public String getSwitcher() {
-        StringBuilder sb = new StringBuilder();
-        if (zeroBased) {
-            sb.append('z');
-        }
-        if (quite) {
-            sb.append('Q');
-        }
-        if (verbose) {
-            sb.append('V');
-        }
-        if (qualityAngle > 0) {
-            sb.append('q');
-            if (qualityAngle != 20) {
-                sb.append(String.format("%f", qualityAngle));
-            }
-        }
-        if (areaConstraint >= 0) {
-            sb.append('a');
-            if (areaConstraint != 0) {
-                sb.append(String.format("%f", areaConstraint));
-            }
-        }
-        if (refine) {
-            sb.append('r');
-        }
-        if (noNodesOutput) {
-            sb.append('N');
-        }
-        if (noBoundaryMarkersOutput) {
-            sb.append('B');
-        }
-        if (noNeighborOutput) {
-            sb.append('n');
-        }
-        if (noElementOutput) {
-            sb.append('E');
-        }
-        if (segmentConstraint) {
-            sb.append('p');
-        }
-        if (takeTriangleAttributes) {
-            sb.append('A');
-        }
-        return sb.toString();
-    }
-
-    /**
-     * set the numberofpoint and pointlist of input data
-     * @param input
-     * @param numPoints 
-     */
-    public void setPointList(double[] input,int numPoints) {
-        if (null == in) {
-            in = new triangulateio();
-        }
-        try {
-            in.setArrayField("pointlist", input,2*numPoints);
-        } catch (NoSuchFieldException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        in.numberofpoints=numPoints;
-    }
-    
-    /**
-     * set the numberofpoint and pointlist of input data, the numberofpoint=input.length/2
-     * @param input 
-     */
-    public void setPointList(double[] input){
-        setPointList(input,input.length/2);
-    }
-    
-    public void setPointSegmentMarkers(int[] input){
-        if(in.pointlist==null){
-            throw new NullPointerException("The pointlist is still null! the setPointSegmentMarkers operation must be used after the setPointList()!");
-        }
-        try {
-            in.setArrayField("pointmarkerlist", input,in.numberofpoints);
-        } catch (NoSuchFieldException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void setSegmentList(int[] input,int numSegments){
-        in.numberofsegments=numSegments;
-        try {
-            in.setArrayField("segmentlist", input,numSegments*2);
-        } catch (NoSuchFieldException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void setSegmentMarkers(int []input){
-        if(null==in.segmentlist){
-            throw new NullPointerException("The segmentlist is still null! the setSegmentMarkers operation must be used after the setSegmentList()!");
-        }
-        try {
-            in.setArrayField("segmentmarkerlist", input,in.numberofsegments);
-        } catch (NoSuchFieldException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void setHoles(double [] input,int numHoles){
-        in.numberofholes=numHoles;
-        try {
-            in.setArrayField("holelist", input,numHoles*2);
-        } catch (NoSuchFieldException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TriangleJna.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void setHoles(double [] input){
-        setHoles(input,input.length/2);
-    }
-    
-    public void callTriangluate(){
-        LibTriangleJna.INSTANCE.triangulate(getSwitcher(), in, out, vorout);
+    public static void triangle(String switcher, triangulateio in, triangulateio out, triangulateio vout) {
+        LibTriangleJna.INSTANCE.triangulate(switcher, in, out, vout);
     }
 }
 /*****************************************************************************/
@@ -590,16 +213,16 @@ public class TriangleJna {
 /*  eliminates Triangle's -r, -q, -a, -u, -D, -Y, -S, and -s switches.       */
 /*                                                                           */
 /*  IMPORTANT:  These definitions (TRILIBRARY, REDUCED, CDT_ONLY) must be    */
-/*  made in the makefile or in triangle.c itself.  Putting these definitions */
-/*  in this file (triangle.h) will not create the desired effect.            */
+/*  made inIO the makefile or inIO triangle.c itself.  Putting these definitions */
+/*  inIO this file (triangle.h) will not create the desired effect.            */
 /*                                                                           */
 /*                                                                           */
 /*  The calling convention for triangulate() follows.                        */
 /*                                                                           */
-/*      void triangulate(triswitches, in, out, vorout)                       */
+/*      void triangulate(triswitches, inIO, outIO, vorout)                       */
 /*      char *triswitches;                                                   */
-/*      struct triangulateio *in;                                            */
-/*      struct triangulateio *out;                                           */
+/*      struct triangulateio *inIO;                                            */
+/*      struct triangulateio *outIO;                                           */
 /*      struct triangulateio *vorout;                                        */
 /*                                                                           */
 /*  `triswitches' is a string containing the command line switches you wish  */
@@ -610,7 +233,7 @@ public class TriangleJna {
 /*    indexing, because the first item of any type always starts at index    */
 /*    [0] of the corresponding array, whether that item's number is zero or  */
 /*    one.                                                                   */
-/*  - You'll probably want to use the `Q' (quiet) switch in your final code, */
+/*  - You'll probably want to use the `Q' (quiet) switch inIO your final code, */
 /*    but you can take advantage of Triangle's printed output (including the */
 /*    `V' switch) while debugging.                                           */
 /*  - If you are not using the `q', `a', `u', `D', `j', or `s' switches,     */
@@ -618,15 +241,15 @@ public class TriangleJna {
 /*    possibly for the boundary markers.  If you don't need the boundary     */
 /*    markers, you should use the `N' (no nodes output) switch to save       */
 /*    memory.  (If you do need boundary markers, but need to save memory, a  */
-/*    good nasty trick is to set out->pointlist equal to in->pointlist       */
+/*    good nasty trick is to set outIO->pointlist equal to inIO->pointlist       */
 /*    before calling triangulate(), so that Triangle overwrites the input    */
 /*    points with identical copies.)                                         */
 /*  - The `I' (no iteration numbers) and `g' (.off file output) switches     */
 /*    have no effect when Triangle is compiled with TRILIBRARY defined.      */
 /*                                                                           */
-/*  `in', `out', and `vorout' are descriptions of the input, the output,     */
+/*  `inIO', `outIO', and `vorout' are descriptions of the input, the output,     */
 /*  and the Voronoi output.  If the `v' (Voronoi output) switch is not used, */
-/*  `vorout' may be NULL.  `in' and `out' may never be NULL.                 */
+/*  `vorout' may be NULL.  `inIO' and `outIO' may never be NULL.                 */
 /*                                                                           */
 /*  Certain fields of the input and output structures must be initialized,   */
 /*  as described below.                                                      */
@@ -636,14 +259,14 @@ public class TriangleJna {
 /*                                                                           */
 /*  The `triangulateio' structure.                                           */
 /*                                                                           */
-/*  Used to pass data into and out of the triangulate() procedure.           */
+/*  Used to pass data into and outIO of the triangulate() procedure.           */
 /*                                                                           */
 /*                                                                           */
 /*  Arrays are used to store points, triangles, markers, and so forth.  In   */
-/*  all cases, the first item in any array is stored starting at index [0].  */
-/*  However, that item is item number `1' unless the `z' switch is used, in  */
+/*  all cases, the first item inIO any array is stored starting at index [0].  */
+/*  However, that item is item number `1' unless the `z' switch is used, inIO  */
 /*  which case it is item number `0'.  Hence, you may find it easier to      */
-/*  index points (and triangles in the neighbor list) if you use the `z'     */
+/*  index points (and triangles inIO the neighbor list) if you use the `z'     */
 /*  switch.  Unless, of course, you're calling Triangle from a Fortran       */
 /*  program.                                                                 */
 /*                                                                           */
@@ -658,7 +281,7 @@ public class TriangleJna {
 /*  `pointmarkerlist':  An array of point markers; one int per point.        */
 /*                                                                           */
 /*  `trianglelist':  An array of triangle corners.  The first triangle's     */
-/*    first corner is at index [0], followed by its other two corners in     */
+/*    first corner is at index [0], followed by its other two corners inIO     */
 /*    counterclockwise order, followed by any other nodes if the triangle    */
 /*    represents a nonlinear element.  Each triangle occupies                */
 /*    `numberofcorners' ints.                                                */
@@ -695,10 +318,10 @@ public class TriangleJna {
 /*    edge.  Output only.                                                    */
 /*  `edgemarkerlist':  An array of edge markers; one int per edge.  Output   */
 /*    only.                                                                  */
-/*  `normlist':  An array of normal vectors, used for infinite rays in       */
+/*  `normlist':  An array of normal vectors, used for infinite rays inIO       */
 /*    Voronoi diagrams.  The first normal vector's x and y magnitudes are    */
 /*    at indices [0] and [1], followed by the remaining vectors.  For each   */
-/*    finite edge in a Voronoi diagram, the normal vector written is the     */
+/*    finite edge inIO a Voronoi diagram, the normal vector written is the     */
 /*    zero vector.  Two REALs per edge.  Output only.                        */
 /*                                                                           */
 /*                                                                           */
@@ -718,16 +341,16 @@ public class TriangleJna {
 /*  Triangle by calling the trifree() procedure defined below.  (By default, */
 /*  trifree() just calls the standard free() library procedure, but          */
 /*  applications that call triangulate() may replace trimalloc() and         */
-/*  trifree() in triangle.c to use specialized memory allocators.)           */
+/*  trifree() inIO triangle.c to use specialized memory allocators.)           */
 /*                                                                           */
 /*  Here's a guide to help you decide which fields you must initialize       */
 /*  before you call triangulate().                                           */
 /*                                                                           */
-/*  `in':                                                                    */
+/*  `inIO':                                                                    */
 /*                                                                           */
 /*    - `pointlist' must always point to a list of points; `numberofpoints'  */
 /*      and `numberofpointattributes' must be properly set.                  */
-/*      `pointmarkerlist' must either be set to NULL (in which case all      */
+/*      `pointmarkerlist' must either be set to NULL (inIO which case all      */
 /*      markers default to zero), or must point to a list of markers.  If    */
 /*      `numberofpointattributes' is not zero, `pointattributelist' must     */
 /*      point to a list of point attributes.                                 */
@@ -740,7 +363,7 @@ public class TriangleJna {
 /*      list of triangle area constraints.  `neighborlist' may be ignored.   */
 /*    - If the `p' switch is used, `segmentlist' must point to a list of     */
 /*      segments, `numberofsegments' must be properly set, and               */
-/*      `segmentmarkerlist' must either be set to NULL (in which case all    */
+/*      `segmentmarkerlist' must either be set to NULL (inIO which case all    */
 /*      markers default to zero), or must point to a list of markers.        */
 /*    - If the `p' switch is used without the `r' switch, then               */
 /*      `numberofholes' and `numberofregions' must be properly set.  If      */
@@ -748,22 +371,22 @@ public class TriangleJna {
 /*      holes.  If `numberofregions' is not zero, `regionlist' must point to */
 /*      a list of region constraints.                                        */
 /*    - If the `p' switch is used, `holelist', `numberofholes',              */
-/*      `regionlist', and `numberofregions' is copied to `out'.  (You can    */
+/*      `regionlist', and `numberofregions' is copied to `outIO'.  (You can    */
 /*      nonetheless get away with not initializing them if the `r' switch is */
 /*      used.)                                                               */
 /*    - `edgelist', `edgemarkerlist', `normlist', and `numberofedges' may be */
 /*      ignored.                                                             */
 /*                                                                           */
-/*  `out':                                                                   */
+/*  `outIO':                                                                   */
 /*                                                                           */
 /*    - `pointlist' must be initialized (NULL or pointing to memory) unless  */
 /*      the `N' switch is used.  `pointmarkerlist' must be initialized       */
 /*      unless the `N' or `B' switch is used.  If `N' is not used and        */
-/*      `in->numberofpointattributes' is not zero, `pointattributelist' must */
+/*      `inIO->numberofpointattributes' is not zero, `pointattributelist' must */
 /*      be initialized.                                                      */
 /*    - `trianglelist' must be initialized unless the `E' switch is used.    */
 /*      `neighborlist' must be initialized if the `n' switch is used.  If    */
-/*      the `E' switch is not used and (`in->numberofelementattributes' is   */
+/*      the `E' switch is not used and (`inIO->numberofelementattributes' is   */
 /*      not zero or the `A' switch is used), `elementattributelist' must be  */
 /*      initialized.  `trianglearealist' may be ignored.                     */
 /*    - `segmentlist' must be initialized if the `p' or `c' switch is used,  */
@@ -776,56 +399,56 @@ public class TriangleJna {
 /*                                                                           */
 /*  `vorout' (only needed if `v' switch is used):                            */
 /*                                                                           */
-/*    - `pointlist' must be initialized.  If `in->numberofpointattributes'   */
+/*    - `pointlist' must be initialized.  If `inIO->numberofpointattributes'   */
 /*      is not zero, `pointattributelist' must be initialized.               */
 /*      `pointmarkerlist' may be ignored.                                    */
 /*    - `edgelist' and `normlist' must both be initialized.                  */
 /*      `edgemarkerlist' may be ignored.                                     */
 /*    - Everything else may be ignored.                                      */
 /*                                                                           */
-/*  After a call to triangulate(), the valid fields of `out' and `vorout'    */
-/*  will depend, in an obvious way, on the choice of switches used.  Note    */
+/*  After a call to triangulate(), the valid fields of `outIO' and `vorout'    */
+/*  will depend, inIO an obvious way, on the choice of switches used.  Note    */
 /*  that when the `p' switch is used, the pointers `holelist' and            */
-/*  `regionlist' are copied from `in' to `out', but no new space is          */
+/*  `regionlist' are copied from `inIO' to `outIO', but no new space is          */
 /*  allocated; be careful that you don't free() the same array twice.  On    */
 /*  the other hand, Triangle will never copy the `pointlist' pointer (or any */
-/*  others); new space is allocated for `out->pointlist', or if the `N'      */
-/*  switch is used, `out->pointlist' remains uninitialized.                  */
+/*  others); new space is allocated for `outIO->pointlist', or if the `N'      */
+/*  switch is used, `outIO->pointlist' remains uninitialized.                  */
 /*                                                                           */
 /*  All of the meaningful `numberof' fields will be properly set; for        */
-/*  instance, `numberofedges' will represent the number of edges in the      */
+/*  instance, `numberofedges' will represent the number of edges inIO the      */
 /*  triangulation whether or not the edges were written.  If segments are    */
 /*  not used, `numberofsegments' will indicate the number of boundary edges. */
 /*                                                                           */
 /*****************************************************************************/
 //struct triangulateio {
-//  REAL *pointlist;                                               /* In / out */
-//  REAL *pointattributelist;                                      /* In / out */
-//  int *pointmarkerlist;                                          /* In / out */
-//  int numberofpoints;                                            /* In / out */
-//  int numberofpointattributes;                                   /* In / out */
+//  REAL *pointlist;                                               /* In / outIO */
+//  REAL *pointattributelist;                                      /* In / outIO */
+//  int *pointmarkerlist;                                          /* In / outIO */
+//  int numberofpoints;                                            /* In / outIO */
+//  int numberofpointattributes;                                   /* In / outIO */
 //
-//  int *trianglelist;                                             /* In / out */
-//  REAL *triangleattributelist;                                   /* In / out */
+//  int *trianglelist;                                             /* In / outIO */
+//  REAL *triangleattributelist;                                   /* In / outIO */
 //  REAL *trianglearealist;                                         /* In only */
 //  int *neighborlist;                                             /* Out only */
-//  int numberoftriangles;                                         /* In / out */
-//  int numberofcorners;                                           /* In / out */
-//  int numberoftriangleattributes;                                /* In / out */
+//  int numberoftriangles;                                         /* In / outIO */
+//  int numberofcorners;                                           /* In / outIO */
+//  int numberoftriangleattributes;                                /* In / outIO */
 //
-//  int *segmentlist;                                              /* In / out */
-//  int *segmentmarkerlist;                                        /* In / out */
-//  int numberofsegments;                                          /* In / out */
+//  int *segmentlist;                                              /* In / outIO */
+//  int *segmentmarkerlist;                                        /* In / outIO */
+//  int numberofsegments;                                          /* In / outIO */
 //
-//  REAL *holelist;                        /* In / pointer to array copied out */
-//  int numberofholes;                                      /* In / copied out */
+//  REAL *holelist;                        /* In / pointer to array copied outIO */
+//  int numberofholes;                                      /* In / copied outIO */
 //
-//  REAL *regionlist;                      /* In / pointer to array copied out */
-//  int numberofregions;                                    /* In / copied out */
+//  REAL *regionlist;                      /* In / pointer to array copied outIO */
+//  int numberofregions;                                    /* In / copied outIO */
 //
 //  int *edgelist;                                                 /* Out only */
-//  int *edgemarkerlist;            /* Not used with Voronoi diagram; out only */
-//  REAL *normlist;                /* Used only with Voronoi diagram; out only */
+//  int *edgemarkerlist;            /* Not used with Voronoi diagram; outIO only */
+//  REAL *normlist;                /* Used only with Voronoi diagram; outIO only */
 //  int numberofedges;                                             /* Out only */
 //};
 //

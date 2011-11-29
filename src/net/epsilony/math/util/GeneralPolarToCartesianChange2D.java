@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
 /**
  * 一个变换从最初的u[-1,1],v[-1,1],到ro[0,1],th[0,1]到x,y的变换。
  * 
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class GeneralPolarToCartesianChange2D implements BivariateMapper{
     PathInfoCalculator pathInfoCal;
@@ -59,22 +59,27 @@ public class GeneralPolarToCartesianChange2D implements BivariateMapper{
      * @throws org.apache.commons.math.FunctionEvaluationException
      */
     @Override
-    public double[] getResults(double u, double v, double[] results) throws FunctionEvaluationException {
-        double[] tds=new double[2];
-        double[] tds2=new double[2];
-        double ro,th,tdxro,tdxth,tdyro,tdyth;
-        ro=(u+1)/2;
-        th=(v+1)/2;
-        pathInfoCal.value(th, tds);
-        results[0]=xOri*(1-ro)+tds[0]*ro;
-        results[1]=yOri*(1-ro)+tds[1]*ro;
-        diffFun.value(th, tds2);
-        tdxro=-xOri+tds[0];
-        tdxth=tds2[0]*ro;
-        tdyro=-yOri+tds[1];
-        tdyth=tds2[1]*ro;
-        results[2]=abs((tdxro*tdyth-tdxth*tdyro)/4);
-        return results;
+    public double[] getResults(double u, double v, double[] results){
+        try {
+            double[] tds=new double[2];
+            double[] tds2=new double[2];
+            double ro,th,tdxro,tdxth,tdyro,tdyth;
+            ro=(u+1)/2;
+            th=(v+1)/2;
+            pathInfoCal.value(th, tds);
+            results[0]=xOri*(1-ro)+tds[0]*ro;
+            results[1]=yOri*(1-ro)+tds[1]*ro;
+            diffFun.value(th, tds2);
+            tdxro=-xOri+tds[0];
+            tdxth=tds2[0]*ro;
+            tdyro=-yOri+tds[1];
+            tdyth=tds2[1]*ro;
+            results[2]=abs((tdxro*tdyth-tdxth*tdyro)/4);
+            return results;
+        } catch (FunctionEvaluationException ex) {
+        }finally{
+            return null;
+        }
     }
 
     public void setPathInfoNode(PathInfoNode infoNode) {

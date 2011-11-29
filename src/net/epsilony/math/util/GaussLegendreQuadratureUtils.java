@@ -12,7 +12,7 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
 
 /**
  * Gauss－Legendre积分，计划用commons-math的LegendreGaussIntegrator代替
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class GaussLegendreQuadratureUtils {
 
@@ -31,10 +31,11 @@ public class GaussLegendreQuadratureUtils {
         {(18 - sqrt(30)) / 36, (18 + sqrt(30)) / 36, (18 + sqrt(30)) / 36, (18 - sqrt(30)) / 36},
         {(322 - 13 * sqrt(70)) / 900, (322 + 13 * sqrt(70)) / 900, 128 / 225d, (322 + 13 * sqrt(70)) / 900, (322 - 13 * sqrt(70)) / 900}};
 
-    public static boolean isNumInDomain(int n) throws ArgumentOutsideDomainException {
+    public static boolean isNumInDomain(int n) {
         if (n < MINPOINTS || n > MAXPOINTS) {
-            throw new ArgumentOutsideDomainException(n, MINPOINTS, MAXPOINTS);
+            throw new UnsupportedOperationException("The quadrature points number:"+n+" is not supported yet");
         }
+
         return true;
     }
 
@@ -44,7 +45,7 @@ public class GaussLegendreQuadratureUtils {
      * @return a Copy of n Point position of Gauss-Legendre Quadrature over interval [1,1]
      * @throws ArgumentOutsideDomainException 
      */
-    public static double[] getPositions(int nPt) throws ArgumentOutsideDomainException {
+    public static double[] getPositions(int nPt){
         isNumInDomain(nPt);
         return Arrays.copyOf(positionsArrays[nPt - 1], nPt);
     }
@@ -95,8 +96,8 @@ public class GaussLegendreQuadratureUtils {
      * @return Copy of n Point weights of Gauss-Legendre Quadrature over interval [1,1]
      * @throws ArgumentOutsideDomainException 
      */
-    public static double[] getWeights(int nPt) throws ArgumentOutsideDomainException {
-        isNumInDomain(nPt);
+    public static double[] getWeights(int nPt){
+//        isNumInDomain(nPt);
         return Arrays.copyOf(weightsArrays[nPt - 1], nPt);
     }
     

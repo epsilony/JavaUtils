@@ -10,7 +10,7 @@ import java.awt.Shape;
 /**
  * 一个Element2D的接口
  * Element2D包含了几何信息、名称、点选时所算的区域以及子的Element
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public interface Element2D {
     public Shape getShape();

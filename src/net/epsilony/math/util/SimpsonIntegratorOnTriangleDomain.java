@@ -14,7 +14,7 @@ import org.apache.commons.math.analysis.integration.SimpsonIntegrator;
 
 /**
  * 复分Simpson公式在三角形(x1,y1)(x2,y2)(x3,y3)上积分。计算方法见<a href="http://epsilony.net/mywiki/math/IntegrationOverTriangles"> Man的Wiki上的三角形域上积分的介绍 </a>
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class SimpsonIntegratorOnTriangleDomain {
 

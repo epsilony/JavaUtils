@@ -12,7 +12,7 @@ import java.util.ListIterator;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class OrderedLinkedList<E> extends AbstractSequentialList<E> {
 

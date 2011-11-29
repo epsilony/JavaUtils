@@ -4,6 +4,8 @@
  */
 package net.epsilony.math.util;
 
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.linked.TIntLinkedList;
 import java.util.LinkedList;
 import no.uib.cipr.matrix.BandMatrix;
 import no.uib.cipr.matrix.DenseVector;
@@ -17,11 +19,37 @@ import no.uib.cipr.matrix.sparse.SparseVector;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class MatrixUtils {
 
-    public static final byte UNSYMMETRICAL = 0x00;
+    public static String stringPlot(Matrix matrix) {
+        StringBuilder sb = new StringBuilder();
+        String x = "X";
+        String iS = "I";
+        String zS = "0";
+        String uS = "U";
+        String ln = String.format("%n");
+        for (int i = 0; i < matrix.numRows(); i++) {
+            for (int j = 0; j < matrix.numColumns(); j++) {
+                if (i == j) {
+                    if(matrix.get(i,j)!=0){
+                    sb.append(iS);}else{
+                        sb.append(uS);
+                    }
+                    continue;
+                }
+                if (matrix.get(i, j) != 0) {
+                    sb.append(x);
+                } else {
+                    sb.append(zS);
+                }
+            }
+            sb.append(ln);
+        }
+        return sb.toString();
+    }
+    public static final byte UNSYMMETRICAL = 0x04;
     public static final byte SYMMETRICAL = 0x01;
     public static final byte UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF = 0x02;
     public static final byte SPD = 0x10;
@@ -102,93 +130,145 @@ public class MatrixUtils {
                 }
             }
             adjRow[nodeNum] = adjNum;
+        } else if ((flag & MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) != 0) {
+            TIntLinkedList[] adjVecLists = new TIntLinkedList[nodeNum];
+            for (int i = 0; i < nodeNum; i++) {
+                adjVecLists[i] = new TIntLinkedList();
+            }
+            for (int i = 0; i < nodeNum; i++) {
+                SparseVector vec = inMat.getRow(i);
+                vec.compact();
+                int[] indes = vec.getIndex();
+                TIntLinkedList rowAdjList = adjVecLists[i];
+                for (int j = 0; j < indes.length; j++) {
+                    int index = indes[j];
+                    if (index == i) {
+                        continue;
+                    }
+                    rowAdjList.add(index);
+                    adjVecLists[index].add(i);
+                }
+            }
+            int adjVecSize = 0;
+            for (int i = 0; i < nodeNum; i++) {
+                adjVecSize += adjVecLists[i].size();
+            }
+
+            adjVec = new int[adjVecSize];
+            adjRow = new int[nodeNum + 1];
+            int startIndex = 0;
+            for (int i = 0; i < nodeNum; i++) {
+                int size = adjVecLists[i].size();
+                adjVecLists[i].toArray(adjVec, 0, startIndex, size);
+                adjRow[i] = startIndex;
+                startIndex += size;
+            }
+            adjRow[nodeNum] = startIndex;
         } else {
-            FlexCompRowMatrix inMatTrans = (FlexCompRowMatrix) inMat.transpose(new FlexCompRowMatrix(nodeNum, nodeNum));
-            // Count the adjacency:
-            int adjNum = 0;
-            for (int rowI = 0; rowI < inMat.numRows(); rowI++) {
-                SparseVector rowVec = inMat.getRow(rowI);
-                SparseVector colVec = inMatTrans.getRow(rowI);
-                int rowIndesI = 0;
-                int colIndesI = 0;
-                int[] rowIndes = rowVec.getIndex();
-                int[] colIndes = colVec.getIndex();
-                int rowIndex, colIndex;
-                boolean rowHasNext, colHasNext;
-                rowHasNext = rowIndesI < rowIndes.length;
-                colHasNext = colIndesI < colIndes.length;
-                while (rowHasNext && colHasNext) {
-                    rowIndex = rowIndes[rowIndesI];
-                    colIndex = colIndes[colIndesI];
-                    if (rowIndex < colIndex) {
-                        rowIndesI++;
-                    } else if (rowIndex > colIndex) {
-                        colIndesI++;
-                    } else {
-                        colIndesI++;
-                        rowIndesI++;
+            TIntLinkedList[] adjVecLists1 = new TIntLinkedList[nodeNum], adjVecLists2 = new TIntLinkedList[nodeNum];
+            for (int i = 0; i < nodeNum; i++) {
+                adjVecLists1[i] = new TIntLinkedList();
+                adjVecLists2[i] = new TIntLinkedList();
+            }
+            for (int i = 0; i < nodeNum; i++) {
+                SparseVector vec = inMat.getRow(i);
+                vec.compact();
+                int[] indes = vec.getIndex();
+                TIntLinkedList rowList = adjVecLists1[i];
+                for (int j = 0; j < indes.length; j++) {
+                    int index = indes[j];
+                    if (index == i) {
+                        continue;
                     }
-                    adjNum++;
-                    rowHasNext = rowIndesI < rowIndes.length;
-                    colHasNext = colIndesI < colIndes.length;
-                }
-                if (rowHasNext) {
-                    adjNum += rowIndes.length - rowIndesI;
-                }
-                if (colHasNext) {
-                    adjNum += colIndes.length - colIndesI;
+                    adjVecLists2[index].add(i);
+                    rowList.add(index);
                 }
             }
-            adjNum -= nodeNum;
 
-            adjVec = new int[adjNum];
+            int adjVecLength = 0;
+            for (int i = 0; i < nodeNum; i++) {
+                TIntLinkedList list = new TIntLinkedList();
+                TIntLinkedList list1 = adjVecLists1[i];
+                TIntLinkedList list2 = adjVecLists2[i];
+                TIntIterator iter1 = list1.iterator();
+                TIntIterator iter2 = list2.iterator();
+                int index1 = 0, index2 = 0;
+                boolean b1, b2;
+                if (iter1.hasNext()) {
+                    index1 = iter1.next();
+                    b1 = true;
+                } else {
+                    b1 = false;
+                }
 
-            //fill the adjRow and adjVec
-            for (int rowI = 0, adjVecIndex = 0; rowI < inMat.numRows(); rowI++) {
-                SparseVector rowVec = inMat.getRow(rowI);
-                SparseVector colVec = inMatTrans.getRow(rowI);
-                int rowIndesI = 0;
-                int colIndesI = 0;
-                adjRow[rowI] = adjVecIndex;
-                int[] rowIndes = rowVec.getIndex();
-                int[] colIndes = colVec.getIndex();
-                int rowIndex, colIndex;
-                boolean rowHasNext, colHasNext;
-                rowHasNext = rowIndesI < rowIndes.length;
-                colHasNext = colIndesI < colIndes.length;
-                while (rowHasNext && colHasNext) {
-                    rowIndex = rowIndes[rowIndesI];
-                    colIndex = colIndes[colIndesI];
-                    if (rowIndex < colIndex) {
-                        rowIndesI++;
-                        adjVec[adjVecIndex++] = rowIndex;
-                    } else if (rowIndex > colIndex) {
-                        adjVec[adjVecIndex++] = colIndex;
-                        colIndesI++;
-                    } else {
-                        if (rowI != rowIndex) {
-                            adjVec[adjVecIndex++] = rowIndex;
+                if (iter2.hasNext()) {
+                    index2 = iter2.next();
+                    b2 = true;
+                } else {
+                    b2 = false;
+                }
+
+                //merge two list 
+                while (b1 || b2) {
+                    if (b1 && b2) {
+                        if (index1 < index2) {
+                            list.add(index1);
+                            if (iter1.hasNext()) {
+                                index1 = iter1.next();
+                            } else {
+                                b1 = false;
+                            }
+                        } else if (index1 == index2) {
+                            list.add(index1);
+                            if (iter1.hasNext()) {
+                                index1 = iter1.next();
+                            } else {
+                                b1 = false;
+                            }
+                            if (iter2.hasNext()) {
+                                index2 = iter2.next();
+                            } else {
+                                b2 = false;
+                            }
+                        } else {
+                            list.add(index2);
+                            if (iter2.hasNext()) {
+                                index2 = iter2.next();
+                            } else {
+                                b2 = false;
+                            }
                         }
-                        colIndesI++;
-                        rowIndesI++;
-                    }
-                    rowHasNext = rowIndesI < rowIndes.length;
-                    colHasNext = colIndesI < colIndes.length;
-                }
-                if (rowHasNext) {
-                    for (int i = rowIndesI; i < rowIndes.length; i++) {
-                        rowIndex = rowIndes[i];
-                        adjVec[adjVecIndex++] = rowIndex;
-                    }
-                }
-                if (colHasNext) {
-                    for (int i = colIndesI; i < colIndes.length; i++) {
-                        colIndex = colIndes[i];
-                        adjVec[adjVecIndex++] = colIndex;
+                    } else if (b1) {
+                        list.add(index1);
+                        if (iter1.hasNext()) {
+                            index1 = iter1.next();
+                        } else {
+                            break;
+                        }
+                    } else {
+                        list.add(index2);
+                        if (iter2.hasNext()) {
+                            index2 = iter2.next();
+                        } else {
+                            break;
+                        }
                     }
                 }
+
+                adjVecLists1[i] = list;
+                adjVecLength += list.size();
             }
-            adjRow[nodeNum] = adjNum;
+
+            adjVec = new int[adjVecLength];
+            adjRow = new int[nodeNum + 1];
+            int startIndex = 0;
+            for (int i = 0; i < adjVecLists1.length; i++) {
+                int listSize = adjVecLists1[i].size();
+                adjVecLists1[i].toArray(adjVec, 0, startIndex, listSize);
+                adjRow[i] = startIndex;
+                startIndex += listSize;
+            }
+            adjRow[nodeNum] = startIndex;
         }
 
         if (0 != base) {
@@ -325,7 +405,7 @@ public class MatrixUtils {
      * 用RCM方法缩减矩阵带宽求解方程Ax=b
      * @param matA 满矩方阵 A
      * @param vecB b 向量
-     * @param flag matA本身是对称的:{@link #SYMMETRICAL} inMat本身不是对称的，但是其是一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
+     * @param flag matA本身是对称的:{@link #SYMMETRICAL} matA本身不是对称的，但是其是一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
      * @return Ax=b 的 结果 x
      */
     public static DenseVector solveFlexCompRowMatrixByBandMethod(FlexCompRowMatrix matA, Vector vecB, int flag) {

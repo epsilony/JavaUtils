@@ -49,7 +49,7 @@ import static java.lang.Math.pow;
  * <p> for common objects need to combine with indes use {@link IndexWrapper}
  * @see IndexWrapper#wrapWithIndex(java.util.Collection, java.util.ArrayList, int[], java.util.List, java.util.ArrayList) 
  * </p>
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class LayeredRangeTree<Data> {
 
@@ -703,7 +703,7 @@ public class LayeredRangeTree<Data> {
             }
         }
 
-        void checkToAdd(Collection<Data> results, Node<Data> node, Data from, Data to, int highestDimIndex) {
+        void checkToAdd(Collection<? super Data> results, Node<Data> node, Data from, Data to, int highestDimIndex) {
 
             for (int i = highestDimIndex; i >= 0; i--) {
                 Comparator<Data> comp = comparators.get(i);
@@ -723,7 +723,7 @@ public class LayeredRangeTree<Data> {
          * @param to
          * @param results 
          */
-        void query(int dimIndex, Data from, Data to, Collection<Data> results) {
+        void query(int dimIndex, Data from, Data to, Collection<? super Data> results) {
             if (null == rootNode) {
                 return;
             }
@@ -939,7 +939,8 @@ public class LayeredRangeTree<Data> {
      * @param from
      * @param to 
      */
-    public void search(Collection<Data> results, Data from, Data to) {
+    public void search(Collection<? super Data> results, Data from, Data to) {
+        results.clear();
         rootTree.query(comparators.size() - 1, from, to, results);
     }
 }

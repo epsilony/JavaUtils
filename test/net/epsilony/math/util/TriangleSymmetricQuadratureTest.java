@@ -15,7 +15,7 @@ import static net.epsilony.math.util.TriangleSymmetricQuadrature.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class TriangleSymmetricQuadratureTest {
 

@@ -6,17 +6,11 @@ package net.epsilony.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import org.junit.After;
@@ -27,7 +21,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class LayeredRangeTreeTest {
     boolean isHotspot=false;

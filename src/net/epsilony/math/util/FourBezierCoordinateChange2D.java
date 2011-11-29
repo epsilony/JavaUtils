@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
 
 /**
  * 四条Bezier曲线围成的区域的坐标变换（不太成熟）
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class FourBezierCoordinateChange2D implements BivariateMapper{
     //双三次Bezier曲线系数阵

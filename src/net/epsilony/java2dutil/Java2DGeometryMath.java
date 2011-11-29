@@ -2,16 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.util;
+package net.epsilony.java2dutil;
 
 import java.awt.geom.Point2D;
 import java.util.Iterator;
+import net.epsilony.math.util.EYMath;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
-public class GeometryMath {
+public class Java2DGeometryMath {
     
     public static boolean isCounterClockwise(Iterable<? extends Point2D.Double> pointsIt){
         return isCounterClockwise(pointsIt.iterator());

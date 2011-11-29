@@ -16,7 +16,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 
 /**
  * 专门用于处理Shape有关的工具类
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class ShapeUtils {
     private static final PathInfoCalculator pathInfoCalculator=new PathInfoCalculator();

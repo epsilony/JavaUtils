@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
  * 映射的方法是：取p1到p2的u分点p1+(p2-p1)*u 为点pu,再取p3到pu的v分点，则有u,v到x,y的映射g (这里u,v属于[0,1])
  * u,v到((u+1)/2,(v+1)/2)的映射k
  * 则gk映射即为本类的映射
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class TriMapper implements BivariateMapper{
 
@@ -30,7 +30,7 @@ public class TriMapper implements BivariateMapper{
     }
     
     @Override
-    public double[] getResults(double u, double v, double[] results) throws FunctionEvaluationException {
+    public double[] getResults(double u, double v, double[] results){
         u=(u+1)/2;
         v=(v+1)/2;
         results[0]=(vertex[0]*(1-u)+vertex[2]*u)*v+vertex[4]*(1-v);

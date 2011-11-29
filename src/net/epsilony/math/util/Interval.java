@@ -7,7 +7,7 @@ package net.epsilony.math.util;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class Interval {
     double left;

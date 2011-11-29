@@ -4,25 +4,14 @@
  */
 package net.epsilony.util;
 
-import java.awt.geom.PathIterator;
-import java.nio.DoubleBuffer;
-import com.sun.jna.Memory;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Rectangle2D;
-import java.nio.Buffer;
-import java.nio.IntBuffer;
 import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class TriangleJnaTest {
 
@@ -59,7 +48,7 @@ public class TriangleJnaTest {
 
         libTriangleJna.triangulate(s, in, out, new TriangleJna.triangulateio());
         System.out.println("pointlist:");
-        System.out.println(Arrays.toString(out.getArrayField("pointlist", true)));
+        System.out.println(Arrays.toString(out.pointlist.getDoubleArray(0,out.numberofpoints*2)));
 //        System.out.println("pointmarkerlist");
 //        System.out.println(Arrays.toString(out.pointmarkerlist.getIntArray(0, out.numberofpoints)));
 //        System.out.println("triangles");
@@ -67,22 +56,20 @@ public class TriangleJnaTest {
 
     }
     
+
+    /**
+     * Test of triangluate method, of class TriangleJna.
+     */
     @Test
-    public void testCallTrianglute(){
-        TriangleJna jna=new TriangleJna();
-        jna.setNoNeighborOutput(true);
-        jna.setNoElementOutput(true);
-        jna.setNoBoundaryMarkersOutput(true);
-        jna.setQualityAngle();
-        Area area=new Area(new Rectangle2D.Double(0, 0, 20, 20));
-        PathIterator pathIterator = area.getPathIterator(new AffineTransform());
-        while(pathIterator.isDone()==false){
-           
-            double[] ts=new double[6];
-            int flag = pathIterator.currentSegment(ts);
-            pathIterator.next();
-            String str = Arrays.toString(ts);
-            System.out.println(str);
-        }
+    public void testTriangluate() {
+        System.out.println("triangluate");
+        double[] points = new double[]{0,0,100,0,100,100,0,100};
+        int pointNum = 4;
+        int[] lines = new int[]{0,1,1,2,2,3,3,0};
+        int lineNum = 4;
+        double[] holes = null;
+        int holeNum = 0;
+        TriangleJna instance = new TriangleJna();
+        instance.triangluate(points, pointNum, lines, lineNum, holes, holeNum);
     }
 }

@@ -15,7 +15,7 @@ import static java.lang.Math.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 final public class PathInfoCalculator implements DifferentiableUnivariateVectorialFunctionEx {
 

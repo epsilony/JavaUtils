@@ -10,7 +10,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 /**
  * 将u,v （u,v属于[-1,1]) 平面上的坐标映射到x,y上，并计算Jaccobi阵行列式J(u,v)的绝对值
  * 该接口设计用于一般区域的GaussLegendre积分用。
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public interface BivariateMapper {
     
@@ -21,5 +21,5 @@ public interface BivariateMapper {
      * @return results
      * @throws org.apache.commons.math.FunctionEvaluationException
      */
-    double [] getResults(double u,double v,double[] results) throws FunctionEvaluationException;
+    double [] getResults(double u,double v,double[] results);
 }

@@ -9,7 +9,7 @@ import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
 /**
  * 该类用于对apache commons-math 的PoloynomialFunction类进行操作
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 
 public class PolynomialUtils {

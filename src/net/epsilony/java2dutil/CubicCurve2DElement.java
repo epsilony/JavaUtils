@@ -10,7 +10,7 @@ import java.awt.geom.CubicCurve2D;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class CubicCurve2DElement extends Element2DAbstract{
     public CubicCurve2DElement(double x1,double y1,double ctrlx1,double ctrly1,double ctrlx2,double ctrly2,double x2,double y2) {

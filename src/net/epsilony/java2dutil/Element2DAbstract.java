@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public abstract class Element2DAbstract implements Element2D {
     static double size = 7;

@@ -6,7 +6,7 @@ package net.epsilony.geom;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class GeometryMath {
 

@@ -4,6 +4,7 @@
  */
 package net.epsilony.math.util;
 
+import net.epsilony.java2dutil.Java2DGeometryMath;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import org.junit.AfterClass;
@@ -13,7 +14,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class GeometryMathTest {
     
@@ -39,14 +40,14 @@ public class GeometryMathTest {
         points.add(new Point2D.Double(1,0));
         points.add(new Point2D.Double(0,1));
         boolean expResult = true;
-        boolean result = GeometryMath.isCounterClockwise(points);
+        boolean result = Java2DGeometryMath.isCounterClockwise(points);
         assertEquals(expResult, result);
         expResult=false;
         points.clear();
         points.add(new Point2D.Double(0, 0));
         points.add(new Point2D.Double(0,1));
         points.add(new Point2D.Double(1,0));
-        result = GeometryMath.isCounterClockwise(points);
+        result = Java2DGeometryMath.isCounterClockwise(points);
         assertEquals(expResult, result);
     }
 }

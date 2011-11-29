@@ -4,6 +4,8 @@
  */
 package net.epsilony.geom;
 
+import org.apache.commons.math.linear.OpenMapRealMatrix;
+import org.apache.commons.math.linear.SparseRealMatrix;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -12,7 +14,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class GeometryMathTest {
     
@@ -121,5 +123,10 @@ public class GeometryMathTest {
         assertEquals(expResult, result, 0.0);
         // TODO review the generated test code and remove the default call to fail.
         
+    }
+    
+    @Test
+    public void temp(){
+        SparseRealMatrix sp=new OpenMapRealMatrix(10, 10);
     }
 }

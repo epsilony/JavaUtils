@@ -10,7 +10,7 @@ import static java.lang.Math.*;
 
 /**
  * 自建的工具类，用以补充java.math中缺的静态函数
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class EYMath {
 

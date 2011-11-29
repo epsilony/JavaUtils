@@ -10,7 +10,7 @@ import static java.lang.Math.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class CompactSupportRadialBasisFunction implements RadialBasisFunction {
 

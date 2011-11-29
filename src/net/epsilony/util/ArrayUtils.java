@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class ArrayUtils {
 
@@ -36,5 +36,16 @@ public class ArrayUtils {
             }
         }
         return t;
+    }
+    
+    public static double max(double[] array){
+        double max=array[0];
+        for(int i=1,stop=array.length;i<stop;i++){
+            double t=array[i];
+            if(max<t){
+                max=t;
+            }
+        }
+        return max;
     }
 }

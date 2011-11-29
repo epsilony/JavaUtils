@@ -12,7 +12,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class LinePolynomial implements DifferentiableUnivariateVectorialFunctionEx{
 

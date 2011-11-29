@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
     public class IndexWrapper<T> {
 

@@ -22,7 +22,7 @@ import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 /**
  *
  * @deprecated  没有通过测试
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 @Deprecated
 public class RootIntervals extends ArrayList<Interval> {

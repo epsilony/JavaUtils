@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class BivariateBinomialsTest {
 

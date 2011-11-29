@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class PointMark2D implements Shape {
 

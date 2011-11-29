@@ -12,7 +12,7 @@ import static java.lang.Math.abs;
 
 /**
  * 由u,v区域(u,v属于[-1,1]到一边为Bezier曲线，其余两边为直线的近三角型区域映射
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class GeneralTriCoordinateChange2D implements BivariateMapper{
     
@@ -39,15 +39,20 @@ public class GeneralTriCoordinateChange2D implements BivariateMapper{
          setup(oriPoint,fun);
     }
     
-    public double[] getResults(double u, double v,double [] results) throws FunctionEvaluationException {
-        u=(u+1)/2;
-        v=(v+1)/2;
-        generatePoint(u);
-        generateDiffs(u);
-        results[0]=x1+(x2-x1)*v;
-        results[1]=y1+(y2-y1)*v;
-        results[2]=abs((v*diffs[0]*(y2-y1)-(x2-x1)*v*diffs[1])/4);
-        return results;
+    public double[] getResults(double u, double v,double [] results) {
+        try {
+            u=(u+1)/2;
+            v=(v+1)/2;
+            generatePoint(u);
+            generateDiffs(u);
+            results[0]=x1+(x2-x1)*v;
+            results[1]=y1+(y2-y1)*v;
+            results[2]=abs((v*diffs[0]*(y2-y1)-(x2-x1)*v*diffs[1])/4);
+            return results;
+        } catch (FunctionEvaluationException ex) {
+        }finally{
+            return null;
+        }
     }
 
     /**

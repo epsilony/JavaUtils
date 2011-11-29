@@ -14,7 +14,7 @@ import static java.lang.Math.sqrt;
  * 一个结点对应一条曲线
  * datas={x0,y0,x1,y1,..。｝相当于pathIterator.currentSegment()获得的double[]在头部加上起点
  * segType为PathIterator规定的SEG_LINETO等三种曲线。
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class PathInfoNode {
 

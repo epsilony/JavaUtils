@@ -16,7 +16,7 @@ import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
  * <p> A2[i][j]=A[perm[i],perm[j]}</p>
  * <p> 另可见 <a href="http://epsilony.net/mywiki/Academic/RcmResources#David> Man Yuan的wiki </a>
  * @see MatrixUtils
- * @author epsilon
+ * @author epsilonyuan@gmail.com
 
 
  */

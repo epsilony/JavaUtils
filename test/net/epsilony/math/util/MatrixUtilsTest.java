@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class MatrixUtilsTest {
 
@@ -57,15 +57,24 @@ public class MatrixUtilsTest {
         int base = 1;
         MatrixUtils.Adjacency expResult = getSymmetricTestResult_01();
         MatrixUtils.Adjacency result = MatrixUtils.getAdjacency(inMat, MatrixUtils.SYMMETRICAL, base);
-        assertArrayEquals(result.adjRow, expResult.adjRow);
-        assertArrayEquals(result.adjVec, expResult.adjVec);
+        assertArrayEquals(expResult.adjRow, result.adjRow);
+        assertArrayEquals(expResult.adjVec, result.adjVec);
         System.out.println("end of testing symmetric base 1");
+
         System.out.println("start testing unsymmetric base 1");
         inMat = getUnsymmetricTestMatrix_01();
         result = MatrixUtils.getAdjacency(inMat, MatrixUtils.UNSYMMETRICAL, base);
-        assertArrayEquals(result.adjRow, expResult.adjRow);
-        assertArrayEquals(result.adjVec, expResult.adjVec);
+        assertArrayEquals(expResult.adjRow, result.adjRow);
+        assertArrayEquals(expResult.adjVec, result.adjVec);
         System.out.println("end of testing unsymmetric base 1");
+
+        System.out.println("start testing unsymmetric by the down half is mirrored by up half actually");
+        inMat = getUnsymmetricButMirrorsByUpTestMatrix_01();
+        result = MatrixUtils.getAdjacency(inMat, MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF, base);
+        assertArrayEquals(expResult.adjRow, result.adjRow);
+        assertArrayEquals(expResult.adjVec, result.adjVec);
+
+        System.out.println("end of testing");
     }
 
     public static FlexCompRowMatrix getSymmetricTestMatrix_01() {
@@ -147,6 +156,31 @@ public class MatrixUtilsTest {
         return result;
     }
 
+    public static FlexCompRowMatrix getUnsymmetricButMirrorsByUpTestMatrix_01() {
+        int[][] orimatrix = new int[][]{
+            {1, 0, 3, 4, 0, 0, 7, 8, 9, 0},
+            {0, 2, 3, 4, 0, 0, 0, 0, 0, 10},
+            {0, 0, 3, 0, 0, 0, 0, 8, 0, 0},
+            {0, 0, 0, 4, 0, 6, 0, 0, 9, 10},
+            {0, 0, 0, 0, 5, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 6, 0, 8, 0, 0},
+            {0, 0, 0, 0, 0, 0, 7, 0, 9, 10},
+            {0, 0, 0, 0, 0, 0, 0, 8, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 9, 10},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 10}
+        };
+        FlexCompRowMatrix result = new FlexCompRowMatrix(orimatrix.length, orimatrix.length);
+        for (int rowI = 0; rowI < orimatrix.length; rowI++) {
+            int[] row = orimatrix[rowI];
+            for (int colI = 0; colI < row.length; colI++) {
+                if (row[colI] != 0) {
+                    result.set(rowI, colI, row[colI]);
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * Test of getBandwidthByInvPerm method, of class MatrixUtils.
      */
@@ -172,8 +206,8 @@ public class MatrixUtilsTest {
         int repeat = 2;
         System.out.println("repeat " + repeat + " times per case:");
         int size = 1000;
-        int propRange = 5;
-        int propBase = 5;
+        int propRange = 50;
+        int propBase = 1000;
         int prop;
 
         int flag = MatrixUtils.UNSYMMETRICAL;
@@ -187,10 +221,10 @@ public class MatrixUtilsTest {
             prop = new Random().nextInt(propRange) + propBase;
             testCase_02(size, prop, flag);
         }
-        
-        flag=MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF;
+
+        flag = MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF;
         System.out.println("unsymmetrical but mirror from up half");
-         for (int i = 0; i < repeat; i++) {
+        for (int i = 0; i < repeat; i++) {
             prop = new Random().nextInt(propRange) + propBase;
             testCase_02(size, prop, flag);
         }
@@ -208,29 +242,32 @@ public class MatrixUtilsTest {
 
         FlexCompRowMatrix mat = getRandomFullRankMatrix_02(size, prop, flag);
         Vector b = new DenseVector(size);
-        Random rand=new Random();
+        Random rand = new Random();
         for (int i = 0; i < b.size(); i++) {
             b.set(i, rand.nextDouble());
         }
 
         Bandwidth bandOri = MatrixUtils.getBandwidth(mat);
-        System.out.println("bandOri (u l) = (" + bandOri.upBandwidth + " " + bandOri.lowBandwidth);
+        System.out.println("bandOri (u l) = (" + bandOri.upBandwidth + " " + bandOri.lowBandwidth + ")");
         DenseMatrix denseMat = new DenseMatrix(mat);
         DenseVector expResult = (DenseVector) denseMat.solve(b, new DenseVector(size));
-        if((flag&MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF)==MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF){
-            FlexCompRowMatrix mat2=mat;
-            mat=new FlexCompRowMatrix(mat2.numRows(), mat2.numColumns());
-            for(MatrixEntry me:mat2){
-                if(me.row()<=me.column()){
-                    mat.set(me.row(),me.column(),me.get());
+        if ((flag & MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) == MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) {
+            FlexCompRowMatrix mat2 = mat;
+            mat = new FlexCompRowMatrix(mat2.numRows(), mat2.numColumns());
+            for (MatrixEntry me : mat2) {
+                if (me.row() <= me.column()) {
+                    mat.set(me.row(), me.column(), me.get());
                 }
             }
         }
         int[] permInv = RcmJna.genrcm2(mat, flag, 0).permInv;
         Bandwidth bandPermd = MatrixUtils.getBandwidthByInvPerm(mat, permInv);
-        System.out.println("bandPermd (u l) = (" + bandPermd.upBandwidth + " " + bandPermd.lowBandwidth);
-        
+        System.out.println("bandPermd (u l) = (" + bandPermd.upBandwidth + " " + bandPermd.lowBandwidth + ")");
+
         DenseVector result = MatrixUtils.solveFlexCompRowMatrixByBandMethod(mat, b, flag);
+        System.out.println("result.getData().length = " + result.getData().length);
+        System.out.println("expResult.getData().length = " + expResult.getData().length);
+        System.out.println("result.getData()[0] = " + result.getData()[0]);
         assertArrayEquals(expResult.getData(), result.getData(), 1e-5);
     }
 
@@ -247,7 +284,7 @@ public class MatrixUtilsTest {
             int to = rand.nextInt(numRow);
             double scale = rand.nextDouble() - 0.5;
 
-            if ((flag & MatrixUtils.SYMMETRICAL) == MatrixUtils.SYMMETRICAL||(flag&MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF)==MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) {
+            if ((flag & MatrixUtils.SYMMETRICAL) == MatrixUtils.SYMMETRICAL || (flag & MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) == MatrixUtils.UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF) {
                 for (VectorEntry ve : mat.getRow(from)) {
                     mat.add(to, ve.index(), ve.get() * scale);
                 }

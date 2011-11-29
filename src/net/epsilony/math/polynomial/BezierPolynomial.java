@@ -16,7 +16,7 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
 
 /**
  * Bezier曲线的多项式，可以构造任意1～3维空间的Bezier曲线多项式
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class BezierPolynomial implements DifferentiableUnivariateVectorialFunctionEx {
 

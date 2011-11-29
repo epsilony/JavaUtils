@@ -4,12 +4,11 @@
  */
 package net.epsilony.math.util;
 
-import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 
 /**
  *
- * @author epsilon
+ * @author epsilonyuan@gmail.com
  */
 public class QuadrangleMapper implements BivariateMapper {
 
@@ -101,10 +100,23 @@ public class QuadrangleMapper implements BivariateMapper {
     }
 
     @Override
-    public double[] getResults(double u, double v, double[] results) throws FunctionEvaluationException {
-        u = (u + 1) / 2;
-        v = (v + 1) / 2;
-//matlab 相关代码：   
+    public double[] getResults(double iu, double iv, double[] results) {
+        double u = (iu + 1) / 2;
+        double v = (iv + 1) / 2;
+
+        double uv=u*v;
+        double tx=x1-x2+x3-x4;
+        double ty=y1-y2+y3-y4;
+        results[0]=tx*uv+(x2-x1)*u+(x4-x1)*v+x1;     //x
+        results[1]=ty*uv+(y2-y1)*u+(y4-y1)*v+y1;    //y
+        double dxdu = (tx*v+(x2-x1))/2;
+        double dxdv =(tx*u+(x4-x1))/2;
+        double dydu = (ty*v+(y2-y1))/2;
+        double dydv =(ty*u+(y4-y1))/2;
+        results[2]=abs(dxdu*dydv-dydu*dxdv);
+        return results;
+    }
+    //matlab 相关代码：   
 //    syms x1 x2 y1 y2 x3 x4 y3 y4 u v
 //xu1=x1+(x2-x1)*u;
 //yu1=y1+(y2-y1)*u;
@@ -130,14 +142,5 @@ public class QuadrangleMapper implements BivariateMapper {
 //dfxv=simple(diff(x,v))
 //dfyu=simple(diff(y,u))
 //dfyv=simple(diff(y,v))
-        results[0] = x1 + u * x2 - u * x1 + v * x4 + v * u * x3 - v * u * x4 - v * x1 - v * u * x2 + v * u * x1;
-        results[1] = y1 + u * y2 - u * y1 + v * y4 + v * u * y3 - v * u * y4 - v * y1 - v * u * y2 + v * u * y1;
-        double dfxu = x2 + v * x3 - v * x2 - x1 - v * x4 + v * x1;
-        double dfxv =x4 + u * x3 - u * x4 - x1 - u * x2 + u * x1;
-        double dfyu = y2 + v * y3 - v * y2 - y1 - v * y4 + v * y1;
-        double dfyv =y4 + u * y3 - u * y4 - y1 - u * y2 + u * y1;
-        results[2]=abs(dfxu*dfyv-dfxv*dfyu)/4;
-        return results;
-
-    }
+    
 }
