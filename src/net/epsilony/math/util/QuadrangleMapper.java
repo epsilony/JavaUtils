@@ -7,7 +7,7 @@ package net.epsilony.math.util;
 import static java.lang.Math.abs;
 
 /**
- *
+ * {@link http://epsilony/mywiki/Math/GaussQuadrature}
  * @author epsilonyuan@gmail.com
  */
 public class QuadrangleMapper implements BivariateMapper {
@@ -113,7 +113,7 @@ public class QuadrangleMapper implements BivariateMapper {
         double dxdv =(tx*u+(x4-x1))/2;
         double dydu = (ty*v+(y2-y1))/2;
         double dydv =(ty*u+(y4-y1))/2;
-        results[2]=abs(dxdu*dydv-dydu*dxdv);
+        results[2]=abs(dxdu*dydv-dydu*dxdv);     //|Jacobi|
         return results;
     }
     //matlab 相关代码：   

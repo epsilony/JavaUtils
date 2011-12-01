@@ -932,8 +932,8 @@ public class LayeredRangeTree<Data> {
     /**
      * Adds the Data in window <b>{@code from}</b>*<b>{@code to}</b> into <b>{@code results}</b></br>
      * <ul> Note!<li>  <b>{@code results}</b> will <strong>not</strong> be cleared in this method</li>
-     * <li>in every dimension  <b>{@code from}</b> must <strong> not be bigger </strong> than  <b>{@code to}</b>
-     * </li>
+     * <li>In every dimension  <b>{@code from}</b> must <strong> not be bigger </strong> than  <b>{@code to}</b></li>
+     * <li>Inclusive! The datas at the border of from-to search window are included in the results</li>
      * </ul>
      * @param results
      * @param from
