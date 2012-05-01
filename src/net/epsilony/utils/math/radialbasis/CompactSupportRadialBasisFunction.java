@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.radialbasis;
+package net.epsilony.utils.math.radialbasis;
 
-import net.epsilony.math.polynomial.PolynomialUtils;
+import net.epsilony.utils.math.polynomial.PolynomialUtils;
 import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 import static java.lang.Math.*;
 

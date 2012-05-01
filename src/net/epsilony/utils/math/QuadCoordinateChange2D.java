@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.util;
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
-import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
+package net.epsilony.utils.math;
+import net.epsilony.utils.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 /**

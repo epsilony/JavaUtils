@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.util;
+package net.epsilony.utils.math;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import net.epsilony.math.util.MatrixUtils.Adjacency;
+import net.epsilony.utils.math.MatrixUtils.Adjacency;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 
 /**

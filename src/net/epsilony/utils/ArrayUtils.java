@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.util;
+package net.epsilony.utils;
 
 import java.util.Arrays;
 
@@ -47,5 +47,31 @@ public class ArrayUtils {
             }
         }
         return max;
+    }
+    
+    public static int maxItemId(double[] array){
+        double max=array[0];
+        int maxId=0;
+        for(int i=1,stop=array.length;i<stop;i++){
+            double t=array[i];
+            if(max<t){
+                max=t;
+                maxId=i;
+            }
+        }
+        return maxId;
+    }
+    
+    public static int minItemId(double[] array){
+        double min=array[0];
+        int minId=0;
+        for(int i=1,stop=array.length;i<stop;i++){
+            double t=array[i];
+            if(t<min){
+                min=t;
+                minId=i;
+            }
+        }
+        return minId;
     }
 }

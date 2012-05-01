@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.polynomial;
+package net.epsilony.utils.math.polynomial;
 
+import net.epsilony.utils.math.polynomial.BivariateBinomials;
 import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

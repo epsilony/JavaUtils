@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.radialbasis;
+package net.epsilony.utils.math.radialbasis;
 
 /**
  * 径向基函数接口

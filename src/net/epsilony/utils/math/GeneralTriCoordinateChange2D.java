@@ -3,10 +3,10 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.util;
+package net.epsilony.utils.math;
 
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
-import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
+import net.epsilony.utils.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 

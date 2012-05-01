@@ -2,17 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template inIO the editor.
  */
-package net.epsilony.util;
+package net.epsilony.utils;
 
-import com.sun.jna.Library;
-import com.sun.jna.Memory;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
+import com.sun.jna.*;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.epsilony.geom.Triangle;
+import net.epsilony.utils.geom.Triangle;
 
 /**
  *

@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.geom;
+package net.epsilony.utils.geom;
 
+import net.epsilony.utils.geom.GeometryMath;
 import org.apache.commons.math.linear.OpenMapRealMatrix;
 import org.apache.commons.math.linear.SparseRealMatrix;
 import org.junit.After;
@@ -104,7 +105,7 @@ public class GeometryMathTest {
     }
 
     /**
-     * Test of crossProduct method, of class GeometryMath.
+     * Test of pt3Cross2D method, of class GeometryMath.
      */
     @Test
     public void testCrossProduct() {
@@ -116,10 +117,10 @@ public class GeometryMathTest {
         double x3 = 0.0;
         double y3 = 1.0;
         double expResult = 1;
-        double result = GeometryMath.crossProduct(x1, y1, x2, y2, x3, y3);
+        double result = GeometryMath.pt3Cross2D(x1, y1, x2, y2, x3, y3);
         assertEquals(expResult, result, 0.0);
         expResult = -1;
-        result = GeometryMath.crossProduct(x1, y1, -x2, y2, x3, y3);
+        result = GeometryMath.pt3Cross2D(x1, y1, -x2, y2, x3, y3);
         assertEquals(expResult, result, 0.0);
         // TODO review the generated test code and remove the default call to fail.
         

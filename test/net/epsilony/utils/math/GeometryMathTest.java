@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.util;
+package net.epsilony.utils.math;
 
-import net.epsilony.java2dutil.Java2DGeometryMath;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
+import net.epsilony.utils.java2d.Java2DGeometryMath;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

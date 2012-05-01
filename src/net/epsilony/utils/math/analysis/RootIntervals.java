@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.analysis;
+package net.epsilony.utils.math.analysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.epsilony.math.polynomial.PolynomialUtils;
+import net.epsilony.utils.math.polynomial.PolynomialUtils;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
-import net.epsilony.math.util.Interval;
-import net.epsilony.util.OrderedLinkedList;
+import net.epsilony.utils.math.Interval;
+import net.epsilony.utils.OrderedLinkedList;
 import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
 /**

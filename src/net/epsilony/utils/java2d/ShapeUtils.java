@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.java2dutil;
+package net.epsilony.utils.java2d;
 
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -11,7 +11,7 @@ import java.awt.geom.PathIterator;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import net.epsilony.math.util.BivariateMapper;
+import net.epsilony.utils.math.BivariateMapper;
 import org.apache.commons.math.FunctionEvaluationException;
 
 /**

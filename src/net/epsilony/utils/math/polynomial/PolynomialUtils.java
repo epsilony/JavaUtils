@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.polynomial;
+package net.epsilony.utils.math.polynomial;
 import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
 

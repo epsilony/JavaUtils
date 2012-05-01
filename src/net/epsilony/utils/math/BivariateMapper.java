@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.util;
+package net.epsilony.utils.math;
 
 import org.apache.commons.math.FunctionEvaluationException;
 

@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.util;
+package net.epsilony.utils;
 
+import net.epsilony.utils.LayeredRangeTree;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;

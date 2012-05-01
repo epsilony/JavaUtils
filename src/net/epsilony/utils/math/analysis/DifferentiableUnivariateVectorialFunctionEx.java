@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.analysis;
+package net.epsilony.utils.math.analysis;
 
 /**
  *

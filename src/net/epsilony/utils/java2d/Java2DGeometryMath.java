@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.java2dutil;
+package net.epsilony.utils.java2d;
 
 import java.awt.geom.Point2D;
 import java.util.Iterator;
-import net.epsilony.math.util.EYMath;
+import net.epsilony.utils.math.EYMath;
 
 /**
  *

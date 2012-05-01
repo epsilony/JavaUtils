@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.java2dutil;
+package net.epsilony.utils.java2d;
 
 import java.awt.geom.PathIterator;
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
-import net.epsilony.math.util.GaussLegendreQuadratureUtils;
-import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
+import net.epsilony.utils.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.utils.math.GaussLegendreQuadratureUtils;
+import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;

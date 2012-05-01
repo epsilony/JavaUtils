@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.util;
+package net.epsilony.utils.math;
 
-import net.epsilony.math.util.MatrixUtils.Bandwidth;
 import java.util.Random;
+import net.epsilony.utils.math.MatrixUtils.Bandwidth;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertArrayEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

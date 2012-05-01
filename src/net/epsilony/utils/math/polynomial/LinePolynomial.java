@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.polynomial;
+package net.epsilony.utils.math.polynomial;
 
 import java.util.Arrays;
-import net.epsilony.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
-import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
+import net.epsilony.utils.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
+import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;
 
 /**

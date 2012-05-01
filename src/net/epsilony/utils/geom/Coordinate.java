@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.geom;
+package net.epsilony.utils.geom;
 
 /**
  *
@@ -26,6 +26,12 @@ public class Coordinate {
         
     }
     
+    public Coordinate(Coordinate coord){
+        x=coord.x;
+        y=coord.y;
+        z=coord.z;
+    }
+    
     public boolean equals2D(Coordinate cd){
         if(cd.x==x&&cd.y==y){
             return true;
@@ -47,6 +53,46 @@ public class Coordinate {
     public String toString() {
         return String.format("c(%f,%f,%f)", x,y,z);     
     }
+
+    public void scale(double s) {
+        x*=s;
+        y*=s;
+        z*=s;
+    }
     
+    public double getDim(int dim){
+        switch(dim){
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+            default:
+                throw new IndexOutOfBoundsException();
+        }
+    }
+    
+    public void setDim(int dim,double value){
+        switch(dim){
+            case 0:
+                x=value;
+                break;
+            case 1:
+                y=value;
+                break;
+            case 2:
+                z=value;
+                break;
+            default:
+                throw new IndexOutOfBoundsException();
+        }
+    }
+    
+    public void setDim(Coordinate input){
+        x=input.x;
+        y=input.y;
+        z=input.z;
+    }
     
 }

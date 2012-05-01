@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.math.util;
+package net.epsilony.utils.math;
 
-import net.epsilony.java2dutil.PathInfoCalculator;
-import net.epsilony.math.analysis.UnivariateVectorialFunctionEx;
-import net.epsilony.java2dutil.PathInfoNode;
+import net.epsilony.utils.java2d.PathInfoCalculator;
+import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
+import net.epsilony.utils.java2d.PathInfoNode;
 import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
 

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.java2dutil;
+package net.epsilony.utils.java2d;
 
 import java.awt.Shape;
 

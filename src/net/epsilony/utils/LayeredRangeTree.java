@@ -2,18 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.util;
+package net.epsilony.utils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import static org.apache.commons.math.util.MathUtils.log;
 import static java.lang.Math.ceil;
 import static java.lang.Math.pow;
+import java.util.*;
+import static org.apache.commons.math.util.MathUtils.log;
 
 /**
  * <p>
@@ -47,6 +41,7 @@ import static java.lang.Math.pow;
  * <li>{@link #fillDatas3D}
  * </p>
  * <p> for common objects need to combine with indes use {@link IndexWrapper}
+ * @param <Data> 
  * @see IndexWrapper#wrapWithIndex(java.util.Collection, java.util.ArrayList, int[], java.util.List, java.util.ArrayList) 
  * </p>
  * @author epsilonyuan@gmail.com

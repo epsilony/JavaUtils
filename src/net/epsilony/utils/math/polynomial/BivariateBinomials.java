@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.math.polynomial;
+package net.epsilony.utils.math.polynomial;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
