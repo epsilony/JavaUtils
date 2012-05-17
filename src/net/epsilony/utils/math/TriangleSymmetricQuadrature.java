@@ -5,6 +5,8 @@
 package net.epsilony.utils.math;
 
 import java.util.Arrays;
+import net.epsilony.utils.geom.Coordinate;
+import net.epsilony.utils.geom.Triangle;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.BivariateRealFunction;
 
@@ -140,6 +142,19 @@ public class TriangleSymmetricQuadrature {
             results[i * 2 + 1] = coords[i * 3] * y1 + coords[i * 3 + 1] * y2 + coords[i * 3 + 2] * y3;
         }
         return numPt;
+    }
+    
+    public static int getPositions(int power,Triangle tri,Coordinate[] results){
+        double[] baryCoords=barycentricCoordinates[power-1];
+        int numPt=numPts[power-1];
+        Coordinate c1=tri.c1,c2=tri.c2,c3=tri.c3;
+        for (int i=0;i<numPt;i++){
+            double b1=baryCoords[i*3],b2=baryCoords[i*3+1],b3=baryCoords[i*3+2];
+            results[i].x=b1*c1.x+b2*c2.x+b3*c3.x;
+            results[i].y=b1*c1.y+b2*c2.y+b3*c3.y;
+            results[i].z=b1*c1.z+b2*c2.z+b3*c3.z;
+        }
+        return numPt; 
     }
 
     /**

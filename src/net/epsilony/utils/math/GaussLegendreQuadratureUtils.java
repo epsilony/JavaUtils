@@ -169,4 +169,8 @@ public class GaussLegendreQuadratureUtils {
         return result;
     }
 
+    public static int getNumPoints(int power) {
+        return (int) Math.ceil((power+1)/2);
+    }
+
 }

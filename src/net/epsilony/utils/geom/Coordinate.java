@@ -94,5 +94,5 @@ public class Coordinate {
         y=input.y;
         z=input.z;
     }
-    
+     
 }
