@@ -7,7 +7,7 @@ package net.epsilony.utils.geom;
 import static java.lang.Math.sqrt;
 
 /**
- * @version 20120528
+ * @version 20120528-1
  * @author epsilonyuan@gmail.com
  */
 public class GeometryMath {
@@ -254,38 +254,41 @@ public class GeometryMath {
     public static final int DISDROINT = 0;
     public static final int INTERSECT = 1;
     public static final int COINCIDENT = 2;
-
-    public static int lineSegmentTriangleIntersection(Coordinate start, Coordinate end, Triangle tri, Coordinate normal) {
+    public static int lineSegmentTriangleIntersection(Coordinate start,Coordinate end,Triangle tri,Coordinate normal){
+        return lineSegmentTriangleIntersection(start, end, tri.c1, tri.c2, tri.c3, normal);
+    }
+    
+    public static int lineSegmentTriangleIntersection(Coordinate start, Coordinate end, Coordinate c1,Coordinate c2,Coordinate c3, Coordinate normal) {
         Coordinate interPt = new Coordinate();
         Coordinate u = null, v = null;
         if (null == normal) {
-            u = minus(tri.c2, tri.c1);
-            v = minus(tri.c3, tri.c1);
+            u = minus(c2, c1);
+            v = minus(c3, c1);
             normal = cross(u, v);
         }
-        int intersec = lineSegmentPlaneIntersection(start, end, normal, tri.c1, interPt);
+        int intersec = lineSegmentPlaneIntersection(start, end, normal, c1, interPt);
         if (intersec == DISDROINT) {
             return DISDROINT;
         }
         if (null == u) {
-            u = minus(tri.c2, tri.c1);
-            v = minus(tri.c3, tri.c1);
+            u = minus(c2, c1);
+            v = minus(c3, c1);
         }
         if (intersec == COINCIDENT) {
-            if (isPtInTriangle(start, tri, u, v) || isPtInTriangle(end, tri, u, v)) {
+            if (isPtInTriangle(start, c1,c2,c3, u, v) || isPtInTriangle(end, c1,c2,c3, u, v)) {
                 return INTERSECT;
             }
             Coordinate project1=u;
             Coordinate project2=cross(normal,u);
-            boolean b1=isLineProjectionIntersect(start, end, tri.c1, tri.c2, project1, project2);
-            boolean b2=isLineProjectionIntersect(start, end, tri.c2, tri.c3, project1, project2);
-            boolean b3=isLineProjectionIntersect(start, end, tri.c3, tri.c1, project1, project2);
+            boolean b1=isLineProjectionIntersect(start, end, c1, c2, project1, project2);
+            boolean b2=isLineProjectionIntersect(start, end, c2, c3, project1, project2);
+            boolean b3=isLineProjectionIntersect(start, end, c3, c1, project1, project2);
             if(b1||b2||b3){
                 return INTERSECT;
             }
             return DISDROINT;
         }
-        if (isPtInTriangle(interPt, tri, u, v)) {
+        if (isPtInTriangle(interPt, c1,c2,c3, u, v)) {
             return INTERSECT;
         } else {
             return DISDROINT;
@@ -303,13 +306,17 @@ public class GeometryMath {
         double ye2 = dot(end2, project2);
         return isLineSegment2DIntersect(xs1, ys1, xe1, ye1, xs2, ys2, xe2, ye2);
     }
-
-    public static boolean isPtInTriangle(Coordinate pt, Triangle tri, Coordinate u, Coordinate v) {
+    
+    public static boolean isPtInTriangle(Coordinate pt,Triangle tri,Coordinate u, Coordinate v){
+        return isPtInTriangle(pt, tri.c1, tri.c2, tri.c3, u, v);
+    }
+    
+    public static boolean isPtInTriangle(Coordinate pt, Coordinate c1,Coordinate c2,Coordinate c3, Coordinate u, Coordinate v) {
         if (u == null || v == null) {
-            u = minus(tri.c2, tri.c1);
-            v = minus(tri.c3, tri.c1);
+            u = minus(c2, c1);
+            v = minus(c3, c1);
         }
-        Coordinate w = minus(pt, tri.c1);
+        Coordinate w = minus(pt, c1);
         double uv = dot(u, v);
         double wv = dot(w, v);
         double vv = dot(v, v);

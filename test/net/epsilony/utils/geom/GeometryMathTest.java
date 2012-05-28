@@ -15,7 +15,7 @@ import org.junit.Test;
 
 /**
  * All the methods in {@link GeometryMath} has been directly or in directly tested.
- * @version 20120528
+ * @version 20120528-1
  * @author epsilonyuan@gmail.com
  */
 public class GeometryMathTest {
