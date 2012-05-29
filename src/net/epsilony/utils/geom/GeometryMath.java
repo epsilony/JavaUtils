@@ -7,12 +7,12 @@ package net.epsilony.utils.geom;
 import static java.lang.Math.sqrt;
 
 /**
- * @version 20120528-1
+ * @version 20120529-1
  * @author epsilonyuan@gmail.com
  */
 public class GeometryMath {
 
-    public static double triangleArea(double x1, double y1, double x2, double y2, double x3, double y3) {
+    public static double triangleArea2D(double x1, double y1, double x2, double y2, double x3, double y3) {
         return 0.5 * Math.abs(pt3Cross2D(x1, y1, x2, y2, x3, y3));
     }
 
@@ -379,5 +379,9 @@ public class GeometryMath {
             }
             return INTERSECT;
         }
+    }
+
+    public static double triangleArea2D(Triangle tri) {
+        return triangleArea2D(tri.c1.x,tri.c1.y,tri.c2.x,tri.c2.y,tri.c3.x,tri.c3.y);
     }
 }

@@ -15,7 +15,7 @@ import org.junit.Test;
 
 /**
  * All the methods in {@link GeometryMath} has been directly or in directly tested.
- * @version 20120528-1
+ * @version 20120529-1
  * @author epsilonyuan@gmail.com
  */
 public class GeometryMathTest {
@@ -36,7 +36,7 @@ public class GeometryMathTest {
     }
 
     /**
-     * Test of triangleArea method, of class GeometryMath.
+     * Test of triangleArea2D method, of class GeometryMath.
      */
     @Test
     public void testTriangleArea() {
@@ -48,7 +48,7 @@ public class GeometryMathTest {
         double x3 = 4;
         double y3 = 6;
         double expResult = 2;
-        double result = GeometryMath.triangleArea(x1, y1, x2, y2, x3, y3);
+        double result = GeometryMath.triangleArea2D(x1, y1, x2, y2, x3, y3);
         assertEquals(expResult, result, 1e-6);
         // TODO review the generated test code and remove the default call to fail.
 
