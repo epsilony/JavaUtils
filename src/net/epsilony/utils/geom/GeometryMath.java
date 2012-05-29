@@ -192,7 +192,7 @@ public class GeometryMath {
         if (null == result) {
             result = new Coordinate(c);
         } else {
-            result.set(result);
+            result.set(c);
         }
         result.scale(s);
         return result;

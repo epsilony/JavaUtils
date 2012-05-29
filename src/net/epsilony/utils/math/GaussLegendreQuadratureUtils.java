@@ -170,7 +170,7 @@ public class GaussLegendreQuadratureUtils {
     }
 
     public static int getNumPoints(int power) {
-        return (int) Math.ceil((power+1)/2);
+        return (int) Math.ceil((power+1)/2.0);
     }
 
 }
