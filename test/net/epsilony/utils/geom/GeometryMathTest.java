@@ -50,8 +50,7 @@ public class GeometryMathTest {
         double expResult = 2;
         double result = GeometryMath.triangleArea2D(x1, y1, x2, y2, x3, y3);
         assertEquals(expResult, result, 1e-6);
-        // TODO review the generated test code and remove the default call to fail.
-
+        
     }
 
     /**

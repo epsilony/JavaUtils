@@ -48,8 +48,6 @@ public class BivariateBinomialsTest {
         System.out.println("results1="+Arrays.toString(results));
         b=b&&Arrays.equals(results, expResult2);
         assertTrue(b);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
@@ -72,8 +70,6 @@ public class BivariateBinomialsTest {
         BivariateBinomials.getBinomials(3, 1, 2, results);
         b=b&&Arrays.equals(results, expResult2);
         assertTrue(b);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
 }

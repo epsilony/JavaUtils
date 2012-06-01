@@ -193,8 +193,6 @@ public class MatrixUtilsTest {
         Bandwidth expResult = null;
         Bandwidth result = MatrixUtils.getBandwidthByInvPerm(mat, permInv);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
