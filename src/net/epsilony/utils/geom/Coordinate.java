@@ -4,11 +4,13 @@
  */
 package net.epsilony.utils.geom;
 
+import java.io.Serializable;
+
 /**
  *
  * @author epsilonyuan@gmail.com
  */
-public class Coordinate {
+public class Coordinate implements Serializable{
 
     public double x, y, z;
 
