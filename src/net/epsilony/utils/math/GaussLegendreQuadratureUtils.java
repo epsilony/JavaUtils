@@ -131,7 +131,7 @@ public class GaussLegendreQuadratureUtils {
         double[] weights = weightsArrays[nPt - 1];
         double t1 = up - low;
         for (int i = 0; i < nPt; i++) {
-            results[i] += t1 / 2 * weights[i] ;
+            results[i] = t1 / 2 * weights[i] ;
         }
         return results;
     }
@@ -171,6 +171,25 @@ public class GaussLegendreQuadratureUtils {
 
     public static int getNumPoints(int power) {
         return (int) Math.ceil((power+1)/2.0);
+    }
+    
+    public static double getWeight(int numPt,int index,double low,double up){
+        return weightsArrays[numPt-1][index]*(up-low)/2.0;
+    }
+    
+    public static double getWeight(int numPt,int index){
+        return weightsArrays[numPt-1][index];
+    }
+    
+    public static double getPosition(int numPt,int index, double low,double up){
+        double[] positions = positionsArrays[numPt - 1];
+        double t1 = up - low;
+        double t2 = up + low;
+        return (t1 * positions[index] + t2) / 2.0;
+    }
+    
+    public static double getPosition(int numPt,int index){
+        return positionsArrays[numPt-1][index];
     }
 
 }

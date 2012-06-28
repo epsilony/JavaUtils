@@ -11,7 +11,8 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.BivariateRealFunction;
 
 /**
- * <p> 对称三角形Gauss积分的工具类 </p> <p> 采用sum(面积×权值×积分点被积函数值)的方法进行积分，积分点采用重心坐标为背景数据，积分点全在三角形的内部（边，与外部均无积分点），最高代数精度为{@link #MAX_POWER}
+ * <p> 对称三角形Gauss积分的工具类 </p> <p>
+ * 采用sum(面积×权值×积分点被积函数值)的方法进行积分，积分点采用重心坐标为背景数据，积分点全在三角形的内部（边，与外部均无积分点），最高代数精度为{@link #MAX_POWER}
  * </p> <p>the data is copy from: </ br> Table 10.5 Dunavant quadrature for area
  * coordinate triangle , p275,Chapter 10, Finite Element Analysis with Error
  * Estimators, Ed Akin, Elsevere.</p>
@@ -112,13 +113,14 @@ public class TriangleSymmetricQuadrature {
      * 获取power阶代数精度的三角形对称积分的积分点的重心坐标
      *
      * @param power 积分的代数精度
-     * @param copy true: 返回{@link #barycentricCoordinates}的片段拷贝, false: 直接返回{@link #barycentricCoordinates}的片段引用
-     * @return 重心坐标数组，长度为3*{@link #getNumPoints(int) getNumPoints(power)},其内容为:</
-     * br>
+     * @param copy true: 返回{@link #barycentricCoordinates}的片段拷贝, false:
+     * 直接返回{@link #barycentricCoordinates}的片段引用
+     * @return
+     * 重心坐标数组，长度为3*{@link #getNumPoints(int) getNumPoints(power)},其内容为:</ br>
      * {α<sub>1</sub>,β<sub>1</sub>,γ<sub>1</sub>,α<sub>2</sub>,β<sub>2</sub>,γ<sub>2</sub>,...}
      */
-    public static double[] getBarycentricCoordinates(int power) {     
-            return Arrays.copyOf(barycentricCoordinates[power - 1], barycentricCoordinates[power - 1].length);
+    public static double[] getBarycentricCoordinates(int power) {
+        return Arrays.copyOf(barycentricCoordinates[power - 1], barycentricCoordinates[power - 1].length);
     }
 
     /**
@@ -131,8 +133,10 @@ public class TriangleSymmetricQuadrature {
      * @param x3
      * @param y3
      * @param power 积分的代数精度 应属于闭区间[{@link #MIN_POWER},{@link #MAX_POWER}]
-     * @param results 用于输入的数组，results.length于不小于2*{@link #getNumPoints(int) getNumPoints(power)}
-     * @return 重心坐标数组，有效数据index为左闭右开区间[0,2*{@link #getNumPoints(int) getNumPoints(power)})内的整数，其内容为{x<sub>积分点1</sub>,y<sub>积分点1</sub>,x<sub>积分点2</sub>,y<sub>积分点2</sub>,...,}
+     * @param results
+     * 用于输入的数组，results.length于不小于2*{@link #getNumPoints(int) getNumPoints(power)}
+     * @return
+     * 重心坐标数组，有效数据index为左闭右开区间[0,2*{@link #getNumPoints(int) getNumPoints(power)})内的整数，其内容为{x<sub>积分点1</sub>,y<sub>积分点1</sub>,x<sub>积分点2</sub>,y<sub>积分点2</sub>,...,}
      */
     public static int getPositions(double x1, double y1, double x2, double y2, double x3, double y3, int power, double[] results) {
         double[] coords = barycentricCoordinates[power - 1];
@@ -143,34 +147,49 @@ public class TriangleSymmetricQuadrature {
         }
         return numPt;
     }
-    
-    public static int getPositions(int power,Triangle tri,Coordinate[] results){
-        double[] baryCoords=barycentricCoordinates[power-1];
-        int numPt=numPts[power-1];
-        Coordinate c1=tri.c1,c2=tri.c2,c3=tri.c3;
-        for (int i=0;i<numPt;i++){
-            double b1=baryCoords[i*3],b2=baryCoords[i*3+1],b3=baryCoords[i*3+2];
-            results[i].x=b1*c1.x+b2*c2.x+b3*c3.x;
-            results[i].y=b1*c1.y+b2*c2.y+b3*c3.y;
-            results[i].z=b1*c1.z+b2*c2.z+b3*c3.z;
+
+    public static int getPositions(int power, Triangle tri, Coordinate[] results) {
+        double[] baryCoords = barycentricCoordinates[power - 1];
+        int numPt = numPts[power - 1];
+        Coordinate c1 = tri.c1, c2 = tri.c2, c3 = tri.c3;
+        for (int i = 0; i < numPt; i++) {
+            double b1 = baryCoords[i * 3], b2 = baryCoords[i * 3 + 1], b3 = baryCoords[i * 3 + 2];
+            results[i].x = b1 * c1.x + b2 * c2.x + b3 * c3.x;
+            results[i].y = b1 * c1.y + b2 * c2.y + b3 * c3.y;
+            results[i].z = b1 * c1.z + b2 * c2.z + b3 * c3.z;
         }
-        return numPt; 
+        return numPt;
     }
 
-    /**
-     * 获取power阶代数精度的三角形对称积分的积分点的迪卡尔坐标，三角形的三个顶点是(x1,y1),(x2,y2),(x3,y3)
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param x3
-     * @param y3
-     * @param power 积分的代数精度 应属于闭区间[{@link #MIN_POWER},{@link #MAX_POWER}]
-     * @return 重心坐标数组，长度为2*{@link #getNumPoints(int) getNumPoints(power)},
-     * ，其内容为{x<sub>积分点1</sub>,y<sub>积分点1</sub>,x<sub>积分点2</sub>,y<sub>积分点2</sub>,...,}
-     */
-    public static int getPositions(double x1, double y1, double x2, double y2, double x3, double y3, int power) {
+    public static Coordinate getPosition(int power, int index, Triangle tri, Coordinate result) {
+        if (null == result) {
+            result = new Coordinate();
+        }
+        double[] baryCoords = barycentricCoordinates[power - 1];
+        Coordinate c1 = tri.c1, c2 = tri.c2, c3 = tri.c3;
+        int baryIndex = index * 3;
+
+        double b1 = baryCoords[baryIndex], b2 = baryCoords[baryIndex + 1], b3 = baryCoords[baryIndex + 2];
+        result.x = b1 * c1.x + b2 * c2.x + b3 * c3.x;
+        result.y = b1 * c1.y + b2 * c2.y + b3 * c3.y;
+        result.z = b1 * c1.z + b2 * c2.z + b3 * c3.z;
+        return result ;
+    }
+
+/**
+ * 获取power阶代数精度的三角形对称积分的积分点的迪卡尔坐标，三角形的三个顶点是(x1,y1),(x2,y2),(x3,y3)
+ *
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ * @param x3
+ * @param y3
+ * @param power 积分的代数精度 应属于闭区间[{@link #MIN_POWER},{@link #MAX_POWER}]
+ * @return 重心坐标数组，长度为2*{@link #getNumPoints(int) getNumPoints(power)},
+ * ，其内容为{x<sub>积分点1</sub>,y<sub>积分点1</sub>,x<sub>积分点2</sub>,y<sub>积分点2</sub>,...,}
+ */
+public static int getPositions(double x1, double y1, double x2, double y2, double x3, double y3, int power) {
         return getPositions(x1, y1, x2, y2, y3, y3, power, new double[2 * numPts[power - 1]]);
     }
 
@@ -187,6 +206,10 @@ public class TriangleSymmetricQuadrature {
         } else {
             return weights[power - 1];
         }
+    }
+    
+    public static double getWeight(int power, int index){
+        return weights[power-1][index];
     }
 
     /**
