@@ -9,7 +9,7 @@ package net.epsilony.utils.geom;
  * @author epsilonyuan@gmail.com
  */
 public class Quadrangle {
-    public double x1,y1,x2,y2,x3,y3,x4,y4;
+    public double x1,y1,x2,y2,x3,y3,x4,y4;  //counter clock wise
     public Quadrangle(){
         
     }
