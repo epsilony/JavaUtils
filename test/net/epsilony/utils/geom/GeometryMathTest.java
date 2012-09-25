@@ -14,7 +14,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * All the methods in {@link GeometryMath} has been directly or in directly tested.
+ * All the methods in {@link GeometryMath} has been directly or in directly
+ * tested.
+ *
  * @version 20120529-1
  * @author epsilonyuan@gmail.com
  */
@@ -50,7 +52,7 @@ public class GeometryMathTest {
         double expResult = 2;
         double result = GeometryMath.triangleArea2D(x1, y1, x2, y2, x3, y3);
         assertEquals(expResult, result, 1e-6);
-        
+
     }
 
     /**
@@ -207,46 +209,46 @@ public class GeometryMathTest {
             tri.c2 = new Coordinate(triangleVs[i][3], triangleVs[i][4], triangleVs[i][5]);
             tri.c3 = new Coordinate(triangleVs[i][6], triangleVs[i][7], triangleVs[i][8]);
             int act = GeometryMath.lineSegmentTriangleIntersection(start, end, tri, null);
-            try{
-            assertEquals(exps[i], act);}
-            catch (AssertionError e){
+            try {
+                assertEquals(exps[i], act);
+            } catch (AssertionError e) {
                 GeometryMath.lineSegmentTriangleIntersection(start, end, tri, null);
                 throw e;
             }
         }
-        
-        triangleVs=new double[][]{
-            {1,1,0.5,1,-1,0.5,-1,0,0.5},
-            {1,1,0.5,1,-1,0.5,0.1,0,0.5}
+
+        triangleVs = new double[][]{
+            {1, 1, 0.5, 1, -1, 0.5, -1, 0, 0.5},
+            {1, 1, 0.5, 1, -1, 0.5, 0.1, 0, 0.5}
         };
-        exps=new int[]{GeometryMath.INTERSECT,GeometryMath.DISDROINT};
-        Coordinate transform=new Coordinate(new Random().nextDouble(),new Random().nextDouble(),new Random().nextDouble());
-        Coordinate rotAxis=new Coordinate(new Random().nextDouble(),new Random().nextDouble(),new Random().nextDouble());
-        double rotAngle=new Random().nextDouble()*2*Math.PI;
-        Rotation rot=new Rotation(new Vector3D(rotAxis.x,rotAxis.y,rotAxis.z), rotAngle);
-        Vector3D startVec=rot.applyTo(new Vector3D(start.x,start.y,start.z));
-        Vector3D endVec=rot.applyTo(new Vector3D(end.x,end.y,end.z));
-        Vector3D transVec=new Vector3D(transform.x,transform.y,transform.z);
-        startVec=startVec.add(transVec);
-        endVec=endVec.add(transVec);
-        start=new Coordinate(startVec.getX(),startVec.getY(),startVec.getZ());
-        end=new Coordinate(endVec.getX(),endVec.getY(),endVec.getZ());
+        exps = new int[]{GeometryMath.INTERSECT, GeometryMath.DISDROINT};
+        Coordinate transform = new Coordinate(new Random().nextDouble(), new Random().nextDouble(), new Random().nextDouble());
+        Coordinate rotAxis = new Coordinate(new Random().nextDouble(), new Random().nextDouble(), new Random().nextDouble());
+        double rotAngle = new Random().nextDouble() * 2 * Math.PI;
+        Rotation rot = new Rotation(new Vector3D(rotAxis.x, rotAxis.y, rotAxis.z), rotAngle);
+        Vector3D startVec = rot.applyTo(new Vector3D(start.x, start.y, start.z));
+        Vector3D endVec = rot.applyTo(new Vector3D(end.x, end.y, end.z));
+        Vector3D transVec = new Vector3D(transform.x, transform.y, transform.z);
+        startVec = startVec.add(transVec);
+        endVec = endVec.add(transVec);
+        start = new Coordinate(startVec.getX(), startVec.getY(), startVec.getZ());
+        end = new Coordinate(endVec.getX(), endVec.getY(), endVec.getZ());
         for (int i = 0; i < exps.length; i++) {
-            
-            Vector3D v1 = new Vector3D (triangleVs[i][0], triangleVs[i][1], triangleVs[i][2]);
-            Vector3D v2 = new Vector3D (triangleVs[i][3], triangleVs[i][4], triangleVs[i][5]);
-            Vector3D v3= new Vector3D (triangleVs[i][6], triangleVs[i][7], triangleVs[i][8]);
-            v1=rot.applyTo(v1).add(transVec);
-            v2=rot.applyTo(v2).add(transVec);
-            v3=rot.applyTo(v3).add(transVec);
+
+            Vector3D v1 = new Vector3D(triangleVs[i][0], triangleVs[i][1], triangleVs[i][2]);
+            Vector3D v2 = new Vector3D(triangleVs[i][3], triangleVs[i][4], triangleVs[i][5]);
+            Vector3D v3 = new Vector3D(triangleVs[i][6], triangleVs[i][7], triangleVs[i][8]);
+            v1 = rot.applyTo(v1).add(transVec);
+            v2 = rot.applyTo(v2).add(transVec);
+            v3 = rot.applyTo(v3).add(transVec);
             Triangle tri = new Triangle();
-            tri.c1=new Coordinate(v1.getX(),v1.getY(),v1.getZ());
-            tri.c2=new Coordinate(v2.getX(),v2.getY(),v2.getZ());
-            tri.c3=new Coordinate(v3.getX(),v3.getY(),v3.getZ());
+            tri.c1 = new Coordinate(v1.getX(), v1.getY(), v1.getZ());
+            tri.c2 = new Coordinate(v2.getX(), v2.getY(), v2.getZ());
+            tri.c3 = new Coordinate(v3.getX(), v3.getY(), v3.getZ());
             int act = GeometryMath.lineSegmentTriangleIntersection(start, end, tri, null);
-            try{
-            assertEquals(exps[i], act);}
-            catch (AssertionError e){
+            try {
+                assertEquals(exps[i], act);
+            } catch (AssertionError e) {
                 GeometryMath.lineSegmentTriangleIntersection(start, end, tri, null);
                 throw e;
             }
@@ -276,9 +278,9 @@ public class GeometryMathTest {
             boolean exp = exps[i];
             double[] xy = xys[i];
             boolean act = GeometryMath.isLineSegment2DIntersect(new Coordinate(xy[0], xy[1]), new Coordinate(xy[2], xy[3]), new Coordinate(xy[4], xy[5]), new Coordinate(xy[6], xy[7]));
-            try{
-            assertEquals(exp, act);}
-            catch (AssertionError e){
+            try {
+                assertEquals(exp, act);
+            } catch (AssertionError e) {
                 GeometryMath.isLineSegment2DIntersect(new Coordinate(xy[0], xy[1]), new Coordinate(xy[2], xy[3]), new Coordinate(xy[4], xy[5]), new Coordinate(xy[6], xy[7]));
                 throw e;
             }
@@ -336,6 +338,43 @@ public class GeometryMathTest {
                 double act2 = GeometryMath.dot(GeometryMath.minus(out, pt), norms[i]);
                 assertEquals(0, act2, 1e-6);
             }
+        }
+    }
+
+    @Test
+    public void testCrossPointOfLineSegments() {
+        Random rand = new Random();
+        Coordinate[] sample = new Coordinate[4];
+        double[] sampleXYs = new double[]{-1.0, -2.0, 3.0, 6.0, 1.0, -1.0, -0.25, 4.0};
+        double expX = 0.5, expY = 1;
+        for (int i = 0; i < sample.length; i++) {
+            sample[i] = new Coordinate(sampleXYs[i * 2], sampleXYs[i * 2 + 1]);
+        }
+        Coordinate act = GeometryMath.crossPointOfLineSegments(sample[0], sample[1], sample[2], sample[3], null);
+        assertEquals(expX, act.x, 1e-10);
+        assertEquals(expY, act.y, 1e-10);
+    }
+
+    @Test
+    public void testIsInsideQuadrangle() {
+        double[] vertesXys = new double[]{1, -1, 3, 1, 2, 3, 0, 2};
+        Coordinate[] vertes = new Coordinate[4];
+        for (int i = 0; i < 4; i++) {
+            vertes[i] = new Coordinate(vertesXys[i * 2], vertesXys[i * 2 + 1]);
+        }
+
+        double[] pts = new double[]{1, 0,
+            2, -0.00001,
+            2, 0.001,
+            2.1, 2.9,
+            2.1, 2.5,
+            -0.1, 2,
+            1, 2.50001,
+            1, 2.498};
+        boolean[] exps = new boolean[]{true, false, true, false,true, false, false, true};
+        for(int i=0;i<exps.length;i++){
+            boolean act=GeometryMath.isInsideQuadrangle(pts[i*2], pts[i*2+1], vertes);
+            assertEquals(exps[i], act);
         }
     }
 }

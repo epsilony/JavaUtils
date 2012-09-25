@@ -201,6 +201,24 @@ public class GeometryMath {
     public static Coordinate scale(Coordinate c, double s) {
         return scale(c, s, null);
     }
+    
+    public static Coordinate crossPointOfLineSegments(Coordinate start1,Coordinate end1,Coordinate start2,Coordinate end2,Coordinate result){
+        if(null==result){
+            result=new Coordinate();
+        }
+        double rx=end1.x-start1.x;
+        double ry=end1.y-start1.y;
+        double px=start1.x;
+        double py=start1.y;
+        double sx=end2.x-start2.x;
+        double sy=end2.y-start2.y;
+        double qx=start2.x;
+        double qy=start2.y;
+        double t=cross2D(qx-px, qy-py, sx, sy)/cross2D(rx,ry,sx,sy);
+        result.x=px+t*rx;
+        result.y=py+t*ry; 
+        return result;
+    }
 
     public static boolean isLineSegment2DIntersect(Coordinate start1, Coordinate end1, Coordinate start2, Coordinate end2) {
         return isLineSegment2DIntersect(start1.x, start1.y, end1.x, end1.y, start2.x, start2.y, end2.x, end2.y);
@@ -383,5 +401,29 @@ public class GeometryMath {
 
     public static double triangleArea2D(Triangle tri) {
         return triangleArea2D(tri.c1.x,tri.c1.y,tri.c2.x,tri.c2.y,tri.c3.x,tri.c3.y);
+    }
+    
+    /**
+     * 
+     * @param x 
+     * @param y
+     * @param vertes the vertes of quadrangle, counter clockwise.
+     * @return 
+     */
+    public static boolean isInsideQuadrangle(double x,double y, Coordinate[] vertes){
+        boolean inside=true;
+        for(int i=0;i<4;i++){
+            Coordinate c1=vertes[i],c2=vertes[(i+1)%4];
+            double v1x=c2.x-c1.x;
+            double v1y=c2.y-c1.y;
+            double v2x=x-c1.x;
+            double v2y=y-c1.y;
+            double crs=cross2D(v1x, v1y, v2x, v2y);
+            if(crs<0){
+                inside=false;
+                break;
+            }
+        }
+        return inside;
     }
 }
