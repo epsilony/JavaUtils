@@ -323,7 +323,7 @@ public class MatrixUtils {
      * <p> 采用RCM - Reverse Cuthill McKee Ordering方法 </p>
      * <p> 只依参数symmetric判定mat是否为对称阵
      * @param mat  要求方阵，否则结果可能不正确
-     * @param flag inMat本身是对称的:{@link #SYMMETRICAL} inMat本身不是对称的，但是其是一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
+     * @param flag inMat本身是对称的:{@link #SYMMETRICAL} inMat应该是对称的但是其只存了一个上三角阵:{@link #UNSYMMETRICAL_BUT_MIRROR_FROM_UP_HALF} 若是SPD阵: &{@link #SPD}
      * @return 
      */
     public static BandedResult getBandedMatrix(FlexCompRowMatrix mat, int flag) {
