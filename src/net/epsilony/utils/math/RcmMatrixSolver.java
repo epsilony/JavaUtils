@@ -371,11 +371,10 @@ public class RcmMatrixSolver {
     public static int pseudoPeripheralVertex(Matrix mat, int flag, int startV) {
         TIntArrayList[] caches = new TIntArrayList[]{new TIntArrayList(mat.numRows()), new TIntArrayList(mat.numRows())};
         int[] ecc = new int[]{0};
-        int formEcc = 0;
 
         TIntArrayList eccVs = getEccentricityVertes(mat, flag, startV, ecc, caches);
 
-        formEcc = ecc[0];
+        int formEcc = ecc[0];
 
         do {
             int smallDeg = mat.numRows() + 1;
@@ -581,6 +580,13 @@ public class RcmMatrixSolver {
         return result;
     }
     
+    /**
+     * 
+     * @param mat
+     * @param flag
+     * @param b
+     * @return 
+     */
     public static DenseVector bandSolve(Matrix mat,int flag,Vector b){
         int[][] rcmRes = rcm(mat, flag);
         BandMatrix bandMat = getBandedMatrixByRcmResult(mat, rcmRes);
