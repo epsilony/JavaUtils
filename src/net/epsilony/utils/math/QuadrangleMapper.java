@@ -13,79 +13,7 @@ import net.epsilony.utils.geom.Quadrangle;
  *
  * @author epsilonyuan@gmail.com
  */
-public class QuadrangleMapper implements BivariateMapper {
-
-    double x1, y1, x2, y2, x3, y3, x4, y4; //x1,y1,x2,y2,x3,y3,x4,y4按顺时针排列
-
-    public QuadrangleMapper() {
-    }
-
-    /**
-     * <br>生成一个一般的四边形映射，四边形顶点按姆指为Z轴的右手法侧依次为：</br>
-     * <br>(x<sub>1</sub>,y<sub>1</sub>)，(x<sub>2</sub>,y<sub>2</sub>)，(x<sub>3</sub>,y<sub>3</sub>)，(x<sub>4</sub>,y<sub>4</sub>)</br>
-     *
-     * @param x1 x<sub>1</sub>
-     * @param y1 y<sub>1</sub>
-     * @param x2 x<sub>2</sub>
-     * @param y2 y<sub>2</sub>
-     * @param x3 x<sub>3</sub>
-     * @param y3 y<sub>3</sub>
-     * @param x4 x<sub>4</sub>
-     * @param y4 y<sub>4</sub>
-     */
-    public QuadrangleMapper(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-        this.x3 = x3;
-        this.y3 = y3;
-        this.x4 = x4;
-        this.y4 = y4;
-    }
-
-    /**
-     * 边与x,y轴平形的矩形映射，这个矩形区域为{(x,y)|x&isin;[x<sub>min</sub>,x<sub>max</sub>],x&isin;[y<sub>min</sub>,y<sub>max</sub>]}
-     *
-     * @param xmin x<sub>min</sub>
-     * @param ymin y<sub>min</sub>
-     * @param xmax x<sub>max</sub>
-     * @param ymin y<sub>max</sub>
-     */
-    public QuadrangleMapper(double xmin, double ymin, double xmax, double ymax) {
-        this.x1 = xmin;
-        this.y1 = ymin;
-        this.y2 = ymin;
-        this.x2 = xmax;
-        this.x3 = xmax;
-        this.y3 = ymax;
-        this.x4 = xmin;
-        this.y4 = ymax;
-    }
-
-    /**
-     * <br>设置顶点，四边形顶点按姆指为Z轴的右手法侧依次为：</br>
-     * <br>(x<sub>1</sub>,y<sub>1</sub>)，(x<sub>2</sub>,y<sub>2</sub>)，(x<sub>3</sub>,y<sub>3</sub>)，(x<sub>4</sub>,y<sub>4</sub>)</br>
-     *
-     * @param x1 x<sub>1</sub>
-     * @param y1 y<sub>1</sub>
-     * @param x2 x<sub>2</sub>
-     * @param y2 y<sub>2</sub>
-     * @param x3 x<sub>3</sub>
-     * @param y3 y<sub>3</sub>
-     * @param x4 x<sub>4</sub>
-     * @param y4 y<sub>4</sub>
-     */
-    public void setVertices(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-        this.x3 = x3;
-        this.y3 = y3;
-        this.x4 = x4;
-        this.y4 = y4;
-    }
+public class QuadrangleMapper extends Quadrangle implements BivariateMapper {
 
     /**
      * 边与x,y轴平形的矩形映射顶点，这个矩形区域为{(x,y)|x&isin;[x<sub>min</sub>,x<sub>max</sub>],x&isin;[y<sub>min</sub>,y<sub>max</sub>]}
@@ -95,23 +23,16 @@ public class QuadrangleMapper implements BivariateMapper {
      * @param xmax x<sub>max</sub>
      * @param ymin y<sub>max</sub>
      */
-    public void setVertices(double xmin, double ymin, double xmax, double ymax) {
-        this.x1 = xmin;
-        this.y1 = ymin;
-        this.y2 = ymin;
-        this.x2 = xmax;
-        this.x3 = xmax;
-        this.y3 = ymax;
-        this.x4 = xmin;
-        this.y4 = ymax;
+    public void setVertes(double xmin, double ymin, double xmax, double ymax) {
+        setVertes(xmin,ymin,ymin,xmax,xmax,ymax,xmin,ymax);
     }
 
     @Override
     public double[] getResults(double iu, double iv, double[] results) {
-        return iuv2xy(x1, y1, x2, y2, x3, y3, x4, y4, iu, iv, results);
+        return iuv2xyA(getXY(0),getXY(1),getXY(2),getXY(3),getXY(4),getXY(5),getXY(6),getXY(7), iu, iv, results);
     }
 
-    public static double[] iuv2xy(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double iu, double iv, double[] results) {
+    public static double[] iuv2xyA(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double iu, double iv, double[] results) {
         if (null == results) {
             results = new double[3];
         }
@@ -133,34 +54,23 @@ public class QuadrangleMapper implements BivariateMapper {
         return results;
     }
 
-    public static double iuv2xy(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double iu, double iv, Coordinate result) {
-        if (null == result) {
-            throw new NullPointerException();
-        }
-        double u = (iu + 1) / 2;
-        double v = (iv + 1) / 2;
+    public static double iuv2xyC(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double iu, double iv, Coordinate coord) {
 
-        double uv = u * v;
-        double tx = x1 - x2 + x3 - x4;
-        double ty = y1 - y2 + y3 - y4;
-        result.x = tx * uv + (x2 - x1) * u + (x4 - x1) * v + x1;     //x
-        result.y = ty * uv + (y2 - y1) * u + (y4 - y1) * v + y1;    //y
-        double dxdu = (tx * v + (x2 - x1)) / 2;
-        double dxdv = (tx * u + (x4 - x1)) / 2;
-        double dydu = (ty * v + (y2 - y1)) / 2;
-        double dydv = (ty * u + (y4 - y1)) / 2;
-        double jacobi = abs(dxdu * dydv - dydu * dxdv);     //|Jacobi|
+        double[] results=iuv2xyA(x1, y1, x2, y2, x3, y3, x4, y4, iu, iv, null);
+        double jacobi=results[2];
+        coord.x=results[0];
+        coord.y=results[1];
         return jacobi;
     }
 
-    public static double iuv2xy(Quadrangle quad, double iu, double iv, Coordinate result) {
-        double x1 = quad.x1, y1 = quad.y1, x2 = quad.x2, y2 = quad.y2, x3 = quad.x3, y3 = quad.y3, x4 = quad.x4, y4 = quad.y4;
-        return iuv2xy(x1, y1, x2, y2, x3, y3, x4, y4, iu, iv, result);
+    public static double iuv2xyC(Quadrangle quad, double iu, double iv, Coordinate result) {
+        double x1 = quad.getXY(0), y1 = quad.getXY(1), x2 = quad.getXY(2), y2 = quad.getXY(3), x3 = quad.getXY(4), y3 = quad.getXY(5), x4 = quad.getXY(6), y4 = quad.getXY(7);
+        return iuv2xyC(x1, y1, x2, y2, x3, y3, x4, y4, iu, iv, result);
     }
 
-    public static double[] iuv2xy(Quadrangle quad, double iu, double iv, double[] results) {
-        double x1 = quad.x1, y1 = quad.y1, x2 = quad.x2, y2 = quad.y2, x3 = quad.x3, y3 = quad.y3, x4 = quad.x4, y4 = quad.y4;
-        return iuv2xy(x1, y1, x2, y2, x3, y3, x4, y4, iu, iv, results);
+    public static double[] iuv2xyA(Quadrangle quad, double iu, double iv, double[] results) {
+        double x1 = quad.getXY(0), y1 = quad.getXY(1), x2 = quad.getXY(2), y2 = quad.getXY(3), x3 = quad.getXY(4), y3 = quad.getXY(5), x4 = quad.getXY(6), y4 = quad.getXY(7);
+        return iuv2xyA(x1, y1, x2, y2, x3, y3, x4, y4, iu, iv, results);
     }
 
     public static double jacobi(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double iu, double iv) {
@@ -177,7 +87,7 @@ public class QuadrangleMapper implements BivariateMapper {
     }
 
     public static double jacobi(Quadrangle quad, double iu, double iv) {
-        double x1 = quad.x1, y1 = quad.y1, x2 = quad.x2, y2 = quad.y2, x3 = quad.x3, y3 = quad.y3, x4 = quad.x4, y4 = quad.y4;
+        double x1 = quad.getXY(0), y1 = quad.getXY(1), x2 = quad.getXY(2), y2 = quad.getXY(3), x3 = quad.getXY(4), y3 = quad.getXY(5), x4 = quad.getXY(6), y4 = quad.getXY(7);
         return jacobi(x1, y1, x2, y2, x3, y3, x4, y4, iu, iv);
     }
     //matlab 相关代码：   

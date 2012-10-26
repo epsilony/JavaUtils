@@ -9,30 +9,59 @@ package net.epsilony.utils.geom;
  * @author epsilonyuan@gmail.com
  */
 public class Quadrangle {
-    public double x1,y1,x2,y2,x3,y3,x4,y4;  //counter clock wise
-    public Quadrangle(){
-        
+
+    public Coordinate[] vertes = new Coordinate[4];
+
+    {
+        for (int i = 0; i < vertes.length; i++) {
+            vertes[i] = new Coordinate();
+        }
+    }
+
+    public Quadrangle() {
     }
 
     public Quadrangle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-        this.x3 = x3;
-        this.y3 = y3;
-        this.x4 = x4;
-        this.y4 = y4;
+        vertes[0].x = x1;
+        vertes[0].y = y1;
+        vertes[1].x = x2;
+        vertes[1].y = y2;
+        vertes[2].x = x3;
+        vertes[2].y = y3;
+        vertes[3].x = x4;
+        vertes[3].y = y4;
+    }
+
+    public Quadrangle(double[] points) {
+        for(int i=0;i<vertes.length;i++){
+            vertes[i].x=points[i*2];
+            vertes[i].y=points[i*2+1];
+        }
     }
     
-    public Quadrangle(double[] points){
-        x1=points[0];
-        y1=points[1];
-        x2=points[2];
-        y2=points[3];
-        x3=points[4];
-        y3=points[5];
-        x4=points[6];
-        y4=points[7];
+    public void setVertes(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
+        vertes[0].x = x1;
+        vertes[0].y = y1;
+        vertes[1].x = x2;
+        vertes[1].y = y2;
+        vertes[2].x = x3;
+        vertes[2].y = y3;
+        vertes[3].x = x4;
+        vertes[3].y = y4;
+    }
+    
+    public void setVertes(Quadrangle quad){
+        for(int i=0;i<vertes.length;i++){
+            vertes[i].set(quad.vertes[i]);
+        }
+    }
+    
+    public double getXY(int index){
+        Coordinate vertex=vertes[index/2];
+        if(index % 2 ==0){
+            return vertex.x;
+        }else{
+            return vertex.y;
+        }
     }
 }
