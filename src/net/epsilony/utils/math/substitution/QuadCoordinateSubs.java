@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
  * @see QuadrangleMapper
  * @author M.Yuan
  */
-public class QuadCoordinateChange2D implements BivariateMapper{
+public class QuadCoordinateSubs implements Substitution2d{
 
     private double x1,  y1,  x2,  y2,  x3,  y3,  x4,  y4;
     double[][] pts;
@@ -31,7 +31,7 @@ public class QuadCoordinateChange2D implements BivariateMapper{
         }
     }
     
-    public QuadCoordinateChange2D(DifferentiableUnivariateVectorialFunctionEx[] funs) {
+    public QuadCoordinateSubs(DifferentiableUnivariateVectorialFunctionEx[] funs) {
         setup(funs);
     }
 

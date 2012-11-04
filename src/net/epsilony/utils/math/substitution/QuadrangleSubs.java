@@ -13,7 +13,7 @@ import net.epsilony.utils.geom.Quadrangle;
  *
  * @author epsilonyuan@gmail.com
  */
-public class QuadrangleMapper extends Quadrangle implements BivariateMapper {
+public class QuadrangleSubs extends Quadrangle implements Substitution2d {
 
     /**
      * 边与x,y轴平形的矩形映射顶点，这个矩形区域为{(x,y)|x&isin;[x<sub>min</sub>,x<sub>max</sub>],x&isin;[y<sub>min</sub>,y<sub>max</sub>]}

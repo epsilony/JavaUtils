@@ -16,7 +16,7 @@ import static java.lang.Math.abs;
  * 则gk映射即为本类的映射
  * @author epsilonyuan@gmail.com
  */
-public class TriMapper implements BivariateMapper{
+public class TriangleSubs implements Substitution2d{
 
     double [] vertex = new double[6];  //三角形的三个顶点坐标
     

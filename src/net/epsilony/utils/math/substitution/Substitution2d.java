@@ -12,7 +12,7 @@ import org.apache.commons.math.FunctionEvaluationException;
  * 该接口设计用于一般区域的GaussLegendre积分用。
  * @author epsilonyuan@gmail.com
  */
-public interface BivariateMapper {
+public interface Substitution2d {
     
     /**
      * @param u u坐标

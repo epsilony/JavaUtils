@@ -4,11 +4,11 @@
  */
 package net.epsilony.utils.math.substitution;
 
+import static java.lang.Math.abs;
 import java.util.Collection;
 import net.epsilony.utils.java2d.PathInfoCalculator;
 import net.epsilony.utils.java2d.PathInfoNode;
 import org.apache.commons.math.FunctionEvaluationException;
-import static java.lang.Math.abs;
 
 /**
  * 利用线性Coon曲线的计算，将u,v正方形区域（u,v属于[-1,1])映射到一个由四个参数线段所围成的区域，
@@ -16,7 +16,7 @@ import static java.lang.Math.abs;
  * 清华大学出版社第六章曲线和曲面6.3.4第343－344页
  * @author epsilonyuan@gmail.com
  */
-final public class CoonsBivariateMapper implements BivariateMapper {
+final public class CoonsBivariateSubs implements Substitution2d {
 
     PathInfoCalculator[] pICs = new PathInfoCalculator[4];
     double[] starts = new double[8];

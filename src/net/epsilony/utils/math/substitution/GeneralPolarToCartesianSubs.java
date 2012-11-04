@@ -5,28 +5,28 @@
 
 package net.epsilony.utils.math.substitution;
 
-import net.epsilony.utils.java2d.PathInfoCalculator;
-import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
-import net.epsilony.utils.java2d.PathInfoNode;
-import org.apache.commons.math.FunctionEvaluationException;
 import static java.lang.Math.abs;
+import net.epsilony.utils.java2d.PathInfoCalculator;
+import net.epsilony.utils.java2d.PathInfoNode;
+import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
+import org.apache.commons.math.FunctionEvaluationException;
 
 /**
  * 一个变换从最初的u[-1,1],v[-1,1],到ro[0,1],th[0,1]到x,y的变换。
  * 
  * @author epsilonyuan@gmail.com
  */
-public class GeneralPolarToCartesianChange2D implements BivariateMapper{
+public class GeneralPolarToCartesianSubs implements Substitution2d{
     PathInfoCalculator pathInfoCal;
     UnivariateVectorialFunctionEx diffFun;
     double xOri,yOri;
 
-    public GeneralPolarToCartesianChange2D() {
+    public GeneralPolarToCartesianSubs() {
         xOri=0;
         yOri=0;
     }
 
-    public GeneralPolarToCartesianChange2D(PathInfoNode infoNode,double xOri,double yOri) {
+    public GeneralPolarToCartesianSubs(PathInfoNode infoNode,double xOri,double yOri) {
         setXOri(xOri);
         setYOri(yOri);
         setPathInfoNode(infoNode);

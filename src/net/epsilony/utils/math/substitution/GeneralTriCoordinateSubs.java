@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
  * 由u,v区域(u,v属于[-1,1]到一边为Bezier曲线，其余两边为直线的近三角型区域映射
  * @author epsilonyuan@gmail.com
  */
-public class GeneralTriCoordinateChange2D implements BivariateMapper{
+public class GeneralTriCoordinateSubs implements Substitution2d{
     
     /**
      * get Coordinate Change Result
@@ -35,7 +35,7 @@ public class GeneralTriCoordinateChange2D implements BivariateMapper{
         y1=oriPoint[1];     
     }
 
-    public GeneralTriCoordinateChange2D(double [] oriPoint,DifferentiableUnivariateVectorialFunctionEx fun) {
+    public GeneralTriCoordinateSubs(double [] oriPoint,DifferentiableUnivariateVectorialFunctionEx fun) {
          setup(oriPoint,fun);
     }
     

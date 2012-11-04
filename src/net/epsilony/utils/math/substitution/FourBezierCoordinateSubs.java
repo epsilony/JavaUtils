@@ -7,16 +7,16 @@ package net.epsilony.utils.math.substitution;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
+import static java.lang.Math.abs;
 import no.uib.cipr.matrix.DenseMatrix;
 import no.uib.cipr.matrix.Matrices;
 import no.uib.cipr.matrix.Matrix;
-import static java.lang.Math.abs;
 
 /**
  * 四条Bezier曲线围成的区域的坐标变换（不太成熟）
  * @author epsilonyuan@gmail.com
  */
-public class FourBezierCoordinateChange2D implements BivariateMapper{
+public class FourBezierCoordinateSubs implements Substitution2d{
     //双三次Bezier曲线系数阵
     final public static double[][] M = {{-1, 3, -3, 1},
         {3, -6, 3, 0},
@@ -158,7 +158,7 @@ public class FourBezierCoordinateChange2D implements BivariateMapper{
      * @param domain 4 borders singular Area
      * @throws java.lang.Exception
      */
-    public FourBezierCoordinateChange2D(Shape domain) throws Exception {
+    public FourBezierCoordinateSubs(Shape domain) throws Exception {
         setup(domain);
     }
 
@@ -166,7 +166,7 @@ public class FourBezierCoordinateChange2D implements BivariateMapper{
      * 
      * @param domainCtrls {p00,p01,p02,p03,p31,p32,p33,p32,p31,p30,p20,p10}
      */
-    public FourBezierCoordinateChange2D(double[][] domainCtrls) {
+    public FourBezierCoordinateSubs(double[][] domainCtrls) {
         setup(domainCtrls);
     }
 
