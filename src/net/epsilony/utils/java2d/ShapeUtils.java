@@ -11,7 +11,7 @@ import java.awt.geom.PathIterator;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import net.epsilony.utils.math.BivariateMapper;
+import net.epsilony.utils.math.substitution.BivariateMapper;
 import org.apache.commons.math.FunctionEvaluationException;
 
 /**

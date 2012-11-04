@@ -4,12 +4,10 @@
  */
 package net.epsilony.utils.math;
 
-import net.epsilony.utils.math.EYMath;
-import net.epsilony.utils.math.SimpsonIntegratorOnTriangleDomain;
 import java.util.Arrays;
 import java.util.Random;
-import static net.epsilony.utils.math.TriangleSymmetricQuadrature.MAX_POWER;
-import static net.epsilony.utils.math.TriangleSymmetricQuadrature.MIN_POWER;
+import net.epsilony.utils.math.quadrature.TriangleSymmetricQuadrature;
+import static net.epsilony.utils.math.quadrature.TriangleSymmetricQuadrature.*;
 import org.apache.commons.math.analysis.BivariateRealFunction;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;

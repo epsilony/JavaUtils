@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.epsilony.utils.math;
+package net.epsilony.utils.math.substitution;
 
 import net.epsilony.utils.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
 import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;

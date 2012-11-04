@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.utils.math;
+package net.epsilony.utils.math.substitution;
 import net.epsilony.utils.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
 import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.FunctionEvaluationException;

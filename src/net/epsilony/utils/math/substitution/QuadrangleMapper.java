@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.utils.math;
+package net.epsilony.utils.math.substitution;
 
 import static java.lang.Math.abs;
 import net.epsilony.utils.geom.Coordinate;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.epsilony.utils.math;
+package net.epsilony.utils.math.quadrature;
 
 import java.util.Arrays;
 import net.epsilony.utils.geom.Coordinate;

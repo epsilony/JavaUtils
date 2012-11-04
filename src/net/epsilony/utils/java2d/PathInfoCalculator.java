@@ -6,7 +6,7 @@ package net.epsilony.utils.java2d;
 
 import java.awt.geom.PathIterator;
 import net.epsilony.utils.math.analysis.DifferentiableUnivariateVectorialFunctionEx;
-import net.epsilony.utils.math.GaussLegendreQuadratureUtils;
+import net.epsilony.utils.math.quadrature.GaussLegendreQuadratureUtils;
 import net.epsilony.utils.math.analysis.UnivariateVectorialFunctionEx;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
