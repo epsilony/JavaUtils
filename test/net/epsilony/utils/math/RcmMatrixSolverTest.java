@@ -5,7 +5,7 @@
 package net.epsilony.utils.math;
 
 import java.util.Arrays;
-import static net.epsilony.utils.math.RcmMatrixSolver.*;
+import static net.epsilony.math.RcmMatrixSolver.*;
 import no.uib.cipr.matrix.BandMatrix;
 import no.uib.cipr.matrix.DenseMatrix;
 import no.uib.cipr.matrix.DenseVector;

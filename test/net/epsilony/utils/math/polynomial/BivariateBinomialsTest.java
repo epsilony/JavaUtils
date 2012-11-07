@@ -5,7 +5,7 @@
 
 package net.epsilony.utils.math.polynomial;
 
-import net.epsilony.utils.math.polynomial.BivariateBinomials;
+import net.epsilony.math.polynomial.BivariateBinomials;
 import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

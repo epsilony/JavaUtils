@@ -6,7 +6,7 @@ package net.epsilony.utils.java2d;
 
 import java.awt.geom.Point2D;
 import java.util.Iterator;
-import net.epsilony.utils.math.EYMath;
+import net.epsilony.math.EYMath;
 
 /**
  *

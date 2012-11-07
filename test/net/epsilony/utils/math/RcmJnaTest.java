@@ -4,8 +4,10 @@
  */
 package net.epsilony.utils.math;
 
+import net.epsilony.math.MatrixUtils;
+import net.epsilony.math.RcmJna;
 import java.util.Random;
-import net.epsilony.utils.math.MatrixUtils.Bandwidth;
+import net.epsilony.math.MatrixUtils.Bandwidth;
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertArrayEquals;

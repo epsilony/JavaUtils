@@ -11,7 +11,7 @@ import java.awt.geom.PathIterator;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import net.epsilony.utils.math.substitution.Substitution2d;
+import net.epsilony.math.substrans.SubsTranslation2d;
 import org.apache.commons.math.FunctionEvaluationException;
 
 /**
@@ -526,7 +526,7 @@ public class ShapeUtils {
         return datas;
     }
     
-    public static Shape getCoordinateChangeGridShape(Substitution2d bcc,int nRows,int nCols) throws FunctionEvaluationException{
+    public static Shape getCoordinateChangeGridShape(SubsTranslation2d bcc,int nRows,int nCols) throws FunctionEvaluationException{
         int i,j;
         double du=2.0/nCols;
         double dv=2.0/nRows;

@@ -4,11 +4,12 @@
  */
 package net.epsilony.utils.math;
 
-import net.epsilony.utils.math.RcmJna;
+import net.epsilony.math.MatrixUtils;
+import net.epsilony.math.RcmJna;
 import no.uib.cipr.matrix.Matrix;
 import no.uib.cipr.matrix.VectorEntry;
 import java.util.Random;
-import net.epsilony.utils.math.MatrixUtils.Bandwidth;
+import net.epsilony.math.MatrixUtils.Bandwidth;
 import no.uib.cipr.matrix.DenseMatrix;
 import no.uib.cipr.matrix.DenseVector;
 import no.uib.cipr.matrix.MatrixEntry;
