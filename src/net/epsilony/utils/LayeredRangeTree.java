@@ -41,12 +41,12 @@ import static org.apache.commons.math.util.MathUtils.log;
  * <li>{@link #fillDatas3D}
  * </p>
  * <p> for common objects need to combine with indes use {@link IndexWrapper}
- * @param <Data> 
+ * @param D 
  * @see IndexWrapper#wrapWithIndex(java.util.Collection, java.util.ArrayList, int[], java.util.List, java.util.ArrayList) 
  * </p>
  * @author epsilonyuan@gmail.com
  */
-public class LayeredRangeTree<Data> {
+public class LayeredRangeTree<D> {
 
     /**
      * The dimension is equaals to the number of Data's comparators;
@@ -62,7 +62,7 @@ public class LayeredRangeTree<Data> {
      * @param datas the datas going to be search
      * @param comps the comparators of dimension 1, 2, ... n, the whole tree's dimension is depend on this
      */
-    public LayeredRangeTree(Collection<Data> datas, List<Comparator<Data>> comps) {
+    public LayeredRangeTree(Collection<? extends D> datas, List<? extends Comparator<? super D>> comps) {
         buildTree(datas, comps);
     }
 
@@ -71,11 +71,11 @@ public class LayeredRangeTree<Data> {
      * @param priDimIndex the first priority compare dimension
      * @return  In fact, build a Comparator wrapping {@link #dictCompare dictCompare(priDimIndex)}
      */
-    public Comparator<Data> getDictComparator(final int priDimIndex) {
-        return new Comparator<Data>() {
+    public Comparator<D> getDictComparator(final int priDimIndex) {
+        return new Comparator<D>() {
 
             @Override
-            public int compare(Data o1, Data o2) {
+            public int compare(D o1, D o2) {
                 return dictCompare(o1, o2, priDimIndex);
             }
         };
@@ -488,7 +488,7 @@ public class LayeredRangeTree<Data> {
                 break;
         }
     }
-    private ArrayList<Comparator<Data>> comparators;
+    private ArrayList<? extends Comparator<? super D>> comparators;
     private Tree rootTree;
 
     private static final class Node<T> {
@@ -513,11 +513,11 @@ public class LayeredRangeTree<Data> {
          * @param key design as "from"
          * @return the smallest i that datas.get(i)>=0 key at dimension 1(dimension index 0)
          */
-        private int dataBinarySearch(ArrayList<Data> datas, Data key) {
+        private int dataBinarySearch(ArrayList<D> datas, Object key) {
             int left = 0;
             int right = datas.size();
             int index;
-            Comparator<Data> comp = comparators.get(0);
+            Comparator comp = comparators.get(0);
             if (comp.compare(datas.get(0), key) >= 0) {
                 return 0;
             } else if (comp.compare(datas.get(datas.size() - 1), key) < 0) {
@@ -537,8 +537,8 @@ public class LayeredRangeTree<Data> {
         }
 
         private void fractionalCascading(Node father) {
-            ArrayList<Data> rightDatas, leftDatas;
-            Node<Data> right, left;
+            ArrayList<D> rightDatas, leftDatas;
+            Node<D> right, left;
             right = father.right;
             left = father.left;
             boolean isLeftLeaf = left.isLeaf();
@@ -550,7 +550,7 @@ public class LayeredRangeTree<Data> {
                 rightDataSize = 1;
                 rightDatas = null;
             } else {
-                rightDatas = (ArrayList<Data>) right.associate;
+                rightDatas = (ArrayList<D>) right.associate;
                 rightDataSize = rightDatas.size();
                 fractionalCascading(right);
             }
@@ -559,15 +559,15 @@ public class LayeredRangeTree<Data> {
                 leftDatas = null;
                 leftDataSize = 1;
             } else {
-                leftDatas = (ArrayList<Data>) left.associate;
+                leftDatas = (ArrayList<D>) left.associate;
                 leftDataSize = leftDatas.size();
                 fractionalCascading(left);
             }
 
             int dimIndex = 0;
-            FracCasData<Data> fatherCas = new FracCasData((ArrayList<Data>) father.associate);
+            FracCasData<D> fatherCas = new FracCasData((ArrayList<D>) father.associate);
             father.associate = fatherCas;
-            ArrayList<Data> fatherDatas = fatherCas.datas;
+            ArrayList<D> fatherDatas = fatherCas.datas;
             int i, iLeft, iRight;
             for (i = 0, iLeft = 0, iRight = 0; i < fatherDatas.size(); i++) {
                 if (iLeft >= leftDataSize) {
@@ -604,11 +604,11 @@ public class LayeredRangeTree<Data> {
          * @param dimIndex
          * @return 
          */
-        private ArrayList<Data> merge(ArrayList<Data> from1, ArrayList<Data> from2, int dimIndex) {
-            ArrayList<Data> merged = new ArrayList<>(from1.size() + from2.size());
+        private ArrayList<D> merge(ArrayList<D> from1, ArrayList<D> from2, int dimIndex) {
+            ArrayList<D> merged = new ArrayList<>(from1.size() + from2.size());
             int i, i1, i2, stop;
             for (i = 0, i1 = 0, i2 = 0, stop = from1.size() + from2.size(); i < stop; i++) {
-                Data result;
+                D result;
                 if (i1 >= from1.size()) {
                     result = from2.get(i2++);
                 } else if (i2 >= from2.size()) {
@@ -623,7 +623,7 @@ public class LayeredRangeTree<Data> {
             return merged;
         }
 
-        private void build(int dimIndex, ArrayList<Data> datas) {
+        private void build(int dimIndex, ArrayList<D> datas) {
             //initiate the tree: 
             if (datas.isEmpty()) {
                 return;
@@ -636,37 +636,37 @@ public class LayeredRangeTree<Data> {
             int treeDeep = (int) ceil(log(2, datas.size())) + 1;
             int fullTreeLeafNum = (int) pow(2, treeDeep - 1);
             int higherLeafNum = fullTreeLeafNum - datas.size();
-            LinkedList<Node<Data>> dequeue = new LinkedList<>();
+            LinkedList<Node<D>> dequeue = new LinkedList<>();
             for (int i = 0; i < higherLeafNum; i++) {
-                Node<Data> tNode = new Node<>(datas.get(datas.size() - 1 - i));
+                Node<D> tNode = new Node<>(datas.get(datas.size() - 1 - i));
                 dequeue.addFirst(tNode);
             }
             for (int i = 0; i < datas.size() - higherLeafNum; i++) {
-                Node<Data> tNode = new Node<>(datas.get(i));
+                Node<D> tNode = new Node<>(datas.get(i));
                 dequeue.addLast(tNode);
             }
 
-            ArrayList<Data> tLefts = new ArrayList<>(1);
-            ArrayList<Data> tRights = new ArrayList<>(1);
+            ArrayList<D> tLefts = new ArrayList<>(1);
+            ArrayList<D> tRights = new ArrayList<>(1);
             tLefts.add(null);
             tRights.add(null);
             while (dequeue.size() > 1) {
-                Node<Data> right = dequeue.pollLast();
-                Node<Data> left = dequeue.pollLast();
-                Node<Data> keyNode = left;
+                Node<D> right = dequeue.pollLast();
+                Node<D> left = dequeue.pollLast();
+                Node<D> keyNode = left;
                 while (!keyNode.isLeaf()) {
                     keyNode = keyNode.right;
                 }
-                Node<Data> father = new Node<>(keyNode.key);
+                Node<D> father = new Node<>(keyNode.key);
                 father.left = left;
                 father.right = right;
-                ArrayList<Data> rightDatas, leftDatas;
+                ArrayList<D> rightDatas, leftDatas;
 
                 if (right.isLeaf()) {
                     tRights.set(0, right.key);
                     rightDatas = tRights;
                 } else {
-                    rightDatas = (ArrayList<Data>) right.associate;
+                    rightDatas = (ArrayList<D>) right.associate;
                     if (dimIndex >= 2) {
                         right.associate = new Tree();
                         ((Tree) right.associate).build(dimIndex - 1, rightDatas);
@@ -678,7 +678,7 @@ public class LayeredRangeTree<Data> {
                     tLefts.set(0, left.key);
                     leftDatas = tLefts;
                 } else {
-                    leftDatas = (ArrayList<Data>) left.associate;
+                    leftDatas = (ArrayList<D>) left.associate;
                     if (dimIndex >= 2) {
                         left.associate = new Tree();
                         ((Tree) left.associate).build(dimIndex - 1, leftDatas);
@@ -690,7 +690,7 @@ public class LayeredRangeTree<Data> {
             }
             rootNode = dequeue.pop();
             if (dimIndex >= 2) {
-                ArrayList<Data> rootNodeDatas = (ArrayList<Data>) rootNode.associate;
+                ArrayList<D> rootNodeDatas = (ArrayList<D>) rootNode.associate;
                 rootNode.associate = new Tree();
                 ((Tree) rootNode.associate).build(dimIndex - 1, rootNodeDatas);
             } else {
@@ -698,10 +698,10 @@ public class LayeredRangeTree<Data> {
             }
         }
 
-        void checkToAdd(Collection<? super Data> results, Node<Data> node, Data from, Data to, int highestDimIndex) {
+        void checkToAdd(Collection<? super D> results, Node<D> node, Object from, Object to, int highestDimIndex) {
 
             for (int i = highestDimIndex; i >= 0; i--) {
-                Comparator<Data> comp = comparators.get(i);
+                Comparator comp = comparators.get(i);
                 int fromComp = comp.compare(from, node.key);
                 int toComp = comp.compare(to, node.key);
                 if (fromComp > 0 || toComp < 0) {
@@ -718,7 +718,7 @@ public class LayeredRangeTree<Data> {
          * @param to
          * @param results 
          */
-        void query(int dimIndex, Data from, Data to, Collection<? super Data> results) {
+        void query(int dimIndex, Object from, Object to, Collection<? super D> results) {
             if (null == rootNode) {
                 return;
             }
@@ -730,8 +730,8 @@ public class LayeredRangeTree<Data> {
 
             int compFrom;
             int compTo;
-            Node<Data> splitNode = rootNode;
-            Comparator<Data> comp = comparators.get(dimIndex);
+            Node<D> splitNode = rootNode;
+            Comparator comp = comparators.get(dimIndex);
 
             //determine the splitnode
             while (splitNode != null) {
@@ -756,7 +756,7 @@ public class LayeredRangeTree<Data> {
             }
 
             if (dimIndex >= 2) {
-                Node<Data> leftSearchNode = splitNode.left;
+                Node<D> leftSearchNode = splitNode.left;
                 while (!leftSearchNode.isLeaf()) {
                     if (comp.compare(from, leftSearchNode.key) <= 0) {
                         if (leftSearchNode.right.isLeaf()) {
@@ -771,7 +771,7 @@ public class LayeredRangeTree<Data> {
                 }
                 checkToAdd(results, leftSearchNode, from, to, dimIndex);
 
-                Node<Data> rightSearchNode = splitNode.right;
+                Node<D> rightSearchNode = splitNode.right;
                 while (!rightSearchNode.isLeaf()) {
                     if (comp.compare(to, rightSearchNode.key) >= 0) {
                         if (rightSearchNode.left.isLeaf()) {
@@ -787,25 +787,25 @@ public class LayeredRangeTree<Data> {
                 checkToAdd(results, rightSearchNode, from, to, dimIndex);
 
             } else { //dim==2
-                Comparator<Data> compDown = comparators.get(0);
+                Comparator compDown = comparators.get(0);
 
-                FracCasData<Data> splitNodeCasData = (FracCasData<Data>) splitNode.associate;
+                FracCasData<D> splitNodeCasData = (FracCasData<D>) splitNode.associate;
                 int splitBSearchIndex = dataBinarySearch(splitNodeCasData.datas, from);
                 if (-1 == splitBSearchIndex) {
                     return;
                 }
 
                 int leftSearchCas = splitNodeCasData.leftCas[splitBSearchIndex];
-                Node<Data> leftSearchNode = splitNode.left;
+                Node<D> leftSearchNode = splitNode.left;
                 while (!leftSearchNode.isLeaf() && leftSearchCas >= 0) {
                     if (comp.compare(from, leftSearchNode.key) <= 0) {
-                        int tRightCasIndex = ((FracCasData<Data>) leftSearchNode.associate).rightCas[leftSearchCas];
+                        int tRightCasIndex = ((FracCasData<D>) leftSearchNode.associate).rightCas[leftSearchCas];
                         if (tRightCasIndex >= 0) {
 
                             if (leftSearchNode.right.isLeaf()) {
                                 checkToAdd(results, leftSearchNode.right, from, to, 0);
                             } else {
-                                ArrayList<Data> tDatas = ((FracCasData<Data>) leftSearchNode.right.associate).datas;
+                                ArrayList<D> tDatas = ((FracCasData<D>) leftSearchNode.right.associate).datas;
 
                                 for (int i = tRightCasIndex; i < tDatas.size(); i++) {
                                     if (compDown.compare(tDatas.get(i), to) <= 0) {
@@ -816,11 +816,11 @@ public class LayeredRangeTree<Data> {
                                 }
                             }
                         }
-                        leftSearchCas = ((FracCasData<Data>) leftSearchNode.associate).leftCas[leftSearchCas];
+                        leftSearchCas = ((FracCasData<D>) leftSearchNode.associate).leftCas[leftSearchCas];
                         leftSearchNode = leftSearchNode.left;
 
                     } else {
-                        leftSearchCas = ((FracCasData<Data>) leftSearchNode.associate).rightCas[leftSearchCas];
+                        leftSearchCas = ((FracCasData<D>) leftSearchNode.associate).rightCas[leftSearchCas];
                         leftSearchNode = leftSearchNode.right;
                     }
                 }
@@ -829,15 +829,15 @@ public class LayeredRangeTree<Data> {
 
 
                 int rightSearchCas = splitNodeCasData.rightCas[splitBSearchIndex];
-                Node<Data> rightSearchNode = splitNode.right;
+                Node<D> rightSearchNode = splitNode.right;
                 while (!rightSearchNode.isLeaf() && rightSearchCas >= 0) {
                     if (comp.compare(to, rightSearchNode.key) >= 0) {
-                        int tLeftCasIndex = ((FracCasData<Data>) rightSearchNode.associate).leftCas[rightSearchCas];
+                        int tLeftCasIndex = ((FracCasData<D>) rightSearchNode.associate).leftCas[rightSearchCas];
                         if (tLeftCasIndex >= 0) {
                             if (rightSearchNode.left.isLeaf()) {
                                 checkToAdd(results, rightSearchNode.left, from, to, 0);
                             } else {
-                                ArrayList<Data> tDatas = ((FracCasData<Data>) rightSearchNode.left.associate).datas;
+                                ArrayList<D> tDatas = ((FracCasData<D>) rightSearchNode.left.associate).datas;
                                 int i;
                                 for (i = tLeftCasIndex; i < tDatas.size(); i++) {
                                     if (compDown.compare(tDatas.get(i), to) <= 0) {
@@ -848,11 +848,11 @@ public class LayeredRangeTree<Data> {
                                 }
                             }
                         }
-                        rightSearchCas = ((FracCasData<Data>) rightSearchNode.associate).rightCas[rightSearchCas];
+                        rightSearchCas = ((FracCasData<D>) rightSearchNode.associate).rightCas[rightSearchCas];
                         rightSearchNode = rightSearchNode.right;
 
                     } else {
-                        rightSearchCas = ((FracCasData<Data>) rightSearchNode.associate).leftCas[rightSearchCas];
+                        rightSearchCas = ((FracCasData<D>) rightSearchNode.associate).leftCas[rightSearchCas];
                         rightSearchNode = rightSearchNode.left;
                     }
                 }
@@ -862,7 +862,7 @@ public class LayeredRangeTree<Data> {
 
             }
         }
-        Node<Data> rootNode;
+        Node<D> rootNode;
     }
 
     /**
@@ -891,7 +891,7 @@ public class LayeredRangeTree<Data> {
      * @param dimIndex the first priority compare dimention
      * @return same as common Comparators
      */
-    public int dictCompare(Data ob1, Data ob2, int dimIndex) {
+    public int dictCompare(D ob1, D ob2, int dimIndex) {
         int c = comparators.get(dimIndex).compare(ob1, ob2);
         if (c != 0) {
             return c;
@@ -912,10 +912,10 @@ public class LayeredRangeTree<Data> {
         return 0;
     }
 
-    private void buildTree(Collection<Data> datas, List<Comparator<Data>> comps) {
+    private void buildTree(Collection<? extends D> datas, List<? extends Comparator<? super D>> comps) {
 
         this.comparators = new ArrayList<>(comps);
-        ArrayList<Data> treeDatas = new ArrayList<>(datas);
+        ArrayList<D> treeDatas = new ArrayList<>(datas);
         int dimensionIndex = comps.size() - 1;
         Comparator comp = getDictComparator(dimensionIndex);
 
@@ -934,7 +934,7 @@ public class LayeredRangeTree<Data> {
      * @param from
      * @param to 
      */
-    public void search(Collection<? super Data> results, Data from, Data to) {
+    public void search(Collection<? super D> results, Object from, Object to) {
         results.clear();
         rootTree.query(comparators.size() - 1, from, to, results);
     }

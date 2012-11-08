@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import net.epsilony.utils.PartDiffOrdered;
 import net.epsilony.utils.geom.Coordinate;
-import net.epsilony.utils.geom.Node;
 
 /**
  * 形函数 Shape Function。</br>
@@ -24,12 +23,12 @@ import net.epsilony.utils.geom.Node;
  */
 public interface ShapeFunction extends PartDiffOrdered{   
     /**
-     * @param pos
-     * @param nodes
-     * @param ndDistSqs Wheather not null, must be fit for differential order and be as long as {@code nodes}. If null, the implementation should take the Euclidean distance as default
-     * @param ndInfRads if {@code ndInfRads.size()} is 1, all the nodes share the same influence radiu that is {@ndInfRads.get(0)}
-     * @param result
+     * @param pos   Input
+     * @param nodes Input
+     * @param ndDistSqs Input, Wheather not null, must be fit for differential order and be as long as {@code nodes}. If null, the implementation should take the Euclidean distance as default
+     * @param ndInfRads Input, if {@code ndInfRads.size()} is 1, all the nodes share the same influence radiu that is {@ndInfRads.get(0)}
+     * @param result Output, can be null.
      * @return
      */
-    TDoubleArrayList[] values(Coordinate pos,List<Node> nodes,TDoubleArrayList[] ndDistSqs,TDoubleArrayList ndInfRads, TDoubleArrayList[] result);
+    TDoubleArrayList[] values(Coordinate pos,List<? extends Coordinate> nodes,TDoubleArrayList[] ndDistSqs,TDoubleArrayList ndInfRads, TDoubleArrayList[] result);
 }
