@@ -4,24 +4,39 @@
  */
 package net.epsilony.utils.geom;
 
+import java.util.Arrays;
+
 /**
  *
  * @author epsilonyuan@gmail.com
  */
 public class Quadrangle {
 
-    public Coordinate[] vertes = new Coordinate[4];
+    public Coordinate[] vertes;
 
-    {
+    
+
+    private void initVertes(){
+        vertes=new Coordinate[4];
         for (int i = 0; i < vertes.length; i++) {
             vertes[i] = new Coordinate();
         }
     }
-
+    
     public Quadrangle() {
+        initVertes();
     }
-
+    
+    public Quadrangle(Coordinate[] vertes,boolean copy){
+        if(copy){
+            this.vertes=Arrays.copyOf(vertes, 4);
+        }else{
+            this.vertes=vertes;
+        }
+    }
+    
     public Quadrangle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+        initVertes();
         vertes[0].x = x1;
         vertes[0].y = y1;
         vertes[1].x = x2;
@@ -33,6 +48,7 @@ public class Quadrangle {
     }
 
     public Quadrangle(double[] points) {
+        initVertes();
         for(int i=0;i<vertes.length;i++){
             vertes[i].x=points[i*2];
             vertes[i].y=points[i*2+1];
@@ -40,6 +56,7 @@ public class Quadrangle {
     }
     
     public void setVertes(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
+        vertes = new Coordinate[4];
         vertes[0].x = x1;
         vertes[0].y = y1;
         vertes[1].x = x2;
