@@ -4,7 +4,7 @@
  */
 package net.epsilony.spfun.radialbasis;
 
-import net.epsilony.spfun.radialbasis.WeightFunctionCore;
+import net.epsilony.spfun.radialbasis.RadialFunctionCore;
 import net.epsilony.spfun.radialbasis.Wendland;
 import net.epsilony.spfun.radialbasis.RBF;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class RBFTest {
 //    @Test
 //    public void unitTest() {
 //        DenseVector u = new DenseVector(new double[]{0, 1, 1, 0});
-//        WeightFunctionCore radialBaseCore = new Wendland(Wendland.C4);
+//        RadialFunctionCore radialBaseCore = new Wendland(Wendland.C4);
 //        double[] posts = new double[]{0, 0, 1, 0, 1, 1, 0, 1};
 //        double rad = 2;
 //
@@ -56,7 +56,7 @@ public class RBFTest {
 
         double sampleStep = 10;
 
-        WeightFunctionCore radialBaseCore = new Wendland(Wendland.C4);
+        RadialFunctionCore radialBaseCore = new Wendland(Wendland.C4);
         ArrayList<Node> nodes = SFunTestUtils.genNodes(x0, y0, w, h, step);
 
         CoordinatePartDiffFunction sampleFun = SFunTestUtils.sinSin(x0, y0, w, h, wCir, hCir, wPhase, hPhase);

@@ -12,44 +12,44 @@ import net.epsilony.spfun.CommonUtils;
  *
  * @author epsilonyuan@gmail.com
  */
-public class WeightFunctions {
+public class RadialFunctionUtils {
 
-    public static SomeFactory<WeightFunction> factory(final SomeFactory<WeightFunctionCore> coreFunFactory) {
+    public static SomeFactory<RadialFunction> factory(final SomeFactory<RadialFunctionCore> coreFunFactory) {
         return factory(coreFunFactory, 2);
 
     }
 
-    public static SomeFactory<WeightFunction> factory(final SomeFactory<WeightFunctionCore> coreFunFactory, final int dim) {
-        return new SomeFactory<WeightFunction>() {
+    public static SomeFactory<RadialFunction> factory(final SomeFactory<RadialFunctionCore> coreFunFactory, final int dim) {
+        return new SomeFactory<RadialFunction>() {
             @Override
-            public WeightFunction produce() {
+            public RadialFunction produce() {
                 WeightFunctionImp imp = new WeightFunctionImp(coreFunFactory.produce(), dim);
                 return imp;
             }
         };
     }
 
-    public static WeightFunction weightFunction(WeightFunctionCore coreFun, int dim) {
+    public static RadialFunction weightFunction(RadialFunctionCore coreFun, int dim) {
         return new WeightFunctionImp(coreFun, dim);
     }
 
-    public static WeightFunction weightFunction(WeightFunctionCore coreFun) {
+    public static RadialFunction weightFunction(RadialFunctionCore coreFun) {
         return new WeightFunctionImp(coreFun);
     }
 
-    static class WeightFunctionImp implements WeightFunction {
+    static class WeightFunctionImp implements RadialFunction {
 
         private int diffOrder;
-        WeightFunctionCore coreFun;
+        RadialFunctionCore coreFun;
         private final int dim;
         private double[] coreVals;
 
-        private WeightFunctionImp(WeightFunctionCore coreFun, int dim) {
+        private WeightFunctionImp(RadialFunctionCore coreFun, int dim) {
             this.coreFun = coreFun;
             this.dim = dim;
         }
 
-        private WeightFunctionImp(WeightFunctionCore coreFun) {
+        private WeightFunctionImp(RadialFunctionCore coreFun) {
             this.coreFun = coreFun;
             this.dim = 2;
         }

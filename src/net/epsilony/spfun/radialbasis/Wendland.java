@@ -4,7 +4,7 @@
  */
 package net.epsilony.spfun.radialbasis;
 
-import net.epsilony.spfun.radialbasis.WeightFunctionCore;
+import net.epsilony.spfun.radialbasis.RadialFunctionCore;
 import net.epsilony.utils.SomeFactory;
 import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
@@ -12,7 +12,7 @@ import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
  *
  * @author epsilon
  */
-public class Wendland extends WeightFunctionCoreImp{
+public class Wendland extends RadialFunctionCoreAdapter{
 
     static final PolynomialFunction c2_by_r = new PolynomialFunction(new double[]{1, 0, -10, 20, -15, 4});
     static final PolynomialFunction c2P_1_by_r = new PolynomialFunction(new double[]{-10, 30, -30, 10});
@@ -145,11 +145,11 @@ public class Wendland extends WeightFunctionCoreImp{
         return results;
     }
     
-    SomeFactory<WeightFunctionCore> genFactory(final int type){
-        return new SomeFactory<WeightFunctionCore>() {
+    SomeFactory<RadialFunctionCore> genFactory(final int type){
+        return new SomeFactory<RadialFunctionCore>() {
 
             @Override
-            public WeightFunctionCore produce() {
+            public RadialFunctionCore produce() {
                 return new Wendland(type);
             }
         };

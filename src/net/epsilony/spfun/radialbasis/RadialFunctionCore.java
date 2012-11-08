@@ -10,6 +10,6 @@ import net.epsilony.utils.PartDiffOrdered;
  *
  * @author epsilon
  */
-public interface WeightFunctionCore extends PartDiffOrdered{
+public interface RadialFunctionCore extends PartDiffOrdered{
     double[] valuesByNormalisedDistSq(double distSq,double[] results);
 }

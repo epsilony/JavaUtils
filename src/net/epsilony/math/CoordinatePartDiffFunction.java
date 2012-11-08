@@ -4,6 +4,7 @@
  */
 package net.epsilony.math;
 
+import net.epsilony.utils.Dimensional;
 import net.epsilony.utils.PartDiffOrdered;
 import net.epsilony.utils.geom.Coordinate;
 
@@ -11,6 +12,6 @@ import net.epsilony.utils.geom.Coordinate;
  *
  * @author epsilon
  */
-public interface CoordinatePartDiffFunction extends PartDiffOrdered{
+public interface CoordinatePartDiffFunction extends PartDiffOrdered,Dimensional{
     double[] values(Coordinate coord,double[] results);
 }

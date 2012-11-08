@@ -4,11 +4,11 @@
  */
 package net.epsilony.spfun.radialbasis;
 
-import net.epsilony.spfun.radialbasis.WeightFunctions;
-import net.epsilony.spfun.radialbasis.WeightFunctionCore;
+import net.epsilony.spfun.radialbasis.RadialFunctionUtils;
+import net.epsilony.spfun.radialbasis.RadialFunctionCore;
 import net.epsilony.spfun.radialbasis.Wendland;
 import net.epsilony.spfun.radialbasis.Wu;
-import net.epsilony.spfun.radialbasis.WeightFunction;
+import net.epsilony.spfun.radialbasis.RadialFunction;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class WendlandWuTest {
 
     @Test
     public void UnitTest() {
-        WeightFunctionCore[] cores = new WeightFunctionCore[]{new Wendland(Wendland.C2), new Wendland(Wendland.C4), new Wendland(Wendland.C6), new Wu(Wu.C2), new Wu(Wu.C4), new Wu(Wu.C6)};
+        RadialFunctionCore[] cores = new RadialFunctionCore[]{new Wendland(Wendland.C2), new Wendland(Wendland.C4), new Wendland(Wendland.C6), new Wu(Wu.C2), new Wu(Wu.C4), new Wu(Wu.C6)};
         double rad = 2.2;
         int testDiffOrder=1;
         double[] testPoints = new double[]{1.1, 0.8, -0.6, 1.4, 2.1, 1.0};
@@ -47,8 +47,8 @@ public class WendlandWuTest {
         };
 
         for (int i = 0; i < exps.length; i++) {
-            WeightFunctionCore core = cores[i];
-            WeightFunction wFun = WeightFunctions.weightFunction(core);
+            RadialFunctionCore core = cores[i];
+            RadialFunction wFun = RadialFunctionUtils.weightFunction(core);
             wFun.setDiffOrder(testDiffOrder);
             for (int j = 0; j < testPoints.length / 2; j++) {
                 double x = testPoints[j * 2];

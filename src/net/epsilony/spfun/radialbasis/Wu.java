@@ -4,7 +4,7 @@
  */
 package net.epsilony.spfun.radialbasis;
 
-import net.epsilony.spfun.radialbasis.WeightFunctionCore;
+import net.epsilony.spfun.radialbasis.RadialFunctionCore;
 import net.epsilony.utils.SomeFactory;
 import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 
@@ -12,7 +12,7 @@ import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
  *
  * @author epsilon
  */
-public class Wu extends WeightFunctionCoreImp {
+public class Wu extends RadialFunctionCoreAdapter {
 
     public static final int C2 = 2, C4 = 4, C6 = 6;
     private int type = C2;
@@ -143,10 +143,10 @@ public class Wu extends WeightFunctionCoreImp {
         return results;
     }
 
-    SomeFactory<WeightFunctionCore> genFactory(final int type) {
-        return new SomeFactory<WeightFunctionCore>() {
+    SomeFactory<RadialFunctionCore> genFactory(final int type) {
+        return new SomeFactory<RadialFunctionCore>() {
             @Override
-            public WeightFunctionCore produce() {
+            public RadialFunctionCore produce() {
                 return new Wu(type);
             }
         };

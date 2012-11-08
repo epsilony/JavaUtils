@@ -6,9 +6,9 @@ package net.epsilony.spfun;
 
 import static java.lang.Math.*;
 import java.util.ArrayList;
+import net.epsilony.math.CoordinatePartDiffFunction;
 import net.epsilony.utils.geom.Coordinate;
 import net.epsilony.utils.geom.Node;
-import net.epsilony.math.CoordinatePartDiffFunction;
 
 /**
  *
@@ -21,6 +21,16 @@ public class SFunTestUtils {
     }
 
     public abstract static class Adapter implements CoordinatePartDiffFunction {
+
+        @Override
+        public int getDim() {
+            return 2;
+        }
+
+        @Override
+        public int setDim(int dim) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
 
         protected int baseLen = 1;
         int diffOrder = 0;

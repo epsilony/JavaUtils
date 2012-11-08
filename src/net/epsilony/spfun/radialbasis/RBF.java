@@ -25,7 +25,7 @@ public class RBF implements PartDiffOrdered {
 
     ArrayList<Node> nodes;
     InfluenceDomainSizer infSizer;
-    WeightFunction radialBase;
+    RadialFunction radialBase;
     int diffOrder;
     int dim = 2;
     boolean compactlySupported;
@@ -75,7 +75,7 @@ public class RBF implements PartDiffOrdered {
         }
     }
 
-    public RBF(int dim, List<Node> nodes, DenseVector u, InfluenceDomainSizer infSizer, WeightFunctionCore radialBaseCore) {
+    public RBF(int dim, List<Node> nodes, DenseVector u, InfluenceDomainSizer infSizer, RadialFunctionCore radialBaseCore) {
         this.dim = dim;
         this.infSizer = infSizer;
         commonDistSqFunCore = DistanceSquareFunctionCores.common(dim);
@@ -83,7 +83,7 @@ public class RBF implements PartDiffOrdered {
         this.u = u;
         
 
-        radialBase = WeightFunctions.weightFunction(radialBaseCore, dim);
+        radialBase = RadialFunctionUtils.weightFunction(radialBaseCore, dim);
         A = new DenseMatrix(nodes.size(), nodes.size());
 
         setDiffOrder_private(0);

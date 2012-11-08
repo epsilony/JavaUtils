@@ -6,13 +6,13 @@ package net.epsilony.spfun.radialbasis;
 
 import java.util.Arrays;
 import net.epsilony.utils.SomeFactory;
-import net.epsilony.spfun.radialbasis.WeightFunctionCore;
+import net.epsilony.spfun.radialbasis.RadialFunctionCore;
 
 /**
  *
  * @author epsilon
  */
-public class SimpPower extends WeightFunctionCoreImp {
+public class SimpPower extends RadialFunctionCoreAdapter {
     int power;
 
     public SimpPower(int power) {
@@ -36,10 +36,10 @@ public class SimpPower extends WeightFunctionCoreImp {
     }
 
 
-    public static SomeFactory<WeightFunctionCore> genFactory(final int power) {
-        return new SomeFactory<WeightFunctionCore>() {
+    public static SomeFactory<RadialFunctionCore> genFactory(final int power) {
+        return new SomeFactory<RadialFunctionCore>() {
             @Override
-            public WeightFunctionCore produce() {
+            public RadialFunctionCore produce() {
                 return new SimpPower(power);
             }
         };

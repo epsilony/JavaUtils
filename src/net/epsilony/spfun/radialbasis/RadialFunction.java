@@ -11,7 +11,7 @@ import net.epsilony.utils.PartDiffOrdered;
  * 
  * @author epsilonyuan@gmail.com
  */
-public interface WeightFunction extends PartDiffOrdered{
+public interface RadialFunction extends PartDiffOrdered{
     
     /**
      * 计算相对于node的权函数值或偏导数序列，该序列取决于

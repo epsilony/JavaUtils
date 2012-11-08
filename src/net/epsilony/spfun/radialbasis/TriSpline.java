@@ -6,13 +6,13 @@ package net.epsilony.spfun.radialbasis;
 
 import java.util.Arrays;
 import net.epsilony.utils.SomeFactory;
-import net.epsilony.spfun.radialbasis.WeightFunctionCore;
+import net.epsilony.spfun.radialbasis.RadialFunctionCore;
 
 /**
  *
  * @author epsilon
  */
-public class TriSpline extends WeightFunctionCoreImp {
+public class TriSpline extends RadialFunctionCoreAdapter {
 
     @Override
     public double[] valuesByNormalisedDistSq(double disSq, double[] results) {
@@ -44,10 +44,10 @@ public class TriSpline extends WeightFunctionCoreImp {
         return results;
     }
 
-    public static SomeFactory<WeightFunctionCore> genFactory() {
-        return new SomeFactory<WeightFunctionCore>() {
+    public static SomeFactory<RadialFunctionCore> genFactory() {
+        return new SomeFactory<RadialFunctionCore>() {
             @Override
-            public WeightFunctionCore produce() {
+            public RadialFunctionCore produce() {
                 return new TriSpline();
             }
         };

@@ -4,13 +4,13 @@
  */
 package net.epsilony.spfun.radialbasis;
 
-import net.epsilony.spfun.radialbasis.WeightFunctionCore;
+import net.epsilony.spfun.radialbasis.RadialFunctionCore;
 
 /**
  *
  * @author epsilon
  */
-public abstract class WeightFunctionCoreImp implements WeightFunctionCore {
+public abstract class RadialFunctionCoreAdapter implements RadialFunctionCore {
     protected int diffOrder;
 
     @Override
