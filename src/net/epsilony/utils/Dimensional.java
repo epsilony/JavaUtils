@@ -11,5 +11,4 @@ package net.epsilony.utils;
 public interface Dimensional {
     int getDim();
     
-    int setDim(int dim);
 }

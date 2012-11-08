@@ -27,11 +27,6 @@ public class SFunTestUtils {
             return 2;
         }
 
-        @Override
-        public int setDim(int dim) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
         protected int baseLen = 1;
         int diffOrder = 0;
         double h;
